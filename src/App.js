@@ -8,10 +8,14 @@ import {
   Image,
   Item,
   Label,
+  Form,
+  TextArea,
+  List,
   Menu,
   Segment,
   Step,
   Table,
+  Modal,
   GridColumn,
 } from "semantic-ui-react";
 import MyMenu from "./Menu.js";
@@ -21,31 +25,49 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: "products", // change to main!
+      page: "main", // change to main!
       tableData:
         [
           {
             product: 'Чипсы Lays с беконом, 100г',
             whoBought: 'Серго',
-            whoAte: 'Ваня, Даня, Серго',
-            price: '57'
+            whoPays: 'Ваня, Даня, Серго',
+            price: 57,
+            quantity: 1
           },
 
           {
             product: 'Квас "Очаковский"',
             whoBought: 'Ваня',
-            whoAte: 'Ваня, Даня, Серго',
-            price: '73'
+            whoPays: 'Ваня, Даня, Серго',
+            price: 73,
+            quantity: 2
           },
         ]
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
+    this.handleAddRow = this.handleAddRow.bind(this);
   }
 
   handleMenuChange(a) {
     this.setState({
       page: a,
     });
+  }
+
+  handleAddRow(name, whoBought, whoPays, price) {
+    this.setState(state => ({
+
+      tableData: state.tableData.concat({
+
+        product: name,
+        whoBought: whoBought,
+        whoPays: whoPays,
+        price: price,
+
+      }),
+
+    }));
   }
 
   render() {
@@ -75,43 +97,95 @@ class App extends React.Component {
               <Segment>
                 <Grid ui centered>
                   <Grid.Row>
-                    <Button positive size="massive" onClick={() => {this.handleMenuChange('products')}} > 
+                    <Button positive size="massive" onClick={() => { this.handleMenuChange('products') }} >
                       Начать без регистрации
                         </Button>
                   </Grid.Row>
-                <Grid.Row style={{ paddingTop: 0 }}>
-                  <Button primary size="massive" onClick={() => {this.handleMenuChange('products')}}>
-                    Войти
+                  <Grid.Row style={{ paddingTop: 0 }}>
+                    <Button primary size="massive" onClick={() => { this.handleMenuChange('products') }}>
+                      Войти
                         </Button>
-                </Grid.Row>
+                  </Grid.Row>
                 </Grid>
               </Segment>
             </Segment.Group>
           }
 
-        {
-          this.state.page == 'people' &&
+          {
+            this.state.page == 'people' &&
 
-          <Segment.Group>
-            <Segment>
-              люди
+            <Segment.Group>
+              <Segment>
+                404
               </Segment>
-          </Segment.Group>
+            </Segment.Group>
 
-        }
+          }
 
-        {
-          this.state.page == 'products' &&
-          <div>
-            <TableOfProducts
-              tableData={this.state.tableData}
-            />
-            <div style={{ textAlign: "center", paddingTop: "15px" }}>
-              <Button positive>Рассчитать СколькоСкинуть</Button>
+          {
+            this.state.page == 'products' &&
+            <div>
+
+
+              <Grid columns={3} stackable style={{ paddingBottom: "20px", }}>
+                <Grid.Column>
+
+                  <Segment relaxed style={{ minHeight: '203px' }}>
+                    <Header as="h3" style={{ paddingTop: "0px" }}>
+                      Как пользоваться?
+                        </Header>
+                    <List relaxed>
+                      <List.Item>
+                        <List.Content>
+                          1. Впиши имена всех людей 🧕🎅
+                        </List.Content>
+                      </List.Item>
+                      <List.Item>
+                        <List.Content>
+                          {/* <List.Header>Два</List.Header> */}
+                          2. Добавь продукты в таблицу 🍩🍾
+                       </List.Content>
+                      </List.Item>
+                      <List.Item>
+                        <List.Content>
+                          {/* <List.Header>Три</List.Header> */}
+                        3. Нажми на кнопку и получи рассчет чека (сколько кто кому должен скинуть). 
+                        <br /><br />
+                        У тебя будет ссылка, которой можно поделиться с друзьями, вау!
+                        🥳
+                        </List.Content>
+                      </List.Item>
+                    </List>
+                  </Segment>
+
+
+                </Grid.Column>
+                <Grid.Column style={{ minHeight: '203px' }}>
+                  <Form>
+                    <TextArea 
+                    fluid 
+                    style={{ minHeight: '203px' }}
+                    placeholder={'Серго\r\nДаня\r\nВаня\r\nСаня'} />
+                  </Form>
+                </Grid.Column>
+
+                <Grid.Column>
+                  еще какой-то блок. 
+                </Grid.Column>
+              </Grid>
+
+
+
+              <TableOfProducts
+                tableData={this.state.tableData}
+                handleAddRow={this.handleAddRow}
+              />
+              <div style={{ textAlign: "center", paddingTop: "15px" }}>
+                <Button positive>Рассчитать СколькоСкинуть</Button>
+              </div>
             </div>
-          </div>
 
-        }
+          }
 
         </Container>
 

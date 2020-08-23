@@ -13,7 +13,12 @@ code {
 }
 
 .textAlignCenter{
-  text-align: center;
+  text-align: center!important;
+}
+
+.textAlignCenter > input
+{
+  text-align: center!important;
 }
 
 .tableFont {
@@ -24,4 +29,12 @@ code {
 .tableHeaderFont {
   font-size: 15px;
   text-align: center;
+}
+
+.placeholderCentering > input::placeholder {
+  text-align: center;
+}
+
+textarea {
+  resize: none!important;
 }

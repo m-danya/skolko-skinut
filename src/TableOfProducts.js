@@ -7,6 +7,7 @@ import {
     Icon,
     Input,
     Image,
+    Modal,
     Item,
     Label,
     Menu,
@@ -16,15 +17,40 @@ import {
     Table,
     GridColumn,
 } from "semantic-ui-react";
+import EditMenu from './EditMenu';
 
 class TableOfProducts extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            inputNameText: '',
+            inputWhoBoughtText: '',
+            inputWhoPaysText: '',
+            inputPriceText: '',
+        }
+    }
+
+    handleInputChange(name, e) {
+
+        const target = e.target;
+        const value = target.value;
+        this.setState({
+            ['input' + name + 'Text']: value,
+        });
+    }
+
     render() {
         return (
             <div>
                 {/* <Segment basic> */}
                 <div>
                     <Table selectable celled singleLine >
-                        <Table.Header color='green' >
+
+                        {/* <Table.Header
+                            color='green'
+                            hidden
+                        >
                             <Table.Row>
                                 <Table.HeaderCell width={4}>
                                     <p className='tableHeaderFont'>
@@ -52,44 +78,39 @@ class TableOfProducts extends Component {
                                     </p>
                                 </Table.HeaderCell>
                             </Table.Row>
-                        </Table.Header>
+                        </Table.Header> */}
 
                         <Table.Body>
                             {this.props.tableData.map((row) => {
                                 return (
                                     <Table.Row>
-                                        <Table.Cell>
+                                        <Table.Cell width={4}>
                                             <p className='tableFont'>
                                                 {row.product}
                                             </p>
                                         </Table.Cell>
 
-                                        <Table.Cell>
+                                        <Table.Cell width={4}>
                                             <p className='tableFont'>
                                                 {row.whoBought}
                                             </p>
                                         </Table.Cell>
 
-                                        <Table.Cell>
+                                        <Table.Cell width={4}>
                                             <p className='tableFont'>
-                                                {row.whoAte}
+                                                {row.whoPays}
                                             </p>
                                         </Table.Cell>
 
-                                        <Table.Cell>
+                                        <Table.Cell width={2}>
                                             <p className='tableFont'>
-                                                {row.price} ₽
+                                                {`${row.quantity} × ${row.price} = ${row.quantity * row.price}`} ₽
                                                 </p>
                                         </Table.Cell>
 
                                         <Table.Cell width={1}>
                                             <p className='tableFont'>
-                                                <Button fluid>
-                                                    <p className='textAlignCenter '>
-                                                        <Icon name='pencil' />
-                                                    </p>
-
-                                                </Button>
+                                                <EditMenu />
                                             </p>
                                         </Table.Cell>
 
@@ -101,19 +122,38 @@ class TableOfProducts extends Component {
                             <Table.Row>
                                 <Table.Cell>
                                     <p className='tableFont'>
-                                        <Input fluid />
+                                        <Input fluid
+                                            className='placeholderCentering textAlignCenter'
+                                            placeholder='Название продукта'
+                                            //label='Название продукта'
+                                            onChange={(e) => this.handleInputChange('Name', e)}
+                                            value={this.state.inputNameText}
+
+                                        />
                                     </p>
                                 </Table.Cell>
 
                                 <Table.Cell>
                                     <p className='tableFont'>
-                                        <Input fluid />
+                                        <Input fluid
+                                            className='placeholderCentering textAlignCenter'
+                                            placeholder='Кто купил'
+                                            //label='Кто купил'
+                                            onChange={(e) => this.handleInputChange('WhoBought', e)}
+                                            value={this.state.inputWhoBoughtText}
+                                        />
                                     </p>
                                 </Table.Cell>
 
                                 <Table.Cell>
                                     <p className='tableFont'>
-                                        <Input fluid />
+                                        <Input fluid
+                                            className='placeholderCentering textAlignCenter'
+                                            placeholder='Кто скидывается'
+                                            //label='Кто скидывается'
+                                            onChange={(e) => this.handleInputChange('WhoPays', e)}
+                                            value={this.state.inputWhoPaysText}
+                                        />
                                     </p>
                                 </Table.Cell>
 
@@ -123,6 +163,18 @@ class TableOfProducts extends Component {
                                             label={{ basic: true, content: '₽' }}
                                             labelPosition='right'
                                             placeholder='Цена'
+                                            //label='Цена'
+                                            onChange={(e) => this.handleInputChange('Price', e)}
+                                            value={this.state.inputPriceText}
+                                        />
+                                        <Input
+                                            fluid
+                                            //width={1}
+                                            label='Кол-во'
+                                            style={{ paddingTop: '10px', }}
+                                            placeholder=''
+                                            onChange={(e) => this.handleInputChange('Quantity', e)}
+                                            value={this.state.inputQuantityText}
                                         />
 
                                         {/* {row.price} ₽ */}
@@ -131,7 +183,10 @@ class TableOfProducts extends Component {
 
                                 <Table.Cell width={1}>
                                     <p className='tableFont'>
-                                        <Button fluid>
+                                        <Button fluid onClick={() => this.props.handleAddRow(this.state.inputWhoBoughtText,
+                                            this.state.inputWhoBoughtText,
+                                            this.state.inputWhoPaysText,
+                                            parseInt(this.state.inputPriceText))}>
                                             <p className='textAlignCenter '>
                                                 <Icon name='add' />
                                             </p>
