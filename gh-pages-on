@@ -1,0 +1,1 @@
+sed -i -e 's/\"homepage\": \"\.\/\"/\"homepage\": \"https:\/\/m-danya\.github\.io\/portfolio-generator\/\"/g' ./package.json && npm run deploy

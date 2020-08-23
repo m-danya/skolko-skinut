@@ -1,0 +1,1 @@
+sed -i -e 's/\"homepage\": \"https:\/\/m-danya\.github\.io\/portfolio-generator\/\"/\"homepage\": \"\.\/\"/g' ./package.json

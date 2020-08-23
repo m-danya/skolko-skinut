@@ -4,7 +4,7 @@ import { Menu, Icon } from "semantic-ui-react";
 class MyMenu extends React.Component {
   render() {
     return (
-      <div>
+      <div style={{paddingBottom: "15px",}}>
         <Menu inverted style={{fontSize: "16px"}} >
           <Menu.Item
             name="main"
@@ -15,14 +15,14 @@ class MyMenu extends React.Component {
             Главная
           </Menu.Item>
 
-          <Menu.Item
+          {/* <Menu.Item
             name="people"
             active={this.props.activeItem === "people"}
             onClick={() => this.props.handleItemClick('people')}
           >
               <Icon name='user' />
             Люди
-          </Menu.Item>
+          </Menu.Item> */}
 
           <Menu.Item
             name="products"
