@@ -5,6 +5,7 @@ import {
     Grid,
     Header,
     Icon,
+    Input,
     Image,
     Item,
     Label,
@@ -22,7 +23,7 @@ class TableOfProducts extends Component {
             <div>
                 {/* <Segment basic> */}
                 <div>
-                    <Table selectable unstackable celled singleLine >
+                    <Table selectable celled singleLine >
                         <Table.Header color='green' >
                             <Table.Row>
                                 <Table.HeaderCell width={4}>
@@ -47,8 +48,8 @@ class TableOfProducts extends Component {
                                 </Table.HeaderCell>
                                 <Table.HeaderCell width={1}>
                                     <p className='tableHeaderFont'>
-                                        
-                                        </p>
+
+                                    </p>
                                 </Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
@@ -82,15 +83,64 @@ class TableOfProducts extends Component {
                                         </Table.Cell>
 
                                         <Table.Cell width={1}>
-                                        <p className='tableFont'>
-                                            <Icon name='edit' />
-                                        </p>
+                                            <p className='tableFont'>
+                                                <Button fluid>
+                                                    <p className='textAlignCenter '>
+                                                        <Icon name='pencil' />
+                                                    </p>
+
+                                                </Button>
+                                            </p>
                                         </Table.Cell>
 
                                     </Table.Row>
                                 )
                             })}
 
+
+                            <Table.Row>
+                                <Table.Cell>
+                                    <p className='tableFont'>
+                                        <Input fluid />
+                                    </p>
+                                </Table.Cell>
+
+                                <Table.Cell>
+                                    <p className='tableFont'>
+                                        <Input fluid />
+                                    </p>
+                                </Table.Cell>
+
+                                <Table.Cell>
+                                    <p className='tableFont'>
+                                        <Input fluid />
+                                    </p>
+                                </Table.Cell>
+
+                                <Table.Cell>
+                                    <p className='tableFont'>
+                                        <Input fluid
+                                            label={{ basic: true, content: '₽' }}
+                                            labelPosition='right'
+                                            placeholder='Цена'
+                                        />
+
+                                        {/* {row.price} ₽ */}
+                                    </p>
+                                </Table.Cell>
+
+                                <Table.Cell width={1}>
+                                    <p className='tableFont'>
+                                        <Button fluid>
+                                            <p className='textAlignCenter '>
+                                                <Icon name='add' />
+                                            </p>
+
+                                        </Button>
+                                    </p>
+                                </Table.Cell>
+
+                            </Table.Row>
 
                         </Table.Body>
                     </Table>

@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.textAlignCenter{
+  text-align: center;
+}
+
 .tableFont {
   font-size: 15px;
   text-align: center;

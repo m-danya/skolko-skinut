@@ -68,51 +68,55 @@ class App extends React.Component {
             <Segment.Group>
               <Segment>
                 <Header as="h3">
-                  Приветствие и яркое описание приложения (мб со скринами){" "}
+                  Добро пожаловать!
                 </Header>
+                <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p>
               </Segment>
               <Segment>
                 <Grid ui centered>
                   <Grid.Row>
-                    <Button positive size="massive">
+                    <Button positive size="massive" onClick={() => {this.handleMenuChange('products')}} > 
                       Начать без регистрации
                         </Button>
                   </Grid.Row>
-                  <Grid.Row style={{ paddingTop: 0 }}>
-                    <Button primary size="massive">
-                      Войти
+                <Grid.Row style={{ paddingTop: 0 }}>
+                  <Button primary size="massive" onClick={() => {this.handleMenuChange('products')}}>
+                    Войти
                         </Button>
-                  </Grid.Row>
+                </Grid.Row>
                 </Grid>
               </Segment>
             </Segment.Group>
           }
 
-          {
-            this.state.page == 'people' &&
+        {
+          this.state.page == 'people' &&
 
-            <Segment.Group>
-              <Segment>
-                люди
+          <Segment.Group>
+            <Segment>
+              люди
               </Segment>
-            </Segment.Group>
+          </Segment.Group>
 
-          }
+        }
 
-          {
-            this.state.page == 'products' &&
+        {
+          this.state.page == 'products' &&
+          <div>
             <TableOfProducts
               tableData={this.state.tableData}
             />
-
-          }
-          <div style={{textAlign: "center", paddingTop: "15px"}}>
-            <Button positive>Рассчитать СколькоСкинуть</Button>
+            <div style={{ textAlign: "center", paddingTop: "15px" }}>
+              <Button positive>Рассчитать СколькоСкинуть</Button>
+            </div>
           </div>
+
+        }
+
         </Container>
 
 
-      </div>
+      </div >
     );
   }
 }
