@@ -43,16 +43,35 @@ class App extends React.Component {
             price: 73,
             quantity: 2
           },
-        ]
+        ],
+        namesText: '',
+        namesArray: [],
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
+    this.handleNamesChange = this.handleNamesChange.bind(this);
   }
 
   handleMenuChange(a) {
     this.setState({
       page: a,
     });
+  }
+
+  formSearchFromArray(list) {
+    // console.log("list = " + list);
+    let ans = [];
+    let i = 0;
+    if (!list) return ans;
+    for (let a of list) {
+      ans.push({
+        key: a,
+        value: i,
+        text: a,
+      });
+      ++i;
+    }
+    return ans;
   }
 
   handleAddRow(name, whoBought, whoPays, price) {
@@ -69,6 +88,17 @@ class App extends React.Component {
 
     }));
   }
+
+  handleNamesChange(event)
+  {
+    //console.log(event);
+    this.setState({
+      namesText: event.target.value,
+      namesArray: event.target.value.split(/\r?\n/).filter((element) =>element)
+    });
+    
+  }
+
 
   render() {
     return (
@@ -165,7 +195,10 @@ class App extends React.Component {
                     <TextArea 
                     fluid 
                     style={{ minHeight: '203px' }}
-                    placeholder={'Серго\r\nДаня\r\nВаня\r\nСаня'} />
+                    placeholder={'Серго\r\nДаня\r\nВаня\r\nСаня'}
+                    onChange={this.handleNamesChange} 
+                    value={this.state.namesText}
+                    />
                   </Form>
                 </Grid.Column>
 
@@ -179,6 +212,7 @@ class App extends React.Component {
               <TableOfProducts
                 tableData={this.state.tableData}
                 handleAddRow={this.handleAddRow}
+                namesArray={this.formSearchFromArray(this.state.namesArray)}
               />
               <div style={{ textAlign: "center", paddingTop: "15px" }}>
                 <Button positive>Рассчитать СколькоСкинуть</Button>

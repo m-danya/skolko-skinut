@@ -8,6 +8,7 @@ import {
     Input,
     Image,
     Modal,
+    Dropdown,
     Item,
     Label,
     Menu,
@@ -135,25 +136,46 @@ class TableOfProducts extends Component {
 
                                 <Table.Cell>
                                     <p className='tableFont'>
-                                        <Input fluid
+                                        <Dropdown
+                                            className='placeholderCentering textAlignCenter'
+                                            placeholder='Кто купил'
+                                            fluid
+                                            //multiple
+                                            //clearable их и так можно чистить
+                                            search
+                                            selection
+                                            options={this.props.namesArray}
+                                        />
+                                        {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
                                             placeholder='Кто купил'
                                             //label='Кто купил'
                                             onChange={(e) => this.handleInputChange('WhoBought', e)}
                                             value={this.state.inputWhoBoughtText}
-                                        />
+                                        /> */}
                                     </p>
                                 </Table.Cell>
 
                                 <Table.Cell>
                                     <p className='tableFont'>
-                                        <Input fluid
+                                        <Dropdown
+                                            className='placeholderCentering textAlignCenter'
+                                            placeholder='Кто скидывается'
+                                            fluid
+                                            multiple
+                                            //clearable их и так можно чистить
+                                            search
+                                            selection
+                                            options={this.props.namesArray}
+                                            
+                                        />
+                                        {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
                                             placeholder='Кто скидывается'
                                             //label='Кто скидывается'
                                             onChange={(e) => this.handleInputChange('WhoPays', e)}
                                             value={this.state.inputWhoPaysText}
-                                        />
+                                        /> */}
                                     </p>
                                 </Table.Cell>
 
@@ -183,7 +205,7 @@ class TableOfProducts extends Component {
 
                                 <Table.Cell width={1}>
                                     <p className='tableFont'>
-                                        <Button fluid onClick={() => this.props.handleAddRow(this.state.inputWhoBoughtText,
+                                        <Button fluid onClick={() => this.props.handleAddRow(this.state.inputNameText,
                                             this.state.inputWhoBoughtText,
                                             this.state.inputWhoPaysText,
                                             parseInt(this.state.inputPriceText))}>
