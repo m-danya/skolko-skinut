@@ -38,3 +38,7 @@ code {
 textarea {
   resize: none!important;
 }
+
+.ui.mini.modal {
+  width: 200px!important;
+}

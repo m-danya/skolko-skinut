@@ -82,44 +82,6 @@ class TableOfProducts extends Component {
                         </Table.Header> */}
 
                         <Table.Body>
-                            {this.props.tableData.map((row) => {
-                                return (
-                                    <Table.Row>
-                                        <Table.Cell width={4}>
-                                            <p className='tableFont'>
-                                                {row.product}
-                                            </p>
-                                        </Table.Cell>
-
-                                        <Table.Cell width={4}>
-                                            <p className='tableFont'>
-                                                {row.whoBought}
-                                            </p>
-                                        </Table.Cell>
-
-                                        <Table.Cell width={4}>
-                                            <p className='tableFont'>
-                                                {row.whoPays}
-                                            </p>
-                                        </Table.Cell>
-
-                                        <Table.Cell width={2}>
-                                            <p className='tableFont'>
-                                                {`${row.quantity} × ${row.price} = ${row.quantity * row.price}`} ₽
-                                                </p>
-                                        </Table.Cell>
-
-                                        <Table.Cell width={1}>
-                                            <p className='tableFont'>
-                                                <EditMenu />
-                                            </p>
-                                        </Table.Cell>
-
-                                    </Table.Row>
-                                )
-                            })}
-
-
                             <Table.Row>
                                 <Table.Cell>
                                     <p className='tableFont'>
@@ -140,8 +102,7 @@ class TableOfProducts extends Component {
                                             className='placeholderCentering textAlignCenter'
                                             placeholder='Кто купил'
                                             fluid
-                                            //multiple
-                                            //clearable их и так можно чистить
+                                            noResultsMessage={this.props.namesArray.length ? '' : 'Сначала добавьте имена'}
                                             search
                                             selection
                                             options={this.props.namesArray}
@@ -163,11 +124,11 @@ class TableOfProducts extends Component {
                                             placeholder='Кто скидывается'
                                             fluid
                                             multiple
-                                            //clearable их и так можно чистить
+                                            noResultsMessage={this.props.namesArray.length ? '' : 'Сначала добавьте имена'}
                                             search
                                             selection
                                             options={this.props.namesArray}
-                                            
+
                                         />
                                         {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
@@ -208,7 +169,8 @@ class TableOfProducts extends Component {
                                         <Button fluid onClick={() => this.props.handleAddRow(this.state.inputNameText,
                                             this.state.inputWhoBoughtText,
                                             this.state.inputWhoPaysText,
-                                            parseInt(this.state.inputPriceText))}>
+                                            parseInt(this.state.inputPriceText),
+                                            parseInt(this.state.inputQuantityText))}>
                                             <p className='textAlignCenter '>
                                                 <Icon name='add' />
                                             </p>
@@ -218,6 +180,46 @@ class TableOfProducts extends Component {
                                 </Table.Cell>
 
                             </Table.Row>
+
+                            {this.props.tableData.map((row) => {
+                                return (
+                                    <Table.Row>
+                                        <Table.Cell width={4}>
+                                            <p className='tableFont'>
+                                                {row.product}
+                                            </p>
+                                        </Table.Cell>
+
+                                        <Table.Cell width={4}>
+                                            <p className='tableFont'>
+                                                {row.whoBought}
+                                            </p>
+                                        </Table.Cell>
+
+                                        <Table.Cell width={4}>
+                                            <p className='tableFont'>
+                                                {row.whoPays}
+                                            </p>
+                                        </Table.Cell>
+
+                                        <Table.Cell width={2}>
+                                            <p className='tableFont'>
+                                                {`${row.quantity} × ${row.price} = ${row.quantity * row.price}`} ₽
+                                                </p>
+                                        </Table.Cell>
+
+                                        <Table.Cell width={1}>
+                                            <p className='tableFont'>
+                                                <EditMenu />
+                                            </p>
+                                        </Table.Cell>
+
+                                    </Table.Row>
+                                )
+                            })}
+
+
+
 
                         </Table.Body>
                     </Table>

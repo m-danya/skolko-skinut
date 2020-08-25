@@ -20,12 +20,16 @@ import {
 } from "semantic-ui-react";
 import MyMenu from "./Menu.js";
 import TableOfProducts from './TableOfProducts'
+import ChooseNames from './ChooseNames'
+
+var debugging = false;
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: "main", // change to main!
+      page: "main", // do not change. (see componentDidMount for debug)
       tableData:
         [
           {
@@ -44,8 +48,8 @@ class App extends React.Component {
             quantity: 2
           },
         ],
-        namesText: '',
-        namesArray: [],
+      namesText: '',
+      namesArray: [],
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
@@ -74,7 +78,7 @@ class App extends React.Component {
     return ans;
   }
 
-  handleAddRow(name, whoBought, whoPays, price) {
+  handleAddRow(name, whoBought, whoPays, price, quantity) {
     this.setState(state => ({
 
       tableData: state.tableData.concat({
@@ -83,22 +87,32 @@ class App extends React.Component {
         whoBought: whoBought,
         whoPays: whoPays,
         price: price,
+        quantity: quantity
 
       }),
 
     }));
   }
 
-  handleNamesChange(event)
-  {
+  handleNamesChange(event) {
     //console.log(event);
     this.setState({
       namesText: event.target.value,
-      namesArray: event.target.value.split(/\r?\n/).filter((element) =>element)
+      namesArray: (event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))
     });
-    
+
   }
 
+  componentDidMount(props) {
+    //backend connect 
+
+    if (debugging) {
+      this.setState({
+        page: 'products',
+        namesText: 'Серго\r\nСаня\r\nВаня\r\nДаня'
+      });
+    }
+  }
 
   render() {
     return (
@@ -158,7 +172,7 @@ class App extends React.Component {
 
 
               <Grid columns={3} stackable style={{ paddingBottom: "20px", }}>
-                <Grid.Column>
+                <Grid.Column >
 
                   <Segment relaxed style={{ minHeight: '203px' }}>
                     <Header as="h3" style={{ paddingTop: "0px" }}>
@@ -167,19 +181,25 @@ class App extends React.Component {
                     <List relaxed>
                       <List.Item>
                         <List.Content>
-                          1. Впиши имена всех людей 🧕🎅
+                          1. Впиши имена всех людей:
+                          <div style={{ padding: "10px 0 10px 0", }}>
+                            <ChooseNames
+                              handleNamesChange={this.handleNamesChange}
+                              namesText={this.state.namesText}
+                            />
+                          </div>
                         </List.Content>
                       </List.Item>
                       <List.Item>
                         <List.Content>
                           {/* <List.Header>Два</List.Header> */}
-                          2. Добавь продукты в таблицу 🍩🍾
+                          2. Добавь продукты в таблицу ниже
                        </List.Content>
                       </List.Item>
                       <List.Item>
                         <List.Content>
                           {/* <List.Header>Три</List.Header> */}
-                        3. Нажми на кнопку и получи рассчет чека (сколько кто кому должен скинуть). 
+                        3. Нажми на зелёную кнопку и получи рассчет чека (сколько кто кому должен скинуть).
                         <br /><br />
                         У тебя будет ссылка, которой можно поделиться с друзьями, вау!
                         🥳
@@ -190,8 +210,10 @@ class App extends React.Component {
 
 
                 </Grid.Column>
-                <Grid.Column style={{ minHeight: '203px' }}>
-                  <Form>
+
+                {/* <Grid.Column style={{ minHeight: '203px' }}>
+
+                  { <Form>
                     <TextArea 
                     fluid 
                     style={{ minHeight: '203px' }}
@@ -199,12 +221,12 @@ class App extends React.Component {
                     onChange={this.handleNamesChange} 
                     value={this.state.namesText}
                     />
-                  </Form>
+                  </Form> }
                 </Grid.Column>
 
                 <Grid.Column>
-                  еще какой-то блок. 
-                </Grid.Column>
+                  еще какой-то блок.
+                </Grid.Column> */}
               </Grid>
 
 

@@ -36,15 +36,15 @@ function EditMenu() {
             <Modal.Content>
                 <Modal.Description>
                     <p className='tableFont'>
-                                        <Input fluid
-                                            className='placeholderCentering textAlignCenter'
-                                            placeholder='Название продукта'
-                                            //label='Название продукта'
-                                            //onChange={(e) => this.handleInputChange('Name', e)}
-                                            //value={this.state.inputNameText}
+                        <Input fluid
+                            className='placeholderCentering textAlignCenter'
+                            placeholder='Название продукта'
+                        //label='Название продукта'
+                        //onChange={(e) => this.handleInputChange('Name', e)}
+                        //value={this.state.inputNameText}
 
-                                        />
-                                    </p>
+                        />
+                    </p>
                                     и другие поля (уже заполненные офк)
                 </Modal.Description>
             </Modal.Content>
