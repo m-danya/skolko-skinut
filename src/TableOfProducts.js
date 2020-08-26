@@ -26,10 +26,26 @@ class TableOfProducts extends Component {
         super(props);
         this.state = {
             inputNameText: '',
-            inputWhoBoughtText: '',
-            inputWhoPaysText: '',
+            // inputWhoBoughtText: '',
+            // inputWhoPaysText: '',
             inputPriceText: '',
+            inputQuantityText: '1'
         }
+        this.handleWhoBoughtChange = this.handleWhoBoughtChange.bind(this)
+        this.handleWhoPaysChange = this.handleWhoPaysChange.bind(this)
+    }
+
+    resetInputs()
+    {
+        this.setState({
+            inputNameText: '',
+            // inputWhoBoughtText: '',
+            // inputWhoPaysText: '',
+            whoBought: null,
+            whoPays: null,
+            inputPriceText: '',
+            inputQuantityText: '1'
+        });
     }
 
     handleInputChange(name, e) {
@@ -40,6 +56,23 @@ class TableOfProducts extends Component {
             ['input' + name + 'Text']: value,
         });
     }
+
+    handleWhoBoughtChange(e, {name, value})
+    {
+        //console.log(e);
+        this.setState({
+            whoBought: value,
+        });
+    }
+
+    handleWhoPaysChange(e, {name, value})
+    {
+        //console.log(e);
+        this.setState({
+            whoPays: value,
+        });
+    }
+
 
     render() {
         return (
@@ -106,6 +139,9 @@ class TableOfProducts extends Component {
                                             search
                                             selection
                                             options={this.props.namesArray}
+                                            onChange={this.handleWhoBoughtChange}
+                                            value={this.state.whoBought}
+
                                         />
                                         {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
@@ -128,7 +164,9 @@ class TableOfProducts extends Component {
                                             search
                                             selection
                                             options={this.props.namesArray}
-
+                                            onChange={this.handleWhoPaysChange}
+                                            value={this.state.whoPays}
+                                            
                                         />
                                         {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
@@ -166,11 +204,11 @@ class TableOfProducts extends Component {
 
                                 <Table.Cell width={1}>
                                     <p className='tableFont'>
-                                        <Button fluid onClick={() => this.props.handleAddRow(this.state.inputNameText,
+                                        <Button fluid onClick={() => {this.props.handleAddRow(this.state.inputNameText,
                                             this.state.inputWhoBoughtText,
                                             this.state.inputWhoPaysText,
                                             parseInt(this.state.inputPriceText),
-                                            parseInt(this.state.inputQuantityText))}>
+                                            parseInt(this.state.inputQuantityText)); this.resetInputs(); }}>
                                             <p className='textAlignCenter '>
                                                 <Icon name='add' />
                                             </p>
