@@ -45,11 +45,11 @@ function ChooseNames(props) {
                             //fluid
                             //width={2}
                             //style={{ minHeight: '203px' }}
-                            placeholder={'Серго\r\nДаня\r\nВаня\r\nСаня'}
+                            placeholder={'Серго\r\nДаня\r\nВаня\r\n\r\nили\r\n\r\n\Серго, Даня, Ваня'}
                             onChange={props.handleNamesChange}
                             className='textAlignCenter'
                             value={props.namesText}
-                            rows={6}
+                            rows={7}
                         />
                     </Form>
                 </p>

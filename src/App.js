@@ -35,7 +35,7 @@ class App extends React.Component {
           {
             product: 'Чипсы Lays с беконом, 100г',
             whoBought: 'Серго',
-            whoPays: 'Ваня, Даня, Серго',
+            whoPays: ['Ваня', 'Даня', 'Серго'],
             price: 57,
             quantity: 1
           },
@@ -43,7 +43,7 @@ class App extends React.Component {
           {
             product: 'Квас "Очаковский"',
             whoBought: 'Ваня',
-            whoPays: 'Ваня, Даня, Серго',
+            whoPays: ['Ваня', 'Даня', 'Серго'],
             price: 73,
             quantity: 2
           },
@@ -70,7 +70,8 @@ class App extends React.Component {
     for (let a of list) {
       ans.push({
         key: a,
-        value: i,
+        value: a,
+        //value: i,
         text: a,
       });
       ++i;
@@ -249,18 +250,24 @@ class App extends React.Component {
           <Segment>
             <Header as='h4'>TODO</Header>
             <List bulleted>
-              <List.Item>Проблема с тем, что список имён динамический: нельзя заменить имена на индексы
-              в списке имён (решение - сделать не через textArea, а по-нормальному как-то, присвоить именам id-шники,
-              везде хранить именно их. сделать сопоставление name_id - name. )
-                  </List.Item>
               <List.Item>
-                распределение кол-ва по людям (10 одинаковых предметов на 7 человек)
+                распределение кол-ва по людям (10 одинаковых предметов на 7 человек) - см. кнопку, которая появляется при увеличении кол-ва
+                  + добавить это в структуру tableData
                   </List.Item>
               <List.Item>
                 Контейнер по центру
                   </List.Item>
               <List.Item>
-                выделить какие-то части кода в отдельные контейнеры
+                выделить какие-то части кода в отдельные компоненты (чисто рефакторинг)
+              </List.Item>
+              <List.Item>
+                редактирование предмета
+              </List.Item>
+              <List.Item>
+                сам расчёт
+              </List.Item>
+              <List.Item>
+                сделать везде проверки на дурака (кол-во = undefinded и тд)
               </List.Item>
 
             </List>

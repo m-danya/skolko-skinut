@@ -9,6 +9,7 @@ import {
     Image,
     Modal,
     Dropdown,
+    Transition,
     Item,
     Label,
     Menu,
@@ -35,8 +36,7 @@ class TableOfProducts extends Component {
         this.handleWhoPaysChange = this.handleWhoPaysChange.bind(this)
     }
 
-    resetInputs()
-    {
+    resetInputs() {
         this.setState({
             inputNameText: '',
             // inputWhoBoughtText: '',
@@ -57,16 +57,14 @@ class TableOfProducts extends Component {
         });
     }
 
-    handleWhoBoughtChange(e, {name, value})
-    {
+    handleWhoBoughtChange(e, { name, value }) {
         //console.log(e);
         this.setState({
             whoBought: value,
         });
     }
 
-    handleWhoPaysChange(e, {name, value})
-    {
+    handleWhoPaysChange(e, { name, value }) {
         //console.log(e);
         this.setState({
             whoPays: value,
@@ -166,8 +164,27 @@ class TableOfProducts extends Component {
                                             options={this.props.namesArray}
                                             onChange={this.handleWhoPaysChange}
                                             value={this.state.whoPays}
-                                            
+
                                         />
+
+
+                                        <Transition.Group
+                                            //as={List}
+                                            duration={200}
+                                            divided
+                                            size='huge'
+                                            verticalAlign='middle'
+                                        >
+                                            {this.state.inputQuantityText != '1' &&
+                                                <Button
+                                                    fluid
+                                                    //width={1}
+                                                    style={{ marginTop: '10px', }}
+                                                >
+                                                    Пропорции
+                                        </Button>
+                                            }
+                                        </Transition.Group>
                                         {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
                                             placeholder='Кто скидывается'
@@ -188,9 +205,12 @@ class TableOfProducts extends Component {
                                             onChange={(e) => this.handleInputChange('Price', e)}
                                             value={this.state.inputPriceText}
                                         />
+
+
                                         <Input
                                             fluid
                                             //width={1}
+                                            //type="number" тогда число не вмещается 
                                             label='Кол-во'
                                             style={{ paddingTop: '10px', }}
                                             placeholder=''
@@ -198,17 +218,21 @@ class TableOfProducts extends Component {
                                             value={this.state.inputQuantityText}
                                         />
 
+
+
                                         {/* {row.price} ₽ */}
                                     </p>
                                 </Table.Cell>
 
                                 <Table.Cell width={1}>
                                     <p className='tableFont'>
-                                        <Button fluid onClick={() => {this.props.handleAddRow(this.state.inputNameText,
-                                            this.state.inputWhoBoughtText,
-                                            this.state.inputWhoPaysText,
-                                            parseInt(this.state.inputPriceText),
-                                            parseInt(this.state.inputQuantityText)); this.resetInputs(); }}>
+                                        <Button fluid onClick={() => {
+                                            this.props.handleAddRow(this.state.inputNameText,
+                                                this.state.whoBought,
+                                                this.state.whoPays,
+                                                parseInt(this.state.inputPriceText),
+                                                parseInt(this.state.inputQuantityText)); this.resetInputs();
+                                        }}>
                                             <p className='textAlignCenter '>
                                                 <Icon name='add' />
                                             </p>
@@ -236,7 +260,7 @@ class TableOfProducts extends Component {
 
                                         <Table.Cell width={4}>
                                             <p className='tableFont'>
-                                                {row.whoPays}
+                                                {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}
                                             </p>
                                         </Table.Cell>
 
