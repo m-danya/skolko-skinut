@@ -37,7 +37,8 @@ class App extends React.Component {
             whoBought: 'Серго',
             whoPays: ['Ваня', 'Даня', 'Серго'],
             price: 57,
-            quantity: 1
+            quantity: 1,
+            proportions: [1, 1, 1]
           },
 
           {
@@ -45,7 +46,8 @@ class App extends React.Component {
             whoBought: 'Ваня',
             whoPays: ['Ваня', 'Даня', 'Серго'],
             price: 73,
-            quantity: 2
+            quantity: 2,
+            proportions: [1, 1, 1]
           },
         ],
       namesText: '',
@@ -79,7 +81,7 @@ class App extends React.Component {
     return ans;
   }
 
-  handleAddRow(name, whoBought, whoPays, price, quantity) {
+  handleAddRow(name, whoBought, whoPays, price, quantity, proportions) {
     this.setState(state => ({
 
       tableData: state.tableData.concat({
@@ -88,7 +90,8 @@ class App extends React.Component {
         whoBought: whoBought,
         whoPays: whoPays,
         price: price,
-        quantity: quantity
+        quantity: quantity,
+        proportions: proportions
 
       }),
 
@@ -110,7 +113,8 @@ class App extends React.Component {
     if (debugging) {
       this.setState({
         page: 'products',
-        namesText: 'Серго\r\nСаня\r\nВаня\r\nДаня'
+        namesText: 'Серго\r\nСаня\r\nВаня\r\nДаня',
+        namesArray: ['Серго', 'Даня', 'Саня', 'Ваня'],
       });
     }
   }

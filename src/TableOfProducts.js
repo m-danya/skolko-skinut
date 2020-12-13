@@ -20,6 +20,7 @@ import {
     GridColumn,
 } from "semantic-ui-react";
 import EditMenu from './EditMenu';
+import ChooseProportions from './ChooseProportions';
 
 class TableOfProducts extends Component {
 
@@ -30,10 +31,14 @@ class TableOfProducts extends Component {
             // inputWhoBoughtText: '',
             // inputWhoPaysText: '',
             inputPriceText: '',
-            inputQuantityText: '1'
+            inputQuantityText: '1',
+            proportions: [],
+            whoBought: null,
+            whoPays: [],
         }
         this.handleWhoBoughtChange = this.handleWhoBoughtChange.bind(this)
         this.handleWhoPaysChange = this.handleWhoPaysChange.bind(this)
+        this.handleProportionsChange = this.handleProportionsChange.bind(this)
     }
 
     resetInputs() {
@@ -42,9 +47,10 @@ class TableOfProducts extends Component {
             // inputWhoBoughtText: '',
             // inputWhoPaysText: '',
             whoBought: null,
-            whoPays: null,
+            whoPays: [],
             inputPriceText: '',
-            inputQuantityText: '1'
+            inputQuantityText: '1',
+            proportions: [],
         });
     }
 
@@ -68,8 +74,23 @@ class TableOfProducts extends Component {
         //console.log(e);
         this.setState({
             whoPays: value,
+            proportions: new Array(value.length).fill(1),
         });
     }
+
+    handleProportionsChange( name, value) {
+        console.log("handleProportionsChange!")
+        console.log(name)
+        console.log(value)
+        let proportions_new = this.state.proportions.slice()
+        proportions_new[name] += value
+        if (proportions_new[name] < 1) proportions_new[name] = 1
+        this.setState({
+            proportions: proportions_new,
+        })
+
+    }
+
 
 
     render() {
@@ -175,14 +196,13 @@ class TableOfProducts extends Component {
                                             size='huge'
                                             verticalAlign='middle'
                                         >
-                                            {this.state.inputQuantityText != '1' &&
-                                                <Button
-                                                    fluid
-                                                    //width={1}
-                                                    style={{ marginTop: '10px', }}
-                                                >
-                                                    Пропорции
-                                        </Button>
+                                            {//this.state.inputQuantityText != '1' && this.state.inputQuantityText != '' &&
+                                                <ChooseProportions
+                                                    namesArray={this.state.whoPays}
+                                                    proportions={this.state.proportions}
+                                                    handleProportionsChange={this.handleProportionsChange}
+
+                                                />
                                             }
                                         </Transition.Group>
                                         {/* <Input fluid
@@ -227,11 +247,15 @@ class TableOfProducts extends Component {
                                 <Table.Cell width={1}>
                                     <p className='tableFont'>
                                         <Button fluid onClick={() => {
-                                            this.props.handleAddRow(this.state.inputNameText,
+                                            this.props.handleAddRow(
+                                                this.state.inputNameText,
                                                 this.state.whoBought,
                                                 this.state.whoPays,
                                                 parseInt(this.state.inputPriceText),
-                                                parseInt(this.state.inputQuantityText)); this.resetInputs();
+                                                parseInt(this.state.inputQuantityText),
+                                                this.state.proportions
+                                            );
+                                            this.resetInputs();
                                         }}>
                                             <p className='textAlignCenter '>
                                                 <Icon name='add' />
@@ -260,8 +284,19 @@ class TableOfProducts extends Component {
 
                                         <Table.Cell width={4}>
                                             <p className='tableFont'>
-                                                {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}
+                                                {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}<br />
+                                                <text className='tableFontProportions' style={{ paddingTop: '0', marginInlineStart: 0 }}>
+                                                    ({
+                                                        (row.proportions.every(v => v === row.proportions[0])
+                                                            ?
+                                                            'поровну'
+                                                            :
+                                                            row.proportions.map((e, i) => ((i == row.proportions.length - 1) ? e : e + ' : '))
+                                                        )
+                                                    })
+                                            </text>
                                             </p>
+
                                         </Table.Cell>
 
                                         <Table.Cell width={2}>

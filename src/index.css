@@ -25,6 +25,11 @@ code {
   font-size: 15px;
   text-align: center;
 }
+.tableFontProportions {
+  font-size: 15px;
+  text-align: center;
+  color: #636363;
+}
 
 .tableHeaderFont {
   font-size: 15px;
