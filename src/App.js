@@ -49,6 +49,15 @@ class App extends React.Component {
             quantity: 2,
             proportions: [1, 1, 1]
           },
+
+          {
+            product: 'Подписка на нетфликс"',
+            whoBought: 'Даня',
+            whoPays: ['Ваня', 'Серго'],
+            price: 100,
+            quantity: 2,
+            proportions: [2, 1]
+          },
         ],
       namesText: '',
       namesArray: [],
@@ -56,6 +65,8 @@ class App extends React.Component {
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
     this.handleNamesChange = this.handleNamesChange.bind(this);
+    this.handleCalculate = this.handleCalculate.bind(this);
+
   }
 
   handleMenuChange(a) {
@@ -104,6 +115,34 @@ class App extends React.Component {
       namesText: event.target.value,
       namesArray: (event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))
     });
+
+  }
+
+  handleCalculate(event) {
+    console.log('caclucate, tabledata = ')
+    console.log(this.state.tableData)
+    let relations = {} // relations[КТО][КОМУ]
+    for (let p_name of this.state.namesArray) {
+      relations[p_name] = {}
+      for (let q_name of this.state.namesArray) {
+        relations[p_name][q_name] = 0
+      }
+    } 
+    for (let event of this.state.tableData) {
+      // don't care about the proportins at all!!!!
+      let sum = 0
+      for (let f of event.proportions) {
+        sum += f
+      }
+      let price = event.price * event.quantity / sum
+      let i = 0
+      for (let paying_person of event.whoPays) {
+        relations[paying_person][event.whoBought] += price / event.whoPays.length * event.proportions[i];
+        i += 1;
+      }
+    }
+    console.log(relations)
+    //relations['Серго']['Даня'] += 50
 
   }
 
@@ -242,7 +281,11 @@ class App extends React.Component {
                 namesArray={this.formSearchFromArray(this.state.namesArray)}
               />
               <div style={{ textAlign: "center", paddingTop: "15px" }}>
-                <Button positive>Рассчитать СколькоСкинуть</Button>
+                <Button
+                  positive
+                  onClick={this.handleCalculate}
+                >
+                  Рассчитать СколькоСкинуть</Button>
               </div>
             </div>
 
@@ -252,29 +295,7 @@ class App extends React.Component {
 
         <Segment.Group>
           <Segment>
-            <Header as='h4'>TODO</Header>
-            <List bulleted>
-              <List.Item>
-                распределение кол-ва по людям (10 одинаковых предметов на 7 человек) - см. кнопку, которая появляется при увеличении кол-ва
-                  + добавить это в структуру tableData
-                  </List.Item>
-              <List.Item>
-                Контейнер по центру
-                  </List.Item>
-              <List.Item>
-                выделить какие-то части кода в отдельные компоненты (чисто рефакторинг)
-              </List.Item>
-              <List.Item>
-                редактирование предмета
-              </List.Item>
-              <List.Item>
-                сам расчёт
-              </List.Item>
-              <List.Item>
-                сделать везде проверки на дурака (кол-во = undefinded и тд)
-              </List.Item>
-
-            </List>
+            
           </Segment>
         </Segment.Group>
 

@@ -55,14 +55,14 @@ function ChooseProportions(props) {
 
                             (
                                 <Table basic='very' celled collapsing className='ui center image' >
-                                    <Table.Header>
+                                    {/* <Table.Header>
                                         <Table.Row>
                                             <Table.HeaderCell>Имя</Table.HeaderCell>
                                             <Table.HeaderCell>Доля</Table.HeaderCell>
                                             <Table.HeaderCell textAlign='right'></Table.HeaderCell>
 
                                         </Table.Row>
-                                    </Table.Header>
+                                    </Table.Header> */}
 
                                     <Table.Body>
 
