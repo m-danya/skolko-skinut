@@ -286,14 +286,14 @@ class TableOfProducts extends Component {
                                             <p className='tableFont'>
                                                 {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}<br />
                                                 <text className='tableFontProportions' style={{ paddingTop: '0', marginInlineStart: 0 }}>
-                                                    ({
-                                                        (row.proportions.every(v => v === row.proportions[0])
+                                                    {
+                                                        row.proportions.length == 1? '' : (row.proportions.every(v => v === row.proportions[0])
                                                             ?
-                                                            'поровну'
+                                                            '(поровну)'
                                                             :
-                                                            row.proportions.map((e, i) => ((i == row.proportions.length - 1) ? e : e + ' : '))
+                                                            (row.proportions.map((e, i) => ((i == row.proportions.length - 1) ? e : e + ' : ')))
                                                         )
-                                                    })
+                                                    }
                                             </text>
                                             </p>
 

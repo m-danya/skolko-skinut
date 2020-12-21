@@ -47,3 +47,8 @@ textarea {
 .ui.mini.modal {
   width: 200px!important;
 }
+
+.centertext {
+  height: 20px;
+  line-height: 20px;
+}
