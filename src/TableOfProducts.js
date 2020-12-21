@@ -98,8 +98,7 @@ class TableOfProducts extends Component {
             <div>
                 {/* <Segment basic> */}
                 <div>
-                    <Table selectable celled singleLine >
-
+                    <Table selectable celled >
                         {/* <Table.Header
                             color='green'
                             hidden
@@ -135,7 +134,7 @@ class TableOfProducts extends Component {
 
                         <Table.Body>
                             <Table.Row>
-                                <Table.Cell>
+                                <Table.Cell width={4}>
                                     <p className='tableFont'>
                                         <Input fluid
                                             className='placeholderCentering textAlignCenter'
@@ -148,7 +147,7 @@ class TableOfProducts extends Component {
                                     </p>
                                 </Table.Cell>
 
-                                <Table.Cell>
+                                <Table.Cell width={4}>
                                     <p className='tableFont'>
                                         <Dropdown
                                             className='placeholderCentering textAlignCenter'
@@ -172,7 +171,7 @@ class TableOfProducts extends Component {
                                     </p>
                                 </Table.Cell>
 
-                                <Table.Cell>
+                                <Table.Cell width={4}>
                                     <p className='tableFont'>
                                         <Dropdown
                                             className='placeholderCentering textAlignCenter'
@@ -215,7 +214,7 @@ class TableOfProducts extends Component {
                                     </p>
                                 </Table.Cell>
 
-                                <Table.Cell>
+                                <Table.Cell width={2}>
                                     <p className='tableFont'>
                                         <Input fluid
                                             label={{ basic: true, content: '₽' }}

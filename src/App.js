@@ -354,7 +354,7 @@ class App extends React.Component {
                         color='orange'
                         fluid
                         onClick={this.fillDebugInfo}
-                      >Заполнить демонстраницонными данными</Button>
+                      >Заполнить демонстрационными данными</Button>
 
                     </div>
 
