@@ -71,17 +71,19 @@ function ChooseProportions(props) {
                                         {(props.namesArray.map((name, i) => {
 
                                             return (<Table.Row>
-                                                <Table.Cell>
+                                                <Table.Cell textAlign='center'>
                                                     <Header as='h4' image>
                                                         <Header.Content>
                                                             {name}
                                                         </Header.Content>
                                                     </Header>
                                                 </Table.Cell>
-                                                <Table.Cell> {props.proportions[i]}</Table.Cell>
+                                                <Table.Cell textAlign='center'>
+                                                    {props.proportions[i]}
+                                                </Table.Cell>
                                                 <Table.Cell textAlign='right'>
                                                     <Button.Group icon>
-                                                        
+
                                                         <Button
                                                             onClick={() => { props.handleProportionsChange(i, -1) }}
                                                         >
@@ -103,7 +105,7 @@ function ChooseProportions(props) {
 
                                     </Table.Body>
                                 </Table>
-                            ) : <div>Сначала укажите, кто платит</div>}
+                            ) : <div>Сначала укажите, кто скидывается</div>}
 
                         {/* <TextArea
                             //fluid
@@ -121,8 +123,13 @@ function ChooseProportions(props) {
             </Modal.Content>
             <Modal.Actions className='textAlignCenter'>
                 {/* <Button onClick={() => setOpen(false)}>Cancel</Button> */}
-                <Button onClick={() => setOpen(false)} positive>
-                    Ok
+                <Button onClick={() => {
+                    props.reduceProportions();
+                    setOpen(false);
+                }
+                }
+                    positive>
+                    OK
         </Button>
             </Modal.Actions>
         </Modal>

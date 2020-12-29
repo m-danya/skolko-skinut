@@ -17,6 +17,11 @@ import {
     Table,
     GridColumn,
 } from "semantic-ui-react";
+import {
+    isBrowser,
+    isMobile
+} from "react-device-detect";
+
 function EditMenu() {
     const [open, setOpen] = React.useState(false)
 
@@ -25,16 +30,20 @@ function EditMenu() {
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
             open={open}
-            trigger={<Button fluid>
+            trigger={<Button 
+            
+            fluid = {isBrowser}
+            
+            >
                 <p className='textAlignCenter '>
                     <Icon name='pencil' />
+                    {isMobile && ' Редактировать'}
                 </p>
 
             </Button>}
         >
             <Modal.Header>Upload image</Modal.Header>
             <Modal.Content>
-                <Modal.Description>
                     <p className='tableFont'>
                         <Input fluid
                             className='placeholderCentering textAlignCenter'
@@ -46,7 +55,6 @@ function EditMenu() {
                         />
                     </p>
                                     и другие поля (уже заполненные офк)
-                </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen(false)}>Cancel</Button>

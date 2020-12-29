@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+
 import {
     Button,
     Container,
@@ -23,6 +24,22 @@ import {
 function ChooseNames(props) {
 
     const [open, setOpen] = React.useState(false)
+
+    // Нажатие enter для закрытия окна конфликтует с нажатием для перевода строки
+    
+    // useEffect(() => {
+    //     const listener = event => {
+    //       if (event.code === "Enter" || event.code === "NumpadEnter") {
+    //         console.log("Enter key was pressed. Run your function.");
+    //         setOpen(false);
+    //       }
+    //     };
+    //     document.addEventListener("keydown", listener);
+    //     return () => {
+    //       document.removeEventListener("keydown", listener);
+    //     };
+    //   }, []);
+    
 
     return (
         <Modal
@@ -58,7 +75,7 @@ function ChooseNames(props) {
             <Modal.Actions className='textAlignCenter'>
                 {/* <Button onClick={() => setOpen(false)}>Cancel</Button> */}
                 <Button onClick={() => setOpen(false)} positive>
-                    Ok
+                    ОК
         </Button>
             </Modal.Actions>
         </Modal>

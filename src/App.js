@@ -21,8 +21,14 @@ import {
 import MyMenu from "./Menu.js";
 import TableOfProducts from './TableOfProducts'
 import ChooseNames from './ChooseNames'
+import {
+  BrowserView,
+  isBrowser,
+  MobileView,
+} from "react-device-detect";
 
-var debugging = false;
+
+var debugging = 0;
 
 
 class App extends React.Component {
@@ -341,14 +347,14 @@ class App extends React.Component {
 
 
                   </Grid.Column>
-                  <Grid.Column >
+                  {isBrowser && <Grid.Column >
                     <div style={{ minHeight: '203px' }} >
 
                     </div>
-                  </Grid.Column>
+                  </Grid.Column>}
                   <Grid.Column >
 
-                    <div style={{ minHeight: '203px' }} >
+                    <div style={{ minHeight: '' }} >
 
                       <Button
                         color='orange'
@@ -387,13 +393,16 @@ class App extends React.Component {
                 handleAddRow={this.handleAddRow}
                 namesArray={this.formSearchFromArray(this.state.namesArray)}
               />
-              <div style={{ textAlign: "center", padding: "15px 0px" }}>
-                <Button
-                  positive
-                  onClick={this.handleCalculate}
-                >
-                  Рассчитать СколькоСкинуть</Button>
-              </div>
+              {this.state.tableData.length > 0 &&
+
+                <div style={{ textAlign: "center", padding: "15px 0px" }}>
+                  <Button
+                    positive
+                    onClick={this.handleCalculate}
+                  >
+                    Рассчитать СколькоСкинуть</Button>
+                </div>
+              }
 
               {this.state.calculated &&
 
@@ -437,6 +446,7 @@ class App extends React.Component {
                       <div style={{ textAlign: "center" }}>
                         <Button
                           color='blue'
+                          size='huge'
                         //onClick={this.handleCalculate}
 
                         >
