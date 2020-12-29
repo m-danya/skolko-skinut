@@ -140,7 +140,7 @@ class TableOfProducts extends Component {
 
                         <MobileAddMenu
                             namesArray={this.props.namesArray}
-                            whoBought={this.props.whoBought}
+                            whoBought={this.state.whoBought}
                             handleWhoPaysChange={this.handleWhoPaysChange}
                             whoPays={this.state.whoPays}
                             proportions={this.state.proportions}
@@ -151,6 +151,7 @@ class TableOfProducts extends Component {
                             handleAddRow={this.props.handleAddRow}
                             resetInputs={this.resetInputs}
                             reduceProportions={this.reduceProportions}
+                            handleWhoBoughtChange={this.handleWhoBoughtChange}
                         />
                     }
                     <Table
