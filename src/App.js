@@ -26,6 +26,13 @@ import {
   isBrowser,
   MobileView,
 } from "react-device-detect";
+import { BrowserRouter as Router, Link } from 'react-router-dom'
+const axios = require('axios').default;
+var qs = require('qs');
+
+const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
+//const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
+//const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
 
 
 var debugging = 0;
@@ -40,12 +47,14 @@ class App extends React.Component {
       namesText: '',
       namesArray: [],
       calculated: false,
+      ids: [],
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
     this.handleNamesChange = this.handleNamesChange.bind(this);
     this.handleCalculate = this.handleCalculate.bind(this);
     this.fillDebugInfo = this.fillDebugInfo.bind(this);
+    this.generateNewProjectToken = this.generateNewProjectToken.bind(this);
 
   }
 
@@ -92,11 +101,65 @@ class App extends React.Component {
     }));
   }
 
+
+  uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  generateNewProjectToken() {
+    let new_id = this.uuidv4()
+    this.setState({
+      id: new_id,
+    })
+
+    // BACKEND: CREATE NEW PROJECT
+    console.log('go go axios!')
+
+    axios.post(`${BACKEND_ADDRESS}/api/create`, {
+      'id': new_id,
+      'name': 'test project ' + new_id
+    }).then(res => {
+      console.log('res: ', res)
+      //if it's internal error
+      if (res.status == 500)
+        console.log('Неотловленная ошибка на backend-части, ошибка 500')
+      if (res.status == 404)
+        console.log('Не удалось установить связь с backend-сервером. ошибка 404')
+      if (res.status == 201) {
+        console.log('YAHOOOOOOOOOOOOOOOOOOOOO. created.')
+        window.location.href = "/" + new_id;
+      }
+
+    });
+
+  }
+
+
   handleNamesChange(event) {
     //console.log(event);
     this.setState({
       namesText: event.target.value,
       namesArray: (event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))
+    }, () => {
+      let new_ids = this.state.ids
+      for (let name of this.state.namesArray) {
+        if (!new_ids[name]) {
+          //console.log('new name: ', name)
+          new_ids[name] = this.uuidv4()
+          //console.log('its uuid = ', new_ids[name])
+        }
+      }
+
+      for (let existing_name in new_ids) {
+        if (!this.state.namesArray.includes(existing_name)) {
+          delete new_ids[existing_name]
+        }
+      }
+      console.log(new_ids)
+
     });
   }
 
@@ -244,7 +307,20 @@ class App extends React.Component {
 
   componentDidMount(props) {
     //backend connect 
+    if (this.props.match.params.id) {
+      this.setState({
+        id: this.props.match.params.id,
+      })
 
+      // LOAD tableData FROM BACKEND HERE!!!!!!!!!!!!!!!!!!!1
+
+      this.setState({
+        page: 'products',
+        //tableData = ...
+      })
+
+      //console.log('I\'VE GOT THE ID: ', id)
+    }
     if (debugging) {
       this.fillDebugInfo();
     }
@@ -277,9 +353,15 @@ class App extends React.Component {
               <Segment>
                 <Grid ui centered>
                   <Grid.Row>
-                    <Button positive size="massive" onClick={() => { this.handleMenuChange('products') }} >
+                    {/* <Link to={'this.generateNewProjectToken'} > */}
+                    <Button positive size="massive" onClick={() => {
+                      this.handleMenuChange('products');
+                      this.generateNewProjectToken()
+
+                    }} >
                       Начать без регистрации
                         </Button>
+                    {/* </Link> */}
                   </Grid.Row>
                   <Grid.Row style={{ paddingTop: 0 }}>
                     <Button primary size="massive" onClick={() => { this.handleMenuChange('products') }}>
@@ -305,8 +387,8 @@ class App extends React.Component {
           {
             this.state.page == 'products' &&
             <div>
-              <Segment relaxed >
 
+              <Segment relaxed >
 
                 <Grid columns={3} stackable style={{ paddingBottom: "20px", }}>
                   <Grid.Column  >
