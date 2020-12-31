@@ -21,14 +21,16 @@ import {
 import MyMenu from "./Menu.js";
 import TableOfProducts from './TableOfProducts'
 import ChooseNames from './ChooseNames'
+import ShareMenu from './ShareMenu'
 import {
   BrowserView,
   isBrowser,
   MobileView,
 } from "react-device-detect";
 import { BrowserRouter as Router, Link } from 'react-router-dom'
+
 const axios = require('axios').default;
-var qs = require('qs');
+
 
 const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 //const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
@@ -51,11 +53,13 @@ class App extends React.Component {
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
+    this.handleChangeRow = this.handleChangeRow.bind(this)
     this.handleNamesChange = this.handleNamesChange.bind(this);
     this.handleCalculate = this.handleCalculate.bind(this);
     this.fillDebugInfo = this.fillDebugInfo.bind(this);
     this.generateNewProjectToken = this.generateNewProjectToken.bind(this);
 
+    
   }
 
 
@@ -99,6 +103,16 @@ class App extends React.Component {
       }),
 
     }));
+  }
+
+  handleChangeRow(index, name, whoBought, whoPays, price, quantity, proportions) {
+    this.state.tableData[index].product = name.slice();
+    this.state.tableData[index].whoBought = whoBought.slice();
+    this.state.tableData[index].whoPays = whoPays.slice();
+    this.state.tableData[index].price = price;
+    this.state.tableData[index].quantity = quantity;
+    this.state.tableData[index].proportions = proportions.slice();
+
   }
 
 
@@ -355,7 +369,7 @@ class App extends React.Component {
                   <Grid.Row>
                     {/* <Link to={'this.generateNewProjectToken'} > */}
                     <Button positive size="massive" onClick={() => {
-                      this.handleMenuChange('products');
+                      //this.handleMenuChange('products');
                       this.generateNewProjectToken()
 
                     }} >
@@ -473,6 +487,7 @@ class App extends React.Component {
               <TableOfProducts
                 tableData={this.state.tableData}
                 handleAddRow={this.handleAddRow}
+                handleChangeRow={this.handleChangeRow}
                 namesArray={this.formSearchFromArray(this.state.namesArray)}
               />
               {this.state.tableData.length > 0 &&
@@ -525,16 +540,11 @@ class App extends React.Component {
                       {/* </Segment> */}
                     </Grid.Row>
                     <Grid.Row>
-                      <div style={{ textAlign: "center" }}>
-                        <Button
-                          color='blue'
-                          size='huge'
-                        //onClick={this.handleCalculate}
+                    <ShareMenu 
+                    copyText={'https://skolkoskinut.ru/' + this.state.id}
+                    />
 
-                        >
-                          <Icon name='share' />
-                          Поделиться</Button>
-                      </div>
+
                     </Grid.Row>
 
                   </Grid>

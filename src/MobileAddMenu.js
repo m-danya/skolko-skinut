@@ -80,8 +80,9 @@ function MobileAddMenu(props) {
                         multiple
                         noResultsMessage={props.namesArray.length ? '' : 'Сначала добавьте имена'}
                         search
+                        clearable
                         selection
-                        options={props.namesArray}
+                        options={props.getWhoPaysOptions()}
                         onChange={props.handleWhoPaysChange}
                         value={props.whoPays}
 

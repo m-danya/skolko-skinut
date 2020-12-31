@@ -47,7 +47,11 @@ class TableOfProducts extends Component {
         this.handleInputChange = this.handleInputChange.bind(this)
         this.resetInputs = this.resetInputs.bind(this)
         this.reduceProportions = this.reduceProportions.bind(this)
+        this.getWhoPaysOptions = this.getWhoPaysOptions.bind(this)
+        this.fillDataToEdit = this.fillDataToEdit.bind(this)
     }
+
+    
 
     resetInputs() {
         this.setState({
@@ -59,6 +63,17 @@ class TableOfProducts extends Component {
             inputPriceText: '',
             inputQuantityText: '1',
             proportions: [],
+        });
+    }
+
+    fillDataToEdit(index) {
+        this.setState({
+            inputNameText: this.props.tableData[index].product.slice(),
+            whoBought: this.props.tableData[index].whoBought.slice(),
+            whoPays: this.props.tableData[index].whoPays.slice(),
+            inputPriceText: this.props.tableData[index].price,
+            inputQuantityText: this.props.tableData[index].quantity,
+            proportions: this.props.tableData[index].proportions.slice(),
         });
     }
 
@@ -79,11 +94,25 @@ class TableOfProducts extends Component {
     }
 
     handleWhoPaysChange(e, { name, value }) {
-        //console.log(e);
-        this.setState({
-            whoPays: value,
-            proportions: new Array(value.length).fill(1),
-        });
+        if (value.includes("Добавить всех")) {
+            //console.log('all')
+            //console.log(this.props.namesArray.slice())
+            let newWhoPays = new Array(this.props.namesArray.length);
+            let i = 0
+            for (let f of this.props.namesArray) {
+                newWhoPays[i] = f.key
+                i += 1
+            }
+            this.setState({
+                whoPays: newWhoPays,
+                proportions: new Array(this.props.namesArray.length).fill(1),
+            });
+        } else {
+            this.setState({
+                whoPays: value,
+                proportions: new Array(value.length).fill(1),
+            });
+        }
     }
 
     handleProportionsChange(name, value) {
@@ -129,6 +158,14 @@ class TableOfProducts extends Component {
 
     }
 
+    getWhoPaysOptions() {
+        return this.props.namesArray.length ?
+            (this.props.namesArray.length == this.state.whoPays.length ? [] :
+                [{ key: "Добавить всех", text: "Добавить всех", value: "Добавить всех", icon: "plus" }])
+                .concat(this.props.namesArray)
+            : []
+    }
+
 
 
     render() {
@@ -148,16 +185,18 @@ class TableOfProducts extends Component {
                             handleInputChange={this.handleInputChange}
                             inputPriceText={this.state.inputPriceText}
                             inputQuantityText={this.state.inputQuantityText}
+                            inputNameText={this.state.inputNameText}
                             handleAddRow={this.props.handleAddRow}
                             resetInputs={this.resetInputs}
                             reduceProportions={this.reduceProportions}
                             handleWhoBoughtChange={this.handleWhoBoughtChange}
+                            getWhoPaysOptions={this.getWhoPaysOptions}
                         />
                     }
                     <Table
                         // selectable 
-                         celled
-                        //basic
+                        celled
+                    //basic
                     >
 
                         <Table.Body>
@@ -211,7 +250,8 @@ class TableOfProducts extends Component {
                                                 noResultsMessage={this.props.namesArray.length ? '' : 'Сначала добавьте имена'}
                                                 search
                                                 selection
-                                                options={this.props.namesArray}
+                                                clearable
+                                                options={this.getWhoPaysOptions()}
                                                 onChange={this.handleWhoPaysChange}
                                                 value={this.state.whoPays}
 
@@ -298,7 +338,7 @@ class TableOfProducts extends Component {
 
                             }
 
-                            {this.props.tableData.map((row) => {
+                            {this.props.tableData.map((row, index) => {
                                 return (
                                     <Table.Row>
                                         <Table.Cell width={4}>
@@ -338,7 +378,27 @@ class TableOfProducts extends Component {
 
                                         <Table.Cell width={1}>
                                             <p className='tableFont'>
-                                                <EditMenu />
+                                                <EditMenu
+                                                    tableData={this.props.tableData}
+                                                    index={index}
+                                                    namesArray={this.props.namesArray}
+                                                    whoBought={this.state.whoBought}
+                                                    handleWhoPaysChange={this.handleWhoPaysChange}
+                                                    whoPays={this.state.whoPays}
+                                                    proportions={this.state.proportions}
+                                                    handleProportionsChange={this.handleProportionsChange}
+                                                    handleInputChange={this.handleInputChange}
+                                                    inputPriceText={this.state.inputPriceText}
+                                                    inputQuantityText={this.state.inputQuantityText}
+                                                    handleAddRow={this.props.handleAddRow}
+                                                    resetInputs={this.resetInputs}
+                                                    reduceProportions={this.reduceProportions}
+                                                    handleWhoBoughtChange={this.handleWhoBoughtChange}
+                                                    getWhoPaysOptions={this.getWhoPaysOptions}
+                                                    fillDataToEdit={this.fillDataToEdit}
+                                                    handleChangeRow={this.props.handleChangeRow}
+                                                    inputNameText={this.state.inputNameText}
+                                                />
                                             </p>
                                         </Table.Cell>
 
