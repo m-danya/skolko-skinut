@@ -68,7 +68,7 @@ class TableOfProducts extends Component {
 
     fillDataToEdit(index) {
         this.setState({
-            inputNameText: this.props.tableData[index].product.slice(),
+            inputNameText: this.props.tableData[index].name.slice(),
             whoBought: this.props.tableData[index].whoBought.slice(),
             whoPays: this.props.tableData[index].whoPays.slice(),
             inputPriceText: this.props.tableData[index].price,
@@ -343,7 +343,7 @@ class TableOfProducts extends Component {
                                     <Table.Row>
                                         <Table.Cell width={4}>
                                             <p className='tableFont'>
-                                                {row.product}
+                                                {row.name}
                                             </p>
                                         </Table.Cell>
 

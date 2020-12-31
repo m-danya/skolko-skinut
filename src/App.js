@@ -32,9 +32,9 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 const axios = require('axios').default;
 
 
-const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
+//const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 //const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
-//const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
+const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
 
 
 var debugging = 0;
@@ -45,11 +45,13 @@ class App extends React.Component {
     super(props);
     this.state = {
       page: "main", // do not change. (see componentDidMount for debug)
+      projectname: "temp project name", // need to fix this: add naming system
       tableData: [],
       namesText: '',
       namesArray: [],
       calculated: false,
-      ids: [],
+      namesIds: [],
+      namesIdsSergo: [],
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
@@ -58,12 +60,10 @@ class App extends React.Component {
     this.handleCalculate = this.handleCalculate.bind(this);
     this.fillDebugInfo = this.fillDebugInfo.bind(this);
     this.generateNewProjectToken = this.generateNewProjectToken.bind(this);
-
-    
+    this.updateBackend = this.updateBackend.bind(this);
+    this.updateNameIds = this.updateNameIds.bind(this);
+    this.updateProductIds = this.updateProductIds.bind(this);
   }
-
-
-
 
   handleMenuChange(a) {
     this.setState({
@@ -93,25 +93,56 @@ class App extends React.Component {
 
       tableData: state.tableData.concat({
 
-        product: name,
+        name: name,
         whoBought: whoBought,
         whoPays: whoPays,
         price: price,
         quantity: quantity,
-        proportions: proportions
+        proportions: proportions,
+        id: this.uuidv4(),
 
       }),
 
-    }));
+    }), () => {
+      this.updateProductIds();
+      this.updateBackend();
+    });
   }
 
   handleChangeRow(index, name, whoBought, whoPays, price, quantity, proportions) {
-    this.state.tableData[index].product = name.slice();
+    this.state.tableData[index].name = name.slice();
     this.state.tableData[index].whoBought = whoBought.slice();
     this.state.tableData[index].whoPays = whoPays.slice();
     this.state.tableData[index].price = price;
     this.state.tableData[index].quantity = quantity;
     this.state.tableData[index].proportions = proportions.slice();
+    this.updateProductIds();
+    this.updateBackend();
+  }
+
+  updateBackend() {
+    console.log('go go axios! update')
+
+    axios.put(`${BACKEND_ADDRESS}/api/update/${this.state.id}`, {
+      'id': this.state.id,
+      'name': this.state.projectname,
+      'persons': this.state.namesIdsSergo,
+      'products': this.state.tableData
+    }).then(res => {
+      console.log('update res: ', res)
+      //if it's internal error
+      if (res.status == 500)
+        console.log('Неотловленная ошибка на backend-части, ошибка 500')
+      if (res.status == 404)
+        console.log('Не удалось установить связь с backend-сервером. ошибка 404')
+      if (res.status == 201) {
+        console.log('YAHOOOOOOOOOOOOOOOOOOOOO. updated.')
+        //window.location.href = "/" + new_id;
+      }
+
+    }, (e) => {
+      console.log('put request error: ', e);
+    });
 
   }
 
@@ -134,7 +165,7 @@ class App extends React.Component {
 
     axios.post(`${BACKEND_ADDRESS}/api/create`, {
       'id': new_id,
-      'name': 'test project ' + new_id
+      'name': this.state.projectname,
     }).then(res => {
       console.log('res: ', res)
       //if it's internal error
@@ -146,7 +177,8 @@ class App extends React.Component {
         console.log('YAHOOOOOOOOOOOOOOOOOOOOO. created.')
         window.location.href = "/" + new_id;
       }
-
+    }, (e) => {
+      console.log('post request error: ', e);
     });
 
   }
@@ -158,25 +190,82 @@ class App extends React.Component {
       namesText: event.target.value,
       namesArray: (event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))
     }, () => {
-      let new_ids = this.state.ids
-      for (let name of this.state.namesArray) {
-        if (!new_ids[name]) {
-          //console.log('new name: ', name)
-          new_ids[name] = this.uuidv4()
-          //console.log('its uuid = ', new_ids[name])
-        }
-      }
-
-      for (let existing_name in new_ids) {
-        if (!this.state.namesArray.includes(existing_name)) {
-          delete new_ids[existing_name]
-        }
-      }
-      console.log(new_ids)
-
+      this.updateNameIds();
+      
     });
   }
 
+  getNameId(name) {
+    for (let n in this.state.namesIds) {
+      if (n == name) {
+        return this.state.namesIds[n]
+      }
+    }
+    return "-1"
+  }
+
+  getIdName(id) {
+    for (let n in this.state.namesIds) {
+      if (this.state.namesIds[n] == id) {
+        return n
+      }
+    }
+    return "Незнакомец"
+  }
+
+  getIdNameA(id, namesIds) {
+    for (let n in namesIds) {
+      if (namesIds[n].id == id) {
+        return namesIds[n].name
+      }
+    }
+    return "Незнакомец"
+  }
+
+  updateNameIds() {
+    let new_namesIds = Object.assign({}, this.state.namesIds)
+    let new_namesIdsSergo = []
+    for (let name of this.state.namesArray) {
+      if (!new_namesIds[name]) {
+        //console.log('new name: ', name)
+        new_namesIds[name] = this.uuidv4()
+      }
+    }
+
+    for (let existing_name in new_namesIds) {
+      if (!this.state.namesArray.includes(existing_name)) {
+        delete new_namesIds[existing_name]
+      }
+    }
+
+    for (let name in new_namesIds) {
+      new_namesIdsSergo.push({
+        'name': name,
+        'id': new_namesIds[name]
+      })
+    }
+
+    this.setState({
+      namesIds: Object.assign({}, new_namesIds),
+      namesIdsSergo: new_namesIdsSergo
+    }, () => {
+      this.updateProductIds();
+      this.updateBackend();
+
+    })
+    //console.log()
+
+  }
+
+  updateProductIds() {
+    for (let p_i in this.state.tableData) { //product_index
+      this.state.tableData[p_i].whoBoughtId = this.getNameId(this.state.tableData[p_i].whoBought)
+      this.state.tableData[p_i].whoPaysId = []
+      for (let p_p in this.state.tableData[p_i].whoPays) {
+        this.state.tableData[p_i].whoPaysId[p_p] = this.getNameId(this.state.tableData[p_i].whoPays[p_p])
+      }
+    }
+  }
 
   go(person, left, target, relations, sequences, profits, seq, ints) {
     if (left == 0) {
@@ -274,64 +363,115 @@ class App extends React.Component {
       tableData:
         [
           {
-            product: 'Квас "Очаковский"',
+            name: 'Квас "Очаковский"',
             whoBought: 'Даня',
             whoPays: ['Ваня', 'Даня'],
             price: 98,
             quantity: 1,
-            proportions: [1, 1]
+            proportions: [1, 1],
+            id: 'e5194d58-bfa3-4877-bd73-a0ffd776b23b'
           },
           {
-            product: 'Квас "Никола"',
+            name: 'Квас "Никола"',
             whoBought: 'Ваня',
             whoPays: ['Серго', 'Даня', 'Ваня'],
             price: 87,
             quantity: 2,
-            proportions: [1, 1, 1]
+            proportions: [1, 1, 1],
+            id: '3b123021-f8f2-4506-8be6-b3e2f2891490'
+
           },
           {
-            product: 'Квас "Лидский"',
+            name: 'Квас "Лидский"',
             whoBought: 'Серго',
             whoPays: ['Даня'],
             price: 73,
             quantity: 2,
-            proportions: [1]
+            proportions: [1],
+            id: 'cddc7886-a28e-4bdb-bf7d-25fa97306b62'
+
           },
           {
-            product: 'Ржаной хлеб',
+            name: 'Ржаной хлеб',
             whoBought: 'Серго',
             whoPays: ['Серго', 'Даня', 'Саня', 'Ваня'],
             price: 45,
             quantity: 2,
-            proportions: [1, 2, 3, 1]
+            proportions: [1, 2, 3, 1],
+            id: '2a9a0fc0-3767-4eff-b1c4-10e32a6fc3ad'
+
           },
           {
-            product: 'Бородинский хлеб',
+            name: 'Бородинский хлеб',
             whoBought: 'Ваня',
             whoPays: ['Серго', 'Даня', 'Ваня'],
             price: 58,
             quantity: 4,
-            proportions: [1, 1, 1]
+            proportions: [1, 1, 1],
+            id: 'd847b272-e34d-4713-be6a-4116672a2721'
           },
 
         ],
 
-    });
+    }, () => { this.updateNameIds(); });
   }
 
   componentDidMount(props) {
     //backend connect 
     if (this.props.match.params.id) {
+      let id = this.props.match.params.id
       this.setState({
-        id: this.props.match.params.id,
+        id: id,
       })
-
       // LOAD tableData FROM BACKEND HERE!!!!!!!!!!!!!!!!!!!1
+      axios.get(`${BACKEND_ADDRESS}/api/get/${id}`,).then(res => {
+        console.log('get res: ', res)
+        //if it's internal error
+        if (res.status == 500)
+          console.log('Неотловленная ошибка на backend-части, ошибка 500')
+        if (res.status == 404)
+          console.log('Не удалось установить связь с backend-сервером. ошибка 404')
+        if (res.status == 201) {
+          console.log('YAHOOOOOOOOOOOOOOOOOOOOO. got data.')
+          //window.location.href = "/" + new_id;
+        }
+        let result = res.data
+        console.log('data got: ')
+        console.log(result)
+        if (result) {
+          let names = []
 
-      this.setState({
-        page: 'products',
-        //tableData = ...
-      })
+          for (let t of result.persons) {
+            names.push(t)
+          }
+
+          for (let p of result.products) {
+            p.whoBought = this.getIdNameA(p.whoBoughtId, result.persons)
+            p.whoPays = []
+            for (let g in p.whoPaysId) {
+              p.whoPays.push(this.getIdNameA(p.whoPaysId[g], result.persons))
+            }
+            p.proportions = JSON.parse(p.proportions)
+          }
+          
+          this.setState({
+            page: 'products',
+            tableData: result.products.slice(),
+            name: result.name.slice(),
+            namesIds: result.persons.slice(),
+            namesArray: names.slice()
+          }, () => {
+            //this.updateNameIds();
+            
+            console.log('after all updates tableData = ', this.state.tableData)
+          
+          })
+        }
+      }, (e) => {
+        console.log('get request error: ', e);
+      });
+
+
 
       //console.log('I\'VE GOT THE ID: ', id)
     }
@@ -362,7 +502,10 @@ class App extends React.Component {
                 <Header as="h3">
                   Добро пожаловать!
                 </Header>
-                <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p>
+                {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
+                <p style={{ marginTop: "-5px", }}> 
+                В данный момент программа находится в стадии альфа-теста.
+                 </p>
               </Segment>
               <Segment>
                 <Grid ui centered>
@@ -371,17 +514,16 @@ class App extends React.Component {
                     <Button positive size="massive" onClick={() => {
                       //this.handleMenuChange('products');
                       this.generateNewProjectToken()
-
                     }} >
-                      Начать без регистрации
+                      Начать
                         </Button>
                     {/* </Link> */}
                   </Grid.Row>
-                  <Grid.Row style={{ paddingTop: 0 }}>
+                  {/* <Grid.Row style={{ paddingTop: 0 }}>
                     <Button primary size="massive" onClick={() => { this.handleMenuChange('products') }}>
                       Войти
                         </Button>
-                  </Grid.Row>
+                  </Grid.Row> */}
                 </Grid>
               </Segment>
             </Segment.Group>
@@ -456,7 +598,8 @@ class App extends React.Component {
                         color='orange'
                         fluid
                         onClick={this.fillDebugInfo}
-                      >Заполнить демонстрационными данными</Button>
+                      >
+                        Заполнить демонстрационными данными</Button>
 
                     </div>
 
@@ -540,9 +683,9 @@ class App extends React.Component {
                       {/* </Segment> */}
                     </Grid.Row>
                     <Grid.Row>
-                    <ShareMenu 
-                    copyText={'https://skolkoskinut.ru/' + this.state.id}
-                    />
+                      <ShareMenu
+                        copyText={'https://skolkoskinut.ru/' + this.state.id}
+                      />
 
 
                     </Grid.Row>
