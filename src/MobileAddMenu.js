@@ -27,7 +27,10 @@ function MobileAddMenu(props) {
     return (
         <Modal
             onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
+            onOpen={() => {
+                props.resetInputs();
+                setOpen(true)
+            }}
             open={open}
             trigger={<Button
                 color='green'

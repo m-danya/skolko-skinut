@@ -162,6 +162,7 @@ function EditMenu(props) {
             <Modal.Actions>
                 <Button onClick={() => {
                     props.resetInputs();
+                    
                     setOpen(false);
                 }}
                 >
@@ -177,7 +178,6 @@ function EditMenu(props) {
                         props.proportions
                     );
                     props.resetInputs();
-
                     setOpen(false);
                 }} positive>
                     Добавить

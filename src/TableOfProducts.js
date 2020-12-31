@@ -270,7 +270,7 @@ class TableOfProducts extends Component {
                                                         namesArray={this.state.whoPays}
                                                         proportions={this.state.proportions}
                                                         handleProportionsChange={this.handleProportionsChange}
-
+                                                        reduceProportions={this.reduceProportions}
                                                     />
                                                 }
                                             </Transition.Group>

@@ -32,9 +32,9 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 const axios = require('axios').default;
 
 
-//const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
+const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 //const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
-const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
+//const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
 
 
 var debugging = 0;
@@ -66,6 +66,9 @@ class App extends React.Component {
   }
 
   handleMenuChange(a) {
+    if (a == 'products' && !this.state.id) {
+      this.generateNewProjectToken()
+    } else 
     this.setState({
       page: a,
     });
@@ -100,13 +103,14 @@ class App extends React.Component {
         quantity: quantity,
         proportions: proportions,
         id: this.uuidv4(),
-
+        calculated: false,
       }),
 
     }), () => {
       this.updateProductIds();
       this.updateBackend();
     });
+    
   }
 
   handleChangeRow(index, name, whoBought, whoPays, price, quantity, proportions) {
@@ -118,6 +122,9 @@ class App extends React.Component {
     this.state.tableData[index].proportions = proportions.slice();
     this.updateProductIds();
     this.updateBackend();
+    this.setState({
+      calculated: false,
+    })
   }
 
   updateBackend() {
@@ -185,14 +192,18 @@ class App extends React.Component {
 
 
   handleNamesChange(event) {
+    
     //console.log(event);
     this.setState({
       namesText: event.target.value,
-      namesArray: (event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))
+      namesArray: [...new Set(event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))]
     }, () => {
       this.updateNameIds();
       
     });
+    this.setState({
+      calculated: false,
+    })
   }
 
   getNameId(name) {
@@ -271,14 +282,14 @@ class App extends React.Component {
     if (left == 0) {
       return
     }
-    console.log('go. args = ', person, left, target, relations, sequences, profits, seq, ints)
+    //console.log('go. args = ', person, left, target, relations, sequences, profits, seq, ints)
     seq.push(person)
     for (let p of this.state.namesArray) {
       if (relations[person][p] > 0) {
         if (p == target) {
           ints.push(relations[person][p])
 
-          console.log('FOUND CHAIN! seq = ', seq, 'ints = ', ints, 'relations = ', relations)
+          //console.log('FOUND CHAIN! seq = ', seq, 'ints = ', ints, 'relations = ', relations)
           let min_num = ints[0]
           for (let num of ints) {
             if (num < min_num) {
@@ -306,7 +317,6 @@ class App extends React.Component {
 
   handleCalculate(event) {
     let relations = {} // relations[КТО][КОМУ]
-    console.log(relations)
     for (let p_name of this.state.namesArray) {
       relations[p_name] = {}
       for (let q_name of this.state.namesArray) {
@@ -324,7 +334,7 @@ class App extends React.Component {
       //console.log('price = ', price)
       for (let paying_person of event.whoPays) {
         relations[paying_person][event.whoBought] += price * event.proportions[i];
-        console.log(paying_person, ' += ', price * event.proportions[i])
+        //console.log(paying_person, ' += ', price * event.proportions[i])
         i += 1;
       }
       for (let p_name of this.state.namesArray) {
@@ -369,7 +379,7 @@ class App extends React.Component {
             price: 98,
             quantity: 1,
             proportions: [1, 1],
-            id: 'e5194d58-bfa3-4877-bd73-a0ffd776b23b'
+            id: this.uuidv4()
           },
           {
             name: 'Квас "Никола"',
@@ -378,7 +388,7 @@ class App extends React.Component {
             price: 87,
             quantity: 2,
             proportions: [1, 1, 1],
-            id: '3b123021-f8f2-4506-8be6-b3e2f2891490'
+            id: this.uuidv4()
 
           },
           {
@@ -388,7 +398,7 @@ class App extends React.Component {
             price: 73,
             quantity: 2,
             proportions: [1],
-            id: 'cddc7886-a28e-4bdb-bf7d-25fa97306b62'
+            id: this.uuidv4()
 
           },
           {
@@ -398,7 +408,7 @@ class App extends React.Component {
             price: 45,
             quantity: 2,
             proportions: [1, 2, 3, 1],
-            id: '2a9a0fc0-3767-4eff-b1c4-10e32a6fc3ad'
+            id: this.uuidv4()
 
           },
           {
@@ -408,12 +418,15 @@ class App extends React.Component {
             price: 58,
             quantity: 4,
             proportions: [1, 1, 1],
-            id: 'd847b272-e34d-4713-be6a-4116672a2721'
+            id: this.uuidv4()
           },
 
         ],
 
     }, () => { this.updateNameIds(); });
+    this.setState({
+      calculated: false,
+    })
   }
 
   componentDidMount(props) {
@@ -436,13 +449,14 @@ class App extends React.Component {
           //window.location.href = "/" + new_id;
         }
         let result = res.data
-        console.log('data got: ')
-        console.log(result)
+        //console.log('data got: ')
+        //console.log(result)
         if (result) {
           let names = []
 
           for (let t of result.persons) {
-            names.push(t)
+            names.push(t.name)
+            console.log('push ', t.name)
           }
 
           for (let p of result.products) {
@@ -459,11 +473,12 @@ class App extends React.Component {
             tableData: result.products.slice(),
             name: result.name.slice(),
             namesIds: result.persons.slice(),
-            namesArray: names.slice()
+            namesArray: names.slice(),
+            namesText: names.join("\n")
           }, () => {
             //this.updateNameIds();
             
-            console.log('after all updates tableData = ', this.state.tableData)
+            //console.log('after all updates tableData = ', this.state.tableData)
           
           })
         }
@@ -484,7 +499,7 @@ class App extends React.Component {
     return (
       <div>
         <Header as="h1" textAlign="center" style={{ paddingTop: "20px" }}>
-          <Icon name="chart pie" />
+          {/* <Icon name="chart pie" /> */}
           СколькоСкинуть
         </Header>
         <Container>
@@ -504,7 +519,15 @@ class App extends React.Component {
                 </Header>
                 {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
                 <p style={{ marginTop: "-5px", }}> 
-                В данный момент программа находится в стадии альфа-теста.
+                В данный момент программа находится в стадии альфа-теста —
+                перед Вами лишь предварительная, модельная версия продукта.
+                Она может быть неустойчива к заведомо (или случайно) некорректно введённым входным данным.
+                <br /><br />
+                В будущем планируется реализовать множество функций, не представленных в текущей версии (а также полный редизайн), 
+                однако, если у вас есть какие-либо предложения по улучшению функционала или если вы заметили
+                некорректную работу программы, просьба написать разработчикам. 
+                
+                <br /> <br />Приятного использования!
                  </p>
               </Segment>
               <Segment>
@@ -513,7 +536,7 @@ class App extends React.Component {
                     {/* <Link to={'this.generateNewProjectToken'} > */}
                     <Button positive size="massive" onClick={() => {
                       //this.handleMenuChange('products');
-                      this.generateNewProjectToken()
+                      this.generateNewProjectToken();
                     }} >
                       Начать
                         </Button>
@@ -638,6 +661,7 @@ class App extends React.Component {
                 <div style={{ textAlign: "center", padding: "15px 0px" }}>
                   <Button
                     positive
+                    size='big'
                     onClick={this.handleCalculate}
                   >
                     Рассчитать СколькоСкинуть</Button>
@@ -695,17 +719,8 @@ class App extends React.Component {
                 </div>
               }
             </div>
-
-
           }
-
         </Container>
-
-        {/* <Segment.Group>
-          <Segment>
-            
-          </Segment>
-        </Segment.Group> */}
 
 
       </div >

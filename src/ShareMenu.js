@@ -48,10 +48,10 @@ function ShareMenu(props) {
               </div>
             }
         >
-            <Modal.Header>Готово</Modal.Header>
+            <Modal.Header>Готово!</Modal.Header>
             <Modal.Content>
                     <p className='tableFont'>
-                    Ссылка скопирована в буфер обмена!
+                    Ссылка скопирована в буфер обмена
                     </p>
                     <Image src={funny_gif} centered />
             </Modal.Content>
