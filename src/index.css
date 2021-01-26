@@ -22,17 +22,17 @@ code {
 }
 
 .tableFont {
-  font-size: 15px;
+  font-size: 18px; /* was 15  */
   text-align: center;
 }
 .tableFontProportions {
-  font-size: 15px;
+  font-size: 18px;
   text-align: center;
   color: #636363;
 }
 
 .tableHeaderFont {
-  font-size: 15px;
+  font-size: 18px;
   text-align: center;
 }
 
@@ -51,4 +51,8 @@ textarea {
 .centertext {
   height: 20px;
   line-height: 20px;
+}
+
+.ui.orange.button, .ui.orange.buttons .button {
+  background-color: #f58220!important;
 }

@@ -28,6 +28,7 @@ import {
   MobileView,
 } from "react-device-detect";
 import { BrowserRouter as Router, Link } from 'react-router-dom'
+import ss_logo from './assets/logo.png'
 
 const axios = require('axios').default;
 
@@ -36,8 +37,8 @@ const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 //const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
 //const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
 
-
 var debugging = 0;
+
 
 
 class App extends React.Component {
@@ -45,13 +46,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       page: "main", // do not change. (see componentDidMount for debug)
-      projectname: "temp project name", // need to fix this: add naming system
+      //projectname: "temp project name", // need to fix this: add naming system
       tableData: [],
       namesText: '',
       namesArray: [],
       calculated: false,
       namesIds: [],
       namesIdsSergo: [],
+      guided: false,
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
@@ -63,15 +65,16 @@ class App extends React.Component {
     this.updateBackend = this.updateBackend.bind(this);
     this.updateNameIds = this.updateNameIds.bind(this);
     this.updateProductIds = this.updateProductIds.bind(this);
+    this.removeRow = this.removeRow.bind(this);
   }
 
   handleMenuChange(a) {
     if (a == 'products' && !this.state.id) {
       this.generateNewProjectToken()
-    } else 
-    this.setState({
-      page: a,
-    });
+    } else
+      this.setState({
+        page: a,
+      });
   }
 
   formSearchFromArray(list) {
@@ -103,14 +106,13 @@ class App extends React.Component {
         quantity: quantity,
         proportions: proportions,
         id: this.uuidv4(),
-        calculated: false,
       }),
-
+      calculated: false,
     }), () => {
       this.updateProductIds();
       this.updateBackend();
     });
-    
+
   }
 
   handleChangeRow(index, name, whoBought, whoPays, price, quantity, proportions) {
@@ -146,7 +148,6 @@ class App extends React.Component {
         console.log('YAHOOOOOOOOOOOOOOOOOOOOO. updated.')
         //window.location.href = "/" + new_id;
       }
-
     }, (e) => {
       console.log('put request error: ', e);
     });
@@ -161,18 +162,20 @@ class App extends React.Component {
     });
   }
 
-  generateNewProjectToken() {
+  generateNewProjectToken(guided = false) {
     let new_id = this.uuidv4()
     this.setState({
       id: new_id,
+      guided: guided,
     })
-
+    
     // BACKEND: CREATE NEW PROJECT
     console.log('go go axios!')
 
     axios.post(`${BACKEND_ADDRESS}/api/create`, {
       'id': new_id,
       'name': this.state.projectname,
+      //'guided': guided, // bool
     }).then(res => {
       console.log('res: ', res)
       //if it's internal error
@@ -192,14 +195,14 @@ class App extends React.Component {
 
 
   handleNamesChange(event) {
-    
+
     //console.log(event);
     this.setState({
       namesText: event.target.value,
       namesArray: [...new Set(event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))]
     }, () => {
       this.updateNameIds();
-      
+
     });
     this.setState({
       calculated: false,
@@ -365,6 +368,13 @@ class App extends React.Component {
 
   }
 
+  removeRow(index) {
+    console.log('delete ', index)
+    //delete this.state.tableData[index.toString()]
+    delete this.state.tableData.splice(index, 1)
+  }
+
+
   fillDebugInfo() {
     this.setState({
       page: 'products',
@@ -467,19 +477,23 @@ class App extends React.Component {
             }
             p.proportions = JSON.parse(p.proportions)
           }
-          
+
           this.setState({
             page: 'products',
             tableData: result.products.slice(),
             name: result.name.slice(),
             namesIds: result.persons.slice(),
             namesArray: names.slice(),
-            namesText: names.join("\n")
+            namesText: names.join("\n"),
+            guided: result.name == "guided test project",//result.guided,
           }, () => {
+            if (this.state.guided && this.state.tableData.length == 0) {
+              this.fillDebugInfo();
+            }
             //this.updateNameIds();
-            
+
             //console.log('after all updates tableData = ', this.state.tableData)
-          
+
           })
         }
       }, (e) => {
@@ -500,8 +514,26 @@ class App extends React.Component {
       <div>
         <Header as="h1" textAlign="center" style={{ paddingTop: "20px" }}>
           {/* <Icon name="chart pie" /> */}
-          СколькоСкинуть
+          {/* СколькоСкинуть */}
+
         </Header>
+        {/* <Link to="/"> */}
+
+        <Image
+          src={ss_logo}
+          //size='small'
+          size='medium'
+          //href="https://skolkoskinut.ru/"
+          onClick={() => {
+            this.setState({
+              page: 'main'
+            })
+          }}
+          style={{ paddingBottom: "20px" }}
+          centered
+        />
+        {/* </Link> */}
+
         <Container>
           <MyMenu
             activeItem={this.state.page}
@@ -518,15 +550,15 @@ class App extends React.Component {
                   Добро пожаловать!
                 </Header>
                 {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
-                <p style={{ marginTop: "-5px", }}> 
-                В данный момент программа находится в стадии альфа-теста —
-                перед Вами лишь предварительная, модельная версия продукта.
-                Она может быть неустойчива к заведомо (или случайно) некорректно введённым входным данным.
+                <p style={{ marginTop: "-5px", }}>
+                  В данный момент программа находится в стадии альфа-теста —
+                  перед Вами лишь предварительная, модельная версия продукта.
+                  Она может быть неустойчива к заведомо (или случайно) некорректно введённым входным данным.
                 <br /><br />
-                В будущем планируется реализовать множество функций, не представленных в текущей версии (а также полный редизайн), 
+                В будущем планируется реализовать множество функций, не представленных в текущей версии (а также полный редизайн),
                 однако, если у вас есть какие-либо предложения по улучшению функционала или если вы заметили
-                некорректную работу программы, просьба написать разработчикам. 
-                
+                некорректную работу программы, просьба написать разработчикам.
+
                 <br /> <br />Приятного использования!
                  </p>
               </Segment>
@@ -534,13 +566,39 @@ class App extends React.Component {
                 <Grid ui centered>
                   <Grid.Row>
                     {/* <Link to={'this.generateNewProjectToken'} > */}
-                    <Button positive size="massive" onClick={() => {
-                      //this.handleMenuChange('products');
-                      this.generateNewProjectToken();
-                    }} >
-                      Начать
+                    <Button
+                      size="massive"
+                      onClick={() => {
+                        //this.handleMenuChange('products');
+                        this.setState({
+                          guided: false,
+                          projectname: "temp project name"
+                        }, () => {
+                          this.generateNewProjectToken();
+                        });
+                      }} >
+                      Пустой проект
                         </Button>
                     {/* </Link> */}
+                  </Grid.Row>
+                  <Grid.Row
+                    style={{ paddingTop: 0 }}
+                  >
+                    <Button
+                      size="massive"
+                      positive
+                      onClick={() => {
+                        //this.handleMenuChange('products');
+                        this.setState({
+                          guided: true,
+                          projectname: "guided test project"
+                        }, () => {
+                          this.generateNewProjectToken(true);
+                        });
+                      }} >
+                      Обучение
+                        </Button>
+
                   </Grid.Row>
                   {/* <Grid.Row style={{ paddingTop: 0 }}>
                     <Button primary size="massive" onClick={() => { this.handleMenuChange('products') }}>
@@ -567,10 +625,11 @@ class App extends React.Component {
             this.state.page == 'products' &&
             <div>
 
-              <Segment relaxed >
-
+              {/* <Segment relaxed > */}
+              {this.state.guided ?
                 <Grid columns={3} stackable style={{ paddingBottom: "20px", }}>
-                  <Grid.Column  >
+                  <Grid.Column>
+
 
                     <div style={{ minHeight: '203px' }} >
                       <Header as="h3" style={{ paddingTop: "0px" }}>
@@ -601,20 +660,29 @@ class App extends React.Component {
                         <br /><br />
                         У тебя будет ссылка, которой можно поделиться с друзьями, вау!
                         🥳
+                        <br />
+                        <br />
+                        Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс, 
+                        <a
+                        onClick={() => {
+                          this.setState({
+                            page: 'main',
+                          })
+                        }}
+                        > создай пустой проект</a>
+                        , чтобы внести туда свои данные. 
                         </List.Content>
                         </List.Item>
                       </List>
                     </div>
-
-
                   </Grid.Column>
                   {isBrowser && <Grid.Column >
                     <div style={{ minHeight: '203px' }} >
 
                     </div>
                   </Grid.Column>}
-                  <Grid.Column >
-
+                  {/* <Grid.Column >
+                    
                     <div style={{ minHeight: '' }} >
 
                       <Button
@@ -627,34 +695,33 @@ class App extends React.Component {
                     </div>
 
 
-                  </Grid.Column>
-
-
-                  {/* <Grid.Column style={{ minHeight: '203px' }}>
-
-                  { <Form>
-                    <TextArea 
-                    fluid 
-                    style={{ minHeight: '203px' }}
-                    placeholder={'Серго\r\nДаня\r\nВаня\r\nСаня'}
-                    onChange={this.handleNamesChange} 
-                    value={this.state.namesText}
-                    />
-                  </Form> }
-                </Grid.Column>
-
-                <Grid.Column>
-                  еще какой-то блок.
-                </Grid.Column> */}
+                  </Grid.Column> */}
                 </Grid>
+                :
 
-              </Segment>
+                <div>
+                  <div style={{
+                    padding: "10px 0 10px 0",
+                    // width: isBrowser ? "300px" : "80%",
+                    // class: "textAlignCenter"
+                  }}>
+                    <ChooseNames
+                      handleNamesChange={this.handleNamesChange}
+                      namesText={this.state.namesText}
+                    />
+                  </div>
+                </div>
+
+              }
+              {/* 
+              </Segment> */}
 
               <TableOfProducts
                 tableData={this.state.tableData}
                 handleAddRow={this.handleAddRow}
                 handleChangeRow={this.handleChangeRow}
                 namesArray={this.formSearchFromArray(this.state.namesArray)}
+                removeRow={this.removeRow}
               />
               {this.state.tableData.length > 0 &&
 
@@ -710,12 +777,8 @@ class App extends React.Component {
                       <ShareMenu
                         copyText={'https://skolkoskinut.ru/' + this.state.id}
                       />
-
-
                     </Grid.Row>
-
                   </Grid>
-
                 </div>
               }
             </div>

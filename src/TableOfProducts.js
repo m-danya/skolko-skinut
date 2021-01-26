@@ -51,7 +51,7 @@ class TableOfProducts extends Component {
         this.fillDataToEdit = this.fillDataToEdit.bind(this)
     }
 
-    
+
 
     resetInputs() {
         this.setState({
@@ -124,6 +124,7 @@ class TableOfProducts extends Component {
         })
 
     }
+
 
     gcd(a, b) {
         if (b > a) {
@@ -398,6 +399,7 @@ class TableOfProducts extends Component {
                                                     fillDataToEdit={this.fillDataToEdit}
                                                     handleChangeRow={this.props.handleChangeRow}
                                                     inputNameText={this.state.inputNameText}
+                                                    removeRow={this.props.removeRow}
                                                 />
                                             </p>
                                         </Table.Cell>

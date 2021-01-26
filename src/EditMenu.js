@@ -36,6 +36,7 @@ function EditMenu(props) {
                 setOpen(true);
             }}
             open={open}
+            size={isBrowser ? 'small' : ''}
             trigger={<Button 
             
                 fluid = {isBrowser}
@@ -160,6 +161,16 @@ function EditMenu(props) {
 
             </Modal.Content>
             <Modal.Actions>
+            <Button onClick={() => {
+                    props.resetInputs();
+                    props.removeRow(props.index)
+                    setOpen(false);
+                }}
+
+                style={{float: "left"}}
+
+                >
+                    Удалить</Button>
                 <Button onClick={() => {
                     props.resetInputs();
                     
@@ -180,7 +191,7 @@ function EditMenu(props) {
                     props.resetInputs();
                     setOpen(false);
                 }} positive>
-                    Добавить
+                    Сохранить
         </Button>
             </Modal.Actions>
         </Modal>

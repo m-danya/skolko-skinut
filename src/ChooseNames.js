@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { isBrowser, isMobile } from 'react-device-detect';
 
 import {
     Button,
@@ -26,7 +27,7 @@ function ChooseNames(props) {
     const [open, setOpen] = React.useState(false)
 
     // Нажатие enter для закрытия окна конфликтует с нажатием для перевода строки
-    
+
     // useEffect(() => {
     //     const listener = event => {
     //       if (event.code === "Enter" || event.code === "NumpadEnter") {
@@ -39,7 +40,7 @@ function ChooseNames(props) {
     //       document.removeEventListener("keydown", listener);
     //     };
     //   }, []);
-    
+
 
     return (
         <Modal
@@ -47,9 +48,22 @@ function ChooseNames(props) {
             onOpen={() => setOpen(true)}
             open={open}
             size={'mini'}
-            trigger={<Button primary fluid>
-                Список людей
-            </Button>}
+            trigger={
+                
+                        <Button
+                            //primary
+                            color='orange'
+                            centered
+                            fluid={isMobile}
+                            width={isMobile ? "100%" : "300px"}
+                        >
+                            <p className='textAlignCenter '>
+                                Список людей
+                    </p>
+                        </Button>
+                 
+
+            }
         >
             <Modal.Header>Список людей</Modal.Header>
             <Modal.Content>
