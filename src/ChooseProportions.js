@@ -32,6 +32,8 @@ function ChooseProportions(props) {
             size={'tiny'}
             trigger={<Button
                 fluid
+                basic={props.error}
+                color={props.error? 'red' : 'white'}
                 width={1}
                 style={{ marginTop: '10px', }}
             >

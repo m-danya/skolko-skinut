@@ -98,7 +98,6 @@ class App extends React.Component {
     this.setState(state => ({
 
       tableData: state.tableData.concat({
-
         name: name,
         whoBought: whoBought,
         whoPays: whoPays,
@@ -116,6 +115,7 @@ class App extends React.Component {
   }
 
   handleChangeRow(index, name, whoBought, whoPays, price, quantity, proportions) {
+    console.log('row ', index, ' changed.')
     this.state.tableData[index].name = name.slice();
     this.state.tableData[index].whoBought = whoBought.slice();
     this.state.tableData[index].whoPays = whoPays.slice();
@@ -168,7 +168,7 @@ class App extends React.Component {
       id: new_id,
       guided: guided,
     })
-    
+
     // BACKEND: CREATE NEW PROJECT
     console.log('go go axios!')
 
@@ -372,6 +372,9 @@ class App extends React.Component {
     console.log('delete ', index)
     //delete this.state.tableData[index.toString()]
     delete this.state.tableData.splice(index, 1)
+    this.setState({
+      calculated: false,
+    })
   }
 
 
@@ -481,7 +484,7 @@ class App extends React.Component {
           this.setState({
             page: 'products',
             tableData: result.products.slice(),
-            name: result.name.slice(),
+            projectname: result.name.slice(),
             namesIds: result.persons.slice(),
             namesArray: names.slice(),
             namesText: names.join("\n"),
@@ -543,31 +546,15 @@ class App extends React.Component {
         <Container>
           {
             this.state.page == 'main' &&
-
-            <Segment.Group>
-              <Segment>
-                <Header as="h3">
-                  Добро пожаловать!
-                </Header>
-                {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
-                <p style={{ marginTop: "-5px", }}>
-                  В данный момент программа находится в стадии альфа-теста —
-                  перед Вами лишь предварительная, модельная версия продукта.
-                  Она может быть неустойчива к заведомо (или случайно) некорректно введённым входным данным.
-                <br /><br />
-                В будущем планируется реализовать множество функций, не представленных в текущей версии (а также полный редизайн),
-                однако, если у вас есть какие-либо предложения по улучшению функционала или если вы заметили
-                некорректную работу программы, просьба написать разработчикам.
-
-                <br /> <br />Приятного использования!
-                 </p>
-              </Segment>
-              <Segment>
+            <div>
+            {/* <Segment.Group>
+              <Segment> */}
                 <Grid ui centered>
                   <Grid.Row>
                     {/* <Link to={'this.generateNewProjectToken'} > */}
                     <Button
                       size="massive"
+                      color='orange'
                       onClick={() => {
                         //this.handleMenuChange('products');
                         this.setState({
@@ -577,7 +564,7 @@ class App extends React.Component {
                           this.generateNewProjectToken();
                         });
                       }} >
-                      Пустой проект
+                      Создать пустой проект
                         </Button>
                     {/* </Link> */}
                   </Grid.Row>
@@ -596,18 +583,42 @@ class App extends React.Component {
                           this.generateNewProjectToken(true);
                         });
                       }} >
-                      Обучение
+                      Пройти обучение
                         </Button>
 
                   </Grid.Row>
-                  {/* <Grid.Row style={{ paddingTop: 0 }}>
-                    <Button primary size="massive" onClick={() => { this.handleMenuChange('products') }}>
-                      Войти
-                        </Button>
-                  </Grid.Row> */}
                 </Grid>
-              </Segment>
-            </Segment.Group>
+              {/* </Segment>*/
+              <Segment
+              
+              > 
+                <Header as="h3">
+                  Добро пожаловать!
+                </Header>
+                {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
+                <p style={{ marginTop: "-5px", }}>
+
+                <b style={{ color: "red" }}>
+                    Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями :)
+                    </b>
+                    <br /><br />
+
+                  В данный момент программа находится в стадии альфа-теста —
+                  перед Вами лишь предварительная, модельная версия продукта.
+                  Она может быть неустойчива к заведомо (или случайно) некорректно введённым входным данным.
+                <br /><br />
+                В будущем планируется реализовать множество функций, не представленных в текущей версии (а также полный редизайн),
+                однако, если у вас есть какие-либо предложения по улучшению функционала или если вы заметили
+                некорректную работу программы, просьба написать разработчикам.
+                <br /><br />
+                Приятного использования!
+                <br /><br />
+
+                 </p>
+               </Segment>
+              /*
+            </Segment.Group> */}
+            </div>
           }
 
           {
@@ -661,16 +672,16 @@ class App extends React.Component {
                         У тебя будет ссылка, которой можно поделиться с друзьями, вау!
                         🥳
                         <br />
-                        <br />
-                        Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс, 
+                            <br />
+                        Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс,
                         <a
-                        onClick={() => {
-                          this.setState({
-                            page: 'main',
-                          })
-                        }}
-                        > создай пустой проект</a>
-                        , чтобы внести туда свои данные. 
+                              onClick={() => {
+                                this.setState({
+                                  page: 'main',
+                                })
+                              }}
+                            > создай пустой проект</a>
+                        , чтобы внести туда свои данные.
                         </List.Content>
                         </List.Item>
                       </List>

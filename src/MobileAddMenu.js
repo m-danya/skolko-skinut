@@ -21,8 +21,75 @@ import {
 } from "semantic-ui-react";
 import ChooseProportions from './ChooseProportions';
 
+
 function MobileAddMenu(props) {
     const [open, setOpen] = React.useState(false)
+    const [nameError, setNameError] = React.useState(false)
+    const [whoBoughtError, setWhoBoughtError] = React.useState(false)
+    const [whoPaysError, setWhoPaysError] = React.useState(false)
+    const [proportionsError, setProportionsError] = React.useState(false)
+    const [priceError, setPriceError] = React.useState(false)
+    const [quantityError, setQuantityError] = React.useState(false)
+
+    function checkAllFields() {
+        setNameError(0);
+        setWhoBoughtError(0);
+        setWhoPaysError(0);
+        setProportionsError(0);
+        setPriceError(0);
+        setQuantityError(0);
+
+        let isOk = true;
+        // check name
+        if (props.inputNameText === '') {
+            setNameError(1);
+            isOk = 0;
+        }
+        // check whoBought
+        if (props.whoBought === null) {
+            setWhoBoughtError(1);
+            isOk = 0;
+        }
+        // check whoPays
+        if (props.whoPays.length == 0) {
+            setWhoPaysError(1);
+            isOk = 0;
+        }
+        // check proportions
+        for (let prop of props.proportions) {
+            console.log('prop = ', prop)
+            if (prop < 1) {
+                setProportionsError(1);
+                isOk = 0;
+            }
+        }
+
+        // check price
+        let parsedPrice = parseInt(props.inputPriceText)
+        if (isNaN(parsedPrice)) {
+            setPriceError(1);
+            isOk = 0;
+        } else {
+            if (parsedPrice <= 0 || parsedPrice > 1000000) {
+                setPriceError(1);
+                isOk = 0;
+            }
+        }
+
+        // check quantity
+        let parsedQuantity = parseInt(props.inputQuantityText)
+        if (isNaN(parsedQuantity)) {
+            setQuantityError(1);
+            isOk = 0;
+        } else {
+            if (parsedQuantity <= 0 || parsedQuantity > 1000) {
+                setQuantityError(1);
+                isOk = 0;
+            }
+        }
+
+        return isOk
+    }
 
     return (
         <Modal
@@ -49,6 +116,7 @@ function MobileAddMenu(props) {
                     <Input fluid
                         className='placeholderCentering textAlignCenter'
                         placeholder='Название продукта'
+                        error={nameError}
                         onChange={(e) => props.handleInputChange('Name', e)}
                         value={props.inputNameText}
 
@@ -62,6 +130,7 @@ function MobileAddMenu(props) {
                         noResultsMessage={props.namesArray.length ? '' : 'Сначала добавьте имена'}
                         search
                         selection
+                        error={whoBoughtError}
                         options={props.namesArray}
                         onChange={props.handleWhoBoughtChange}
                         value={props.whoBought}
@@ -85,12 +154,12 @@ function MobileAddMenu(props) {
                         search
                         clearable
                         selection
+                        error={whoPaysError}
                         options={props.getWhoPaysOptions()}
                         onChange={props.handleWhoPaysChange}
                         value={props.whoPays}
 
                     />
-
 
                     <Transition.Group
                         //as={List}
@@ -101,6 +170,7 @@ function MobileAddMenu(props) {
                     >
                         {//props.inputQuantityText != '1' && props.inputQuantityText != '' &&
                             <ChooseProportions
+                                error={proportionsError}
                                 namesArray={props.whoPays}
                                 proportions={props.proportions}
                                 handleProportionsChange={props.handleProportionsChange}
@@ -108,13 +178,7 @@ function MobileAddMenu(props) {
                             />
                         }
                     </Transition.Group>
-                    {/* <Input fluid
-                                            className='placeholderCentering textAlignCenter'
-                                            placeholder='Кто скидывается'
-                                            //label='Кто скидывается'
-                                            onChange={(e) => props.handleInputChange('WhoPays', e)}
-                                            value={props.inputWhoPaysText}
-                                        /> */}
+
                 </p>
                 <p className='tableFont'>
 
@@ -125,6 +189,7 @@ function MobileAddMenu(props) {
                                     label={{ basic: true, content: '₽' }}
                                     labelPosition='right'
                                     placeholder='Цена'
+                                    error={priceError}
                                     //label='Цена'
                                     onChange={(e) => props.handleInputChange('Price', e)}
                                     value={props.inputPriceText}
@@ -138,6 +203,7 @@ function MobileAddMenu(props) {
                                     type="number" // вроде вмещается число с мобильника
                                     label='Кол-во'
                                     //style={{ paddingTop: '10px', }}
+                                    error={quantityError}
                                     placeholder=''
                                     onChange={(e) => props.handleInputChange('Quantity', e)}
                                     value={props.inputQuantityText}
@@ -164,17 +230,19 @@ function MobileAddMenu(props) {
                 >
                     Отмена</Button>
                 <Button onClick={() => {
-                    props.handleAddRow(
-                        props.inputNameText,
-                        props.whoBought,
-                        props.whoPays,
-                        parseInt(props.inputPriceText),
-                        parseInt(props.inputQuantityText),
-                        props.proportions
-                    );
-                    props.resetInputs();
+                    if (checkAllFields()) {
+                        props.handleAddRow(
+                            props.inputNameText,
+                            props.whoBought,
+                            props.whoPays,
+                            parseInt(props.inputPriceText),
+                            parseInt(props.inputQuantityText),
+                            props.proportions
+                        );
+                        props.resetInputs();
 
-                    setOpen(false);
+                        setOpen(false);
+                    }
                 }} positive>
                     Добавить
         </Button>
