@@ -179,6 +179,9 @@ class TableOfProducts extends Component {
 
     reduceProportions() {
         // find gcd and divide by it every number
+        if (!this.state.proportions.length) {
+            return
+        }
         let g = this.state.proportions[0].part;
         for (let i of this.state.proportions) {
             g = this.gcd(g, i.part)
