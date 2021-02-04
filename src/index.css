@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-.textAlignCenter{
+.textAlignCenter {
   text-align: center!important;
 }
 
@@ -20,6 +20,7 @@ code {
 {
   text-align: center!important;
 }
+
 
 .tableFont {
   font-size: 18px; /* was 15  */

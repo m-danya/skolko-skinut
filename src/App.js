@@ -352,6 +352,17 @@ class App extends React.Component {
     })
   }
 
+  relationsIsNotEmpty() {
+    for (let n1 of this.state.namesArray) {
+      for (let n2 of this.state.namesArray) {
+        if (this.state.relations[n1][n2]) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
 
   fillDebugInfo() {
     let pid1 = this.uuidv4();
@@ -599,7 +610,7 @@ class App extends React.Component {
                   <p style={{ marginTop: "-5px", }}>
 
                     <b style={{ color: "red" }}>
-                      Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями :)
+                      Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями, осталось чуть-чуть :)
                     </b>
                     <br /><br />
 
@@ -782,6 +793,9 @@ class App extends React.Component {
                             })
                           )
                         })}
+                        {this.relationsIsNotEmpty() ? "" :
+                          "Никто никому ничего не должен"
+                        }
                       </List>
                       {/* </Segment> */}
                     </Grid.Row>

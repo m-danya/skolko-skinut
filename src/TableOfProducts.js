@@ -86,7 +86,7 @@ class TableOfProducts extends Component {
             inputQuantityText: this.props.tableData[index].quantity,
             proportions: this.props.tableData[index].proportions.slice(),
         });
-    }   
+    }
 
     handleInputChange(name, e) {
         const target = e.target;
@@ -110,7 +110,7 @@ class TableOfProducts extends Component {
             let newProportions = new Array(this.props.namesArray.length);
             let i = 0
             for (let f of this.props.namesArray) {
-                
+
                 newWhoPays[i] = f.key;
                 newProportions[i] = {
                     id: this.props.getIdByName(f.text),
@@ -245,13 +245,12 @@ class TableOfProducts extends Component {
                                 <Table.Row>
                                     <Table.Cell width={4}>
                                         <p className='tableFont'>
-                                            <Input fluid
+                                            <Input
+                                                fluid
                                                 className='placeholderCentering textAlignCenter'
                                                 placeholder='Название продукта'
-                                                //label='Название продукта'
                                                 onChange={(e) => this.handleInputChange('Name', e)}
                                                 value={this.state.inputNameText}
-
                                             />
                                         </p>
                                     </Table.Cell>
@@ -341,9 +340,11 @@ class TableOfProducts extends Component {
                                             <Input
                                                 fluid
                                                 //width={1}
-                                                //type="number" тогда число не вмещается 
+                                                //type="number"// тогда число не вмещается 
                                                 label='Кол-во'
-                                                style={{ paddingTop: '10px', }}
+                                                style={{ paddingTop: '10px'}}
+                                                className='placeholderCentering textAlignCenter'
+                                                size='mini'
                                                 placeholder=''
                                                 onChange={(e) => this.handleInputChange('Quantity', e)}
                                                 value={this.state.inputQuantityText}
