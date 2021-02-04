@@ -40,19 +40,17 @@ const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 var debugging = 0;
 
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: "main", // do not change. (see componentDidMount for debug)
+      page: "main", // do not change. 
       //projectname: "temp project name", // need to fix this: add naming system
       tableData: [],
       namesText: '',
       namesArray: [],
       calculated: false,
       namesIds: [],
-      namesIdsSergo: [],
       guided: false,
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
@@ -64,8 +62,10 @@ class App extends React.Component {
     this.generateNewProjectToken = this.generateNewProjectToken.bind(this);
     this.updateBackend = this.updateBackend.bind(this);
     this.updateNameIds = this.updateNameIds.bind(this);
-    this.updateProductIds = this.updateProductIds.bind(this);
     this.removeRow = this.removeRow.bind(this);
+    this.getNameById = this.getNameById.bind(this);
+    this.getTableItemIndexByProductId = this.getTableItemIndexByProductId.bind(this);
+    this.getIdByName = this.getIdByName.bind(this);
   }
 
   handleMenuChange(a) {
@@ -77,30 +77,26 @@ class App extends React.Component {
       });
   }
 
-  formSearchFromArray(list) {
-    // console.log("list = " + list);
+  formSearchFromArray() {
     let ans = [];
-    let i = 0;
-    if (!list) return ans;
-    for (let a of list) {
+    if (!this.state.namesIds || !this.state.namesIds.length) return ans;
+    console.log("this.state.namesIds = ", this.state.namesIds)
+    for (let a of this.state.namesIds) {
+
       ans.push({
-        key: a,
-        value: a,
-        //value: i,
-        text: a,
+        key: a.id,
+        value: a.id,
+        text: a.name,
       });
-      ++i;
     }
     return ans;
   }
 
-  handleAddRow(name, whoBought, whoPays, price, quantity, proportions) {
+  handleAddRow(name, whoBoughtId, price, quantity, proportions) {
     this.setState(state => ({
-
       tableData: state.tableData.concat({
         name: name,
-        whoBought: whoBought,
-        whoPays: whoPays,
+        whoBoughtId: whoBoughtId,
         price: price,
         quantity: quantity,
         proportions: proportions,
@@ -108,21 +104,18 @@ class App extends React.Component {
       }),
       calculated: false,
     }), () => {
-      this.updateProductIds();
       this.updateBackend();
     });
 
   }
 
-  handleChangeRow(index, name, whoBought, whoPays, price, quantity, proportions) {
-    console.log('row ', index, ' changed.')
+  handleChangeRow(id, name, whoBought, price, quantity, proportions) {
+    let index = this.getTableItemIndexByProductId(id)
     this.state.tableData[index].name = name.slice();
-    this.state.tableData[index].whoBought = whoBought.slice();
-    this.state.tableData[index].whoPays = whoPays.slice();
+    this.state.tableData[index].whoBoughtId = whoBought;
     this.state.tableData[index].price = price;
     this.state.tableData[index].quantity = quantity;
     this.state.tableData[index].proportions = proportions.slice();
-    this.updateProductIds();
     this.updateBackend();
     this.setState({
       calculated: false,
@@ -135,10 +128,11 @@ class App extends React.Component {
     axios.put(`${BACKEND_ADDRESS}/api/update/${this.state.id}`, {
       'id': this.state.id,
       'name': this.state.projectname,
-      'persons': this.state.namesIdsSergo,
+      'persons': this.state.namesIds,
       'products': this.state.tableData
     }).then(res => {
       console.log('update res: ', res)
+      console.log(this.state.tableData)
       //if it's internal error
       if (res.status == 500)
         console.log('Неотловленная ошибка на backend-части, ошибка 500')
@@ -195,7 +189,6 @@ class App extends React.Component {
 
 
   handleNamesChange(event) {
-
     //console.log(event);
     this.setState({
       namesText: event.target.value,
@@ -209,76 +202,61 @@ class App extends React.Component {
     })
   }
 
-  getNameId(name) {
+  getIdByName(name) {
     for (let n in this.state.namesIds) {
-      if (n == name) {
-        return this.state.namesIds[n]
+      if (this.state.namesIds[n].name == name) {
+        return this.state.namesIds[n].id
       }
     }
     return "-1"
   }
 
-  getIdName(id) {
+  getNameById(id) {
     for (let n in this.state.namesIds) {
-      if (this.state.namesIds[n] == id) {
-        return n
+      if (this.state.namesIds[n].id == id) {
+        return this.state.namesIds[n].name
       }
     }
     return "Незнакомец"
   }
 
-  getIdNameA(id, namesIds) {
-    for (let n in namesIds) {
-      if (namesIds[n].id == id) {
-        return namesIds[n].name
+  getTableItemIndexByProductId(id) {
+    for (let i in this.state.tableData) {
+      if (this.state.tableData[i].id == id) {
+        return i
       }
     }
-    return "Незнакомец"
+    console.log("index not found in getTableItemIndexByProductId!!!")
+    return -1
   }
 
   updateNameIds() {
-    let new_namesIds = Object.assign({}, this.state.namesIds)
-    let new_namesIdsSergo = []
+    let new_namesIds = this.state.namesIds.slice()
     for (let name of this.state.namesArray) {
-      if (!new_namesIds[name]) {
-        //console.log('new name: ', name)
-        new_namesIds[name] = this.uuidv4()
+      if (this.getIdByName(name) == -1) {
+        console.log('new name: ', name)
+        new_namesIds.push({
+          'name': name,
+          'id': this.uuidv4()
+        })
       }
     }
 
-    for (let existing_name in new_namesIds) {
-      if (!this.state.namesArray.includes(existing_name)) {
-        delete new_namesIds[existing_name]
+    for (let i in new_namesIds) {
+      if (!this.state.namesArray.includes(new_namesIds[i].name)) {
+        console.log("name ", new_namesIds[i].name, " was not found!")
+        new_namesIds.splice(i, 1)
       }
-    }
-
-    for (let name in new_namesIds) {
-      new_namesIdsSergo.push({
-        'name': name,
-        'id': new_namesIds[name]
-      })
     }
 
     this.setState({
-      namesIds: Object.assign({}, new_namesIds),
-      namesIdsSergo: new_namesIdsSergo
+      namesIds: new_namesIds
     }, () => {
-      this.updateProductIds();
       this.updateBackend();
 
     })
     //console.log()
 
-  }
-
-  updateProductIds() {
-    for (let p_i in this.state.tableData) { //product_index
-      this.state.tableData[p_i].whoBoughtId = this.getNameId(this.state.tableData[p_i].whoBought)
-      this.state.tableData[p_i].whoPaysId = []
-      for (let p_p in this.state.tableData[p_i].whoPays) {
-        this.state.tableData[p_i].whoPaysId[p_p] = this.getNameId(this.state.tableData[p_i].whoPays[p_p])
-      }
-    }
   }
 
   go(person, left, target, relations, sequences, profits, seq, ints) {
@@ -330,15 +308,13 @@ class App extends React.Component {
     for (let event of this.state.tableData) {
       let sum = 0
       for (let f of event.proportions) {
-        sum += f
+        sum += f.part
       }
       let price = event.price * event.quantity / sum
-      let i = 0
       //console.log('price = ', price)
-      for (let paying_person of event.whoPays) {
-        relations[paying_person][event.whoBought] += price * event.proportions[i];
+      for (let paying_person_and_part of event.proportions) {
+        relations[this.getNameById(paying_person_and_part.id)][this.getNameById(event.whoBoughtId)] += price * paying_person_and_part.part;
         //console.log(paying_person, ' += ', price * event.proportions[i])
-        i += 1;
       }
       for (let p_name of this.state.namesArray) {
         relations[p_name][p_name] = 0;
@@ -368,9 +344,8 @@ class App extends React.Component {
 
   }
 
-  removeRow(index) {
-    console.log('delete ', index)
-    //delete this.state.tableData[index.toString()]
+  removeRow(id) {
+    let index = this.getTableItemIndexByProductId(id)
     delete this.state.tableData.splice(index, 1)
     this.setState({
       calculated: false,
@@ -379,105 +354,140 @@ class App extends React.Component {
 
 
   fillDebugInfo() {
+    let pid1 = this.uuidv4();
+    let pid2 = this.uuidv4();
+    let pid3 = this.uuidv4();
+    let pid4 = this.uuidv4();
+    let pid5 = this.uuidv4();
+
+    let id_sergo = this.uuidv4();
+    let id_danya = this.uuidv4();
+    let id_sanya = this.uuidv4();
+    let id_vanya = this.uuidv4();
     this.setState({
       page: 'products',
-      namesText: 'Серго\r\nСаня\r\nВаня\r\nДаня',
+      namesText: 'Серго\r\nСаня\r\nВаня\r\nДаня', // только для демо-инфы задаётся вручную
       namesArray: ['Серго', 'Даня', 'Саня', 'Ваня'],
+      namesIds: [
+        {
+          'name': 'Серго',
+          'id': id_sergo
+        },
+        {
+          'name': 'Даня',
+          'id': id_danya
+        },
+        {
+          'name': 'Саня',
+          'id': id_sanya
+        },
+        {
+          'name': 'Ваня',
+          'id': id_vanya
+        },
+      ],
       tableData:
         [
           {
             name: 'Квас "Очаковский"',
-            whoBought: 'Даня',
-            whoPays: ['Ваня', 'Даня'],
+            whoBoughtId: id_danya,
             price: 98,
             quantity: 1,
-            proportions: [1, 1],
-            id: this.uuidv4()
+            proportions: [
+              { "id": id_vanya, "part": 1 },
+              { "id": id_danya, "part": 1 }
+            ],
+            id: pid1
           },
           {
             name: 'Квас "Никола"',
-            whoBought: 'Ваня',
-            whoPays: ['Серго', 'Даня', 'Ваня'],
+            whoBoughtId: id_vanya,
             price: 87,
             quantity: 2,
-            proportions: [1, 1, 1],
-            id: this.uuidv4()
+            proportions: [
+              { "id": id_sergo, "part": 1 },
+              { "id": id_vanya, "part": 1 },
+              { "id": id_danya, "part": 1 }
+            ],
+            id: pid2
 
           },
           {
             name: 'Квас "Лидский"',
-            whoBought: 'Серго',
-            whoPays: ['Даня'],
+            whoBoughtId: id_sergo,
             price: 73,
             quantity: 2,
-            proportions: [1],
-            id: this.uuidv4()
+            proportions: [
+              { "id": id_danya, "part": 1 }
+            ],
+            id: pid3
 
           },
           {
             name: 'Ржаной хлеб',
-            whoBought: 'Серго',
-            whoPays: ['Серго', 'Даня', 'Саня', 'Ваня'],
+            whoBoughtId: id_sergo,
             price: 45,
             quantity: 2,
-            proportions: [1, 2, 3, 1],
-            id: this.uuidv4()
+            proportions: [
+              { "id": id_sergo, "part": 1 },
+              { "id": id_danya, "part": 2 },
+              { "id": id_sanya, "part": 3 },
+              { "id": id_vanya, "part": 1 },
+            ],
+            id: pid4
 
           },
           {
             name: 'Бородинский хлеб',
-            whoBought: 'Ваня',
-            whoPays: ['Серго', 'Даня', 'Ваня'],
+            whoBoughtId: id_vanya,
             price: 58,
             quantity: 4,
-            proportions: [1, 1, 1],
-            id: this.uuidv4()
+            proportions: [
+              { "id": id_sergo, "part": 1 },
+              { "id": id_danya, "part": 1 },
+              { "id": id_vanya, "part": 1 },
+            ],
+            id: pid5
           },
 
         ],
 
-    }, () => { this.updateNameIds(); });
+    }, () => {
+      this.updateBackend();
+    });
     this.setState({
       calculated: false,
     })
   }
 
   componentDidMount(props) {
-    //backend connect 
     if (this.props.match.params.id) {
       let id = this.props.match.params.id
       this.setState({
         id: id,
       })
-      // LOAD tableData FROM BACKEND HERE!!!!!!!!!!!!!!!!!!!1
+      // get-request
       axios.get(`${BACKEND_ADDRESS}/api/get/${id}`,).then(res => {
-        console.log('get res: ', res)
+        //console.log('get res: ', res)
         //if it's internal error
         if (res.status == 500)
           console.log('Неотловленная ошибка на backend-части, ошибка 500')
         if (res.status == 404)
           console.log('Не удалось установить связь с backend-сервером. ошибка 404')
         if (res.status == 201) {
-          console.log('YAHOOOOOOOOOOOOOOOOOOOOO. got data.')
           //window.location.href = "/" + new_id;
         }
         let result = res.data
-        //console.log('data got: ')
         //console.log(result)
         if (result) {
           let names = []
 
           for (let t of result.persons) {
             names.push(t.name)
-            console.log('push ', t.name)
+            //console.log('push ', t.name)
           }
 
           for (let p of result.products) {
-            p.whoBought = this.getIdNameA(p.whoBoughtId, result.persons)
-            p.whoPays = []
-            for (let g in p.whoPaysId) {
-              p.whoPays.push(this.getIdNameA(p.whoPaysId[g], result.persons))
-            }
             p.proportions = JSON.parse(p.proportions)
           }
 
@@ -494,18 +504,11 @@ class App extends React.Component {
               this.fillDebugInfo();
             }
             //this.updateNameIds();
-
-            //console.log('after all updates tableData = ', this.state.tableData)
-
           })
         }
       }, (e) => {
         console.log('get request error: ', e);
       });
-
-
-
-      //console.log('I\'VE GOT THE ID: ', id)
     }
     if (debugging) {
       this.fillDebugInfo();
@@ -516,9 +519,6 @@ class App extends React.Component {
     return (
       <div>
         <Header as="h1" textAlign="center" style={{ paddingTop: "20px" }}>
-          {/* <Icon name="chart pie" /> */}
-          {/* СколькоСкинуть */}
-
         </Header>
         {/* <Link to="/"> */}
 
@@ -547,59 +547,59 @@ class App extends React.Component {
           {
             this.state.page == 'main' &&
             <div>
-            {/* <Segment.Group>
+              {/* <Segment.Group>
               <Segment> */}
-                <Grid ui centered>
-                  <Grid.Row>
-                    {/* <Link to={'this.generateNewProjectToken'} > */}
-                    <Button
-                      size="massive"
-                      color='orange'
-                      onClick={() => {
-                        //this.handleMenuChange('products');
-                        this.setState({
-                          guided: false,
-                          projectname: "temp project name"
-                        }, () => {
-                          this.generateNewProjectToken();
-                        });
-                      }} >
-                      Создать пустой проект
+              <Grid ui centered>
+                <Grid.Row>
+                  {/* <Link to={'this.generateNewProjectToken'} > */}
+                  <Button
+                    size="massive"
+                    color='orange'
+                    onClick={() => {
+                      //this.handleMenuChange('products');
+                      this.setState({
+                        guided: false,
+                        projectname: "temp project name"
+                      }, () => {
+                        this.generateNewProjectToken();
+                      });
+                    }} >
+                    Создать пустой проект
                         </Button>
-                    {/* </Link> */}
-                  </Grid.Row>
-                  <Grid.Row
-                    style={{ paddingTop: 0 }}
-                  >
-                    <Button
-                      size="massive"
-                      positive
-                      onClick={() => {
-                        //this.handleMenuChange('products');
-                        this.setState({
-                          guided: true,
-                          projectname: "guided test project"
-                        }, () => {
-                          this.generateNewProjectToken(true);
-                        });
-                      }} >
-                      Пройти обучение
+                  {/* </Link> */}
+                </Grid.Row>
+                <Grid.Row
+                  style={{ paddingTop: 0 }}
+                >
+                  <Button
+                    size="massive"
+                    positive
+                    onClick={() => {
+                      //this.handleMenuChange('products');
+                      this.setState({
+                        guided: true,
+                        projectname: "guided test project"
+                      }, () => {
+                        this.generateNewProjectToken(true);
+                      });
+                    }} >
+                    Пройти обучение
                         </Button>
 
-                  </Grid.Row>
-                </Grid>
+                </Grid.Row>
+              </Grid>
               {/* </Segment>*/
-              <Segment
-              
-              > 
-                <Header as="h3">
-                  Добро пожаловать!
-                </Header>
-                {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
-                <p style={{ marginTop: "-5px", }}>
+                <Segment
 
-                <b style={{ color: "red" }}>
-                    Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями :)
+                >
+                  <Header as="h3">
+                    Добро пожаловать!
+                </Header>
+                  {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
+                  <p style={{ marginTop: "-5px", }}>
+
+                    <b style={{ color: "red" }}>
+                      Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями :)
                     </b>
                     <br /><br />
 
@@ -614,8 +614,8 @@ class App extends React.Component {
                 Приятного использования!
                 <br /><br />
 
-                 </p>
-               </Segment>
+                  </p>
+                </Segment>
               /*
             </Segment.Group> */}
             </div>
@@ -640,8 +640,6 @@ class App extends React.Component {
               {this.state.guided ?
                 <Grid columns={3} stackable style={{ paddingBottom: "20px", }}>
                   <Grid.Column>
-
-
                     <div style={{ minHeight: '203px' }} >
                       <Header as="h3" style={{ paddingTop: "0px" }}>
                         Как пользоваться?
@@ -731,8 +729,11 @@ class App extends React.Component {
                 tableData={this.state.tableData}
                 handleAddRow={this.handleAddRow}
                 handleChangeRow={this.handleChangeRow}
-                namesArray={this.formSearchFromArray(this.state.namesArray)}
+                namesArray={this.formSearchFromArray()}
                 removeRow={this.removeRow}
+                getNameById={this.getNameById}
+                getTableItemIndexByProductId={this.getTableItemIndexByProductId}
+                getIdByName={this.getIdByName}
               />
               {this.state.tableData.length > 0 &&
 

@@ -58,14 +58,14 @@ function EditMenu(props) {
             setWhoPaysError(1);
             isOk = 0;
         }
-        // check proportions
-        for (let prop of props.proportions) {
-            console.log('prop = ', prop)
-            if (prop < 1) {
-                setProportionsError(1);
-                isOk = 0;
-            }
-        }
+        // // check proportions
+        // for (let prop of props.proportions) {
+        //     console.log('prop = ', prop)
+        //     if (prop < 1) {
+        //         setProportionsError(1);
+        //         isOk = 0;
+        //     }
+        // }
 
         // check price
         let parsedPrice = parseInt(props.inputPriceText)
@@ -97,7 +97,7 @@ function EditMenu(props) {
         <Modal
             onClose={() => setOpen(false)}
             onOpen={() => {
-                props.fillDataToEdit(props.index);
+                props.fillDataToEdit(props.productId);
                 setOpen(true);
             }}
             open={open}
@@ -175,10 +175,11 @@ function EditMenu(props) {
                         {//props.inputQuantityText != '1' && props.inputQuantityText != '' &&
                             <ChooseProportions
                                 error={proportionsError}
-                                namesArray={props.whoPays}
+                                //namesArray={props.whoPays}
                                 proportions={props.proportions}
                                 handleProportionsChange={props.handleProportionsChange}
                                 reduceProportions={props.reduceProportions}
+                                getNameById={props.getNameById}
                             />
                         }
                     </Transition.Group>
@@ -232,11 +233,13 @@ function EditMenu(props) {
 
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => {
-                    props.resetInputs();
-                    props.removeRow(props.index)
-                    setOpen(false);
-                }}
+                <Button
+                    negative
+                    onClick={() => {
+                        props.resetInputs();
+                        props.removeRow(props.productId)
+                        setOpen(false);
+                    }}
 
                     style={{ float: "left" }}
 
@@ -252,10 +255,10 @@ function EditMenu(props) {
                 <Button onClick={() => {
                     if (checkAllFields()) {
                         props.handleChangeRow(
-                            props.index,
+                            props.productId,
                             props.inputNameText,
                             props.whoBought,
-                            props.whoPays,
+                            //props.whoPays,
                             parseInt(props.inputPriceText),
                             parseInt(props.inputQuantityText),
                             props.proportions

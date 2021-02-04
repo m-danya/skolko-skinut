@@ -33,16 +33,20 @@ function ChooseProportions(props) {
             trigger={<Button
                 fluid
                 basic={props.error}
-                color={props.error? 'red' : 'white'}
+                color={props.error ? 'red' : 'white'}
                 width={1}
                 style={{ marginTop: '10px', }}
             >
-                Пропорции: {props.proportions.every(v => v === props.proportions[0])
-                    ?
-                    'поровну'
-                    :
-                    props.proportions.map((e, i) => ((i == props.proportions.length - 1) ? e : e + ' : '))
-
+                Пропорции: {
+                    (props.proportions.every(v => v.part === props.proportions[0].part)
+                        ?
+                        'поровну'
+                        :
+                        (props.proportions.map((e, i) => ((i == props.proportions.length - 1) ?
+                            e.part
+                            :
+                            e.part + ' : ')))
+                    )
                 }
             </Button>}
         >
@@ -53,7 +57,7 @@ function ChooseProportions(props) {
                     <Form
                         value='sm'
                     >
-                        {props.namesArray.length ?
+                        {props.proportions.length ?
 
                             (
                                 <Table basic='very' celled collapsing className='ui center image' >
@@ -70,29 +74,28 @@ function ChooseProportions(props) {
 
 
 
-                                        {(props.namesArray.map((name, i) => {
+                                        {(props.proportions.map((p) => {
 
                                             return (<Table.Row>
                                                 <Table.Cell textAlign='center'>
                                                     <Header as='h4' image>
                                                         <Header.Content>
-                                                            {name}
+                                                            {props.getNameById(p.id)}
                                                         </Header.Content>
                                                     </Header>
                                                 </Table.Cell>
                                                 <Table.Cell textAlign='center'>
-                                                    {props.proportions[i]}
+                                                    {p.part}
                                                 </Table.Cell>
                                                 <Table.Cell textAlign='right'>
                                                     <Button.Group icon>
-
                                                         <Button
-                                                            onClick={() => { props.handleProportionsChange(i, -1) }}
+                                                            onClick={() => { props.handleProportionsChange(p.id, -1) }}
                                                         >
                                                             <Icon name='minus' />
                                                         </Button>
                                                         <Button
-                                                            onClick={() => { props.handleProportionsChange(i, 1) }}
+                                                            onClick={() => { props.handleProportionsChange(p.id, 1) }}
                                                         >
                                                             <Icon name='plus' />
                                                         </Button>

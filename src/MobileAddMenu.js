@@ -55,14 +55,14 @@ function MobileAddMenu(props) {
             setWhoPaysError(1);
             isOk = 0;
         }
-        // check proportions
-        for (let prop of props.proportions) {
-            console.log('prop = ', prop)
-            if (prop < 1) {
-                setProportionsError(1);
-                isOk = 0;
-            }
-        }
+        // // check proportions
+        // for (let prop of props.proportions) {
+        //     console.log('prop = ', prop)
+        //     if (prop < 1) {
+        //         setProportionsError(1);
+        //         isOk = 0;
+        //     }
+        // }
 
         // check price
         let parsedPrice = parseInt(props.inputPriceText)
@@ -171,10 +171,11 @@ function MobileAddMenu(props) {
                         {//props.inputQuantityText != '1' && props.inputQuantityText != '' &&
                             <ChooseProportions
                                 error={proportionsError}
-                                namesArray={props.whoPays}
+                                //namesArray={props.whoPays}
                                 proportions={props.proportions}
                                 handleProportionsChange={props.handleProportionsChange}
                                 reduceProportions={props.reduceProportions}
+                                getNameById={props.getNameById}
                             />
                         }
                     </Transition.Group>
@@ -234,7 +235,7 @@ function MobileAddMenu(props) {
                         props.handleAddRow(
                             props.inputNameText,
                             props.whoBought,
-                            props.whoPays,
+                            //props.whoPays,
                             parseInt(props.inputPriceText),
                             parseInt(props.inputQuantityText),
                             props.proportions

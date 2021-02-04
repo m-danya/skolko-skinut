@@ -38,8 +38,9 @@ class TableOfProducts extends Component {
             inputPriceText: '',
             inputQuantityText: '1',
             proportions: [],
-            whoBought: null,
-            whoPays: [],
+            whoBought: null, // мы обнуляем input-ы
+            //whoBoughtId: null,
+            whoPays: [], // мы обнуляем input-ы
         }
         this.handleWhoBoughtChange = this.handleWhoBoughtChange.bind(this)
         this.handleWhoPaysChange = this.handleWhoPaysChange.bind(this)
@@ -51,34 +52,43 @@ class TableOfProducts extends Component {
         this.fillDataToEdit = this.fillDataToEdit.bind(this)
     }
 
-
-
     resetInputs() {
         this.setState({
             inputNameText: '',
             // inputWhoBoughtText: '',
             // inputWhoPaysText: '',
-            whoBought: null,
-            whoPays: [],
+            whoBought: null, // мы обнуляем input-ы
+            whoPays: [], // мы обнуляем input-ы
+            //whoBoughtId: null,
             inputPriceText: '',
             inputQuantityText: '1',
             proportions: [],
         });
     }
 
-    fillDataToEdit(index) {
+    fillDataToEdit(id) {
+        console.log('fillDataToEdit(', id, ')')
+        let index = this.props.getTableItemIndexByProductId(id)
+        if (index == -1) {
+            console.log('fillDataToEdit error: no such id! кто-то удалил продукт!')
+            return
+        }
+        let whoPaysGenerated = new Array(this.props.tableData[index].proportions.length)
+        for (let i in this.props.tableData[index].proportions) {
+            whoPaysGenerated[i] = this.props.tableData[index].proportions[i].id
+            console.log(this.props.tableData[index].proportions[i])
+        }
         this.setState({
             inputNameText: this.props.tableData[index].name.slice(),
-            whoBought: this.props.tableData[index].whoBought.slice(),
-            whoPays: this.props.tableData[index].whoPays.slice(),
+            whoBought: this.props.tableData[index].whoBoughtId,
+            whoPays: whoPaysGenerated.slice(), //this.props.tableData[index].whoPays.slice(),
             inputPriceText: this.props.tableData[index].price,
             inputQuantityText: this.props.tableData[index].quantity,
             proportions: this.props.tableData[index].proportions.slice(),
         });
-    }
+    }   
 
     handleInputChange(name, e) {
-
         const target = e.target;
         const value = target.value;
         this.setState({
@@ -87,42 +97,67 @@ class TableOfProducts extends Component {
     }
 
     handleWhoBoughtChange(e, { name, value }) {
-        //console.log(e);
         this.setState({
             whoBought: value,
         });
     }
 
     handleWhoPaysChange(e, { name, value }) {
+        console.log('val = ', value)
         if (value.includes("Добавить всех")) {
-            //console.log('all')
-            //console.log(this.props.namesArray.slice())
+            console.log('all. not tested yet')
             let newWhoPays = new Array(this.props.namesArray.length);
+            let newProportions = new Array(this.props.namesArray.length);
             let i = 0
             for (let f of this.props.namesArray) {
-                newWhoPays[i] = f.key
+                
+                newWhoPays[i] = f.key;
+                newProportions[i] = {
+                    id: this.props.getIdByName(f.text),
+                    part: 1,
+                };
+                i += 1
+            }
+
+            this.setState({
+                whoPays: newWhoPays,
+                proportions: newProportions,
+            });
+        } else {
+            let newProportions = new Array(value.length);
+            let i = 0
+            for (let f of value) {
+                console.log('f = ', f)
+                newProportions[i] = {
+                    id: f,
+                    part: 1,
+                };
                 i += 1
             }
             this.setState({
-                whoPays: newWhoPays,
-                proportions: new Array(this.props.namesArray.length).fill(1),
-            });
-        } else {
-            this.setState({
                 whoPays: value,
-                proportions: new Array(value.length).fill(1),
+                proportions: newProportions,
+            }, () => {
+                console.log('set. whoPays = ', this.state.whoPays, ". props = ", this.state.proportions)
             });
         }
     }
 
-    handleProportionsChange(name, value) {
+    handleProportionsChange(id, value) {
         let proportions_new = this.state.proportions.slice()
-        proportions_new[name] += value
-        if (proportions_new[name] < 1) proportions_new[name] = 1
+        let i = 0
+        while (i < proportions_new.length && proportions_new[i].id != id) {
+            i += 1
+        }
+        if (i == proportions_new.length) {
+            console.log('handleProportionsChange error! id ', id, ' was not found!')
+            return
+        }
+        proportions_new[i].part += value
+        if (proportions_new[i].part < 1) proportions_new[i].part = 1
         this.setState({
             proportions: proportions_new,
         })
-
     }
 
 
@@ -144,14 +179,14 @@ class TableOfProducts extends Component {
 
     reduceProportions() {
         // find gcd and divide by it every number
-        let g = this.state.proportions[0];
+        let g = this.state.proportions[0].part;
         for (let i of this.state.proportions) {
-            g = this.gcd(g, i)
+            g = this.gcd(g, i.part)
         }
 
         let proportions_new = this.state.proportions.slice()
         for (let n in proportions_new) {
-            proportions_new[n] = proportions_new[n] / g
+            proportions_new[n].part = proportions_new[n].part / g
         }
         this.setState({
             proportions: proportions_new,
@@ -192,6 +227,7 @@ class TableOfProducts extends Component {
                             reduceProportions={this.reduceProportions}
                             handleWhoBoughtChange={this.handleWhoBoughtChange}
                             getWhoPaysOptions={this.getWhoPaysOptions}
+                            getNameById={this.props.getNameById}
                         />
                     }
                     <Table
@@ -272,6 +308,7 @@ class TableOfProducts extends Component {
                                                         proportions={this.state.proportions}
                                                         handleProportionsChange={this.handleProportionsChange}
                                                         reduceProportions={this.reduceProportions}
+                                                        getNameById={this.props.getNameById}
                                                     />
                                                 }
                                             </Transition.Group>
@@ -287,7 +324,8 @@ class TableOfProducts extends Component {
 
                                     <Table.Cell width={2}>
                                         <p className='tableFont'>
-                                            <Input fluid
+                                            <Input
+                                                fluid
                                                 label={{ basic: true, content: '₽' }}
                                                 labelPosition='right'
                                                 placeholder='Цена'
@@ -320,7 +358,7 @@ class TableOfProducts extends Component {
                                                 this.props.handleAddRow(
                                                     this.state.inputNameText,
                                                     this.state.whoBought,
-                                                    this.state.whoPays,
+                                                    //this.state.whoPays,
                                                     parseInt(this.state.inputPriceText),
                                                     parseInt(this.state.inputQuantityText),
                                                     this.state.proportions
@@ -339,6 +377,7 @@ class TableOfProducts extends Component {
 
                             }
 
+
                             {this.props.tableData.map((row, index) => {
                                 return (
                                     <Table.Row>
@@ -350,20 +389,27 @@ class TableOfProducts extends Component {
 
                                         <Table.Cell width={4}>
                                             <p className='tableFont'>
-                                                {row.whoBought}
+                                                {this.props.getNameById(row.whoBoughtId)}
                                             </p>
                                         </Table.Cell>
 
                                         <Table.Cell width={4}>
                                             <p className='tableFont'>
-                                                {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}<br />
+                                                {/* {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}<br /> */}
+                                                {row.proportions.map((e, i) => ((i == row.proportions.length - 1) ?
+                                                    this.props.getNameById(e.id)
+                                                    :
+                                                    this.props.getNameById(e.id) + ', '))}<br />
                                                 <text className='tableFontProportions' style={{ paddingTop: '0', marginInlineStart: 0 }}>
                                                     {
-                                                        row.proportions.length == 1 ? '' : (row.proportions.every(v => v === row.proportions[0])
+                                                        row.proportions.length == 1 ? '' : (row.proportions.every(v => v.part === row.proportions[0].part)
                                                             ?
-                                                            '(поровну)'
+                                                            'поровну'
                                                             :
-                                                            (row.proportions.map((e, i) => ((i == row.proportions.length - 1) ? e : e + ' : ')))
+                                                            (row.proportions.map((e, i) => ((i == row.proportions.length - 1) ?
+                                                                e.part
+                                                                :
+                                                                e.part + ' : ')))
                                                         )
                                                     }
                                                 </text>
@@ -381,7 +427,8 @@ class TableOfProducts extends Component {
                                             <p className='tableFont'>
                                                 <EditMenu
                                                     tableData={this.props.tableData}
-                                                    index={index}
+                                                    //index={index}
+                                                    productId={row.id}
                                                     namesArray={this.props.namesArray}
                                                     whoBought={this.state.whoBought}
                                                     handleWhoPaysChange={this.handleWhoPaysChange}
@@ -400,6 +447,7 @@ class TableOfProducts extends Component {
                                                     handleChangeRow={this.props.handleChangeRow}
                                                     inputNameText={this.state.inputNameText}
                                                     removeRow={this.props.removeRow}
+                                                    getNameById={this.props.getNameById}
                                                 />
                                             </p>
                                         </Table.Cell>
