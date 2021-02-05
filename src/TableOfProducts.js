@@ -27,6 +27,23 @@ import {
     isMobile
 } from "react-device-detect";
 
+const colors = [
+    'red',
+    'orange',
+    'yellow',
+    'olive',
+    'green',
+    'teal',
+    'blue',
+    'violet',
+    'purple',
+    'pink',
+    'brown',
+    'grey',
+    'black',
+  ]
+  
+
 class TableOfProducts extends Component {
 
     constructor(props) {
@@ -235,6 +252,7 @@ class TableOfProducts extends Component {
                     }
                     <Table
                         // selectable 
+                        
                         celled
                     //basic
                     >

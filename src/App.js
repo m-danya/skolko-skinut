@@ -479,7 +479,7 @@ class App extends React.Component {
       })
       // get-request
       axios.get(`${BACKEND_ADDRESS}/api/get/${id}`,).then(res => {
-        //console.log('get res: ', res)
+        console.log('get res: ', res)
         //if it's internal error
         if (res.status == 500)
           console.log('Неотловленная ошибка на backend-части, ошибка 500')
@@ -499,7 +499,7 @@ class App extends React.Component {
           }
 
           for (let p of result.products) {
-            p.proportions = JSON.parse(p.proportions)
+            //p.proportions = JSON.parse(p.proportions)
           }
 
           this.setState({
@@ -529,24 +529,33 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header as="h1" textAlign="center" style={{ paddingTop: "20px" }}>
-        </Header>
-        {/* <Link to="/"> */}
+        <div
 
-        <Image
-          src={ss_logo}
-          //size='small'
-          size='medium'
-          //href="https://skolkoskinut.ru/"
-          onClick={() => {
-            this.setState({
-              page: 'main'
-            })
+          style={{
+            backgroundImage: "url(/background1.png)",
+            // height: "300px",
+            //backgroundRepeat: "no-repeat"
           }}
-          style={{ paddingBottom: "20px" }}
-          centered
-        />
-        {/* </Link> */}
+        >
+          <Header as="h1" textAlign="center" style={{ paddingTop: "20px" }}>
+          </Header>
+          {/* <Link to="/"> */}
+
+          <Image
+            src={ss_logo}
+            //size='small'
+            size='medium'
+            //href="https://skolkoskinut.ru/"
+            onClick={() => {
+              this.setState({
+                page: 'main'
+              })
+            }}
+            style={{ paddingBottom: "20px" }}
+            centered
+          />
+          {/* </Link> */}
+        </div>
 
         <Container>
           <MyMenu
