@@ -34,6 +34,7 @@ class MyMenu extends React.Component {
 
           <Menu.Item
             name="products"
+            disabled={!this.props.hasId}
             active={this.props.activeItem === "products"}
             onClick={() => this.props.handleItemClick('products')}
           >

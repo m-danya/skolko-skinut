@@ -559,6 +559,7 @@ class App extends React.Component {
 
         <Container>
           <MyMenu
+            hasId={this.props.match.params.id}
             activeItem={this.state.page}
             handleItemClick={this.handleMenuChange}
           />
@@ -617,11 +618,11 @@ class App extends React.Component {
                 </Header>
                   {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
                   <p style={{ marginTop: "-5px", }}>
-
+{/* 
                     <b style={{ color: "red" }}>
                       Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями, осталось чуть-чуть :)
                     </b>
-                    <br /><br />
+                    <br /><br /> */}
 
                   В данный момент программа находится в стадии альфа-теста —
                   перед Вами лишь предварительная, модельная версия продукта.
@@ -661,7 +662,7 @@ class App extends React.Component {
                 <Grid columns={3} stackable style={{ paddingBottom: "20px", }}>
                   <Grid.Column>
                     <div style={{ minHeight: '203px' }} >
-                      <Header as="h3" style={{ paddingTop: "0px" }}>
+                      <Header as="h3" style={{ paddingTop: "10px" }}>
                         Как пользоваться?
                         </Header>
                       <List relaxed>
