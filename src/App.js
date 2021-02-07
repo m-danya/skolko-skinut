@@ -139,9 +139,11 @@ class App extends React.Component {
         console.log('Неотловленная ошибка на backend-части, ошибка 500')
       if (res.status == 404)
         console.log('Не удалось установить связь с backend-сервером. ошибка 404')
-      if (res.status == 201) {
+      if (res.status == 200) {
         //console.log('YAHOOOOOOOOOOOOOOOOOOOOO. updated.')
+        console.log('send?')
         if (ws_client) {
+          console.log('send!')
           ws_client.send(JSON.stringify({
             type: "message",
             msg: "hey",
@@ -395,9 +397,9 @@ class App extends React.Component {
         console.log('Неотловленная ошибка на backend-части, ошибка 500')
       if (res.status == 404)
         console.log('Не удалось установить связь с backend-сервером. ошибка 404')
-      if (res.status == 201) {
-        //window.location.href = "/" + new_id;
-      }
+      // if (res.status == 201) {
+      //   //window.location.href = "/" + new_id;
+      // }
       let result = res.data
       //console.log(result)
       if (result) {
@@ -549,6 +551,7 @@ class App extends React.Component {
       ws_client.onopen = () => {
         console.log('WS: WebSocket Client Connected');
       };
+
       ws_client.onmessage = (message) => {
         const dataFromServer = JSON.parse(message.data);
         console.log('WS: got reply! ', dataFromServer);
