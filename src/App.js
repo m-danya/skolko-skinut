@@ -38,7 +38,7 @@ const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 //const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
 //const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
 
-var debugging = 0;
+var debugging = false;
 
 
 class App extends React.Component {
@@ -48,7 +48,6 @@ class App extends React.Component {
       page: "main", // do not change. 
       //projectname: "temp project name", // need to fix this: add naming system
       tableData: [],
-      namesText: '',
       namesArray: [],
       calculated: false,
       namesIds: [],
@@ -57,12 +56,12 @@ class App extends React.Component {
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
     this.handleChangeRow = this.handleChangeRow.bind(this)
-    this.handleNamesChange = this.handleNamesChange.bind(this);
+    this.handleRemoveName = this.handleRemoveName.bind(this);
+    this.handleAddName = this.handleAddName.bind(this);
     this.handleCalculate = this.handleCalculate.bind(this);
     this.fillDebugInfo = this.fillDebugInfo.bind(this);
     this.generateNewProjectToken = this.generateNewProjectToken.bind(this);
     this.updateBackend = this.updateBackend.bind(this);
-    this.updateNameIds = this.updateNameIds.bind(this);
     this.removeRow = this.removeRow.bind(this);
     this.getNameById = this.getNameById.bind(this);
     this.getTableItemIndexByProductId = this.getTableItemIndexByProductId.bind(this);
@@ -146,7 +145,7 @@ class App extends React.Component {
             type: "message",
             msg: "hey",
           }));
-        } 
+        }
         //window.location.href = "/" + new_id;
       }
     }, (e) => {
@@ -194,18 +193,43 @@ class App extends React.Component {
 
   }
 
+  handleAddName(name) {
+    let new_namesIds = this.state.namesIds.slice()
+    new_namesIds.push({
+      'name': name,
+      'id': this.uuidv4()
+    })
 
-  handleNamesChange(event) {
-    //console.log(event);
     this.setState({
-      namesText: event.target.value,
-      namesArray: [...new Set(event.target.value.split(/\r?[\n,]\s?/).filter((element) => element))]
-    }, () => {
-      this.updateNameIds();
-
-    });
-    this.setState({
+      namesArray: [...this.state.namesArray, name],
+      namesIds: new_namesIds,
       calculated: false,
+    }, () => {
+      this.updateBackend();
+    })
+  }
+
+
+  handleRemoveName(name) {
+    let newNamesArray = this.state.namesArray.slice()
+    let new_namesIds = this.state.namesIds.slice()
+    newNamesArray.splice(newNamesArray.indexOf(name), 1)
+    let index = 0;
+    for (index in new_namesIds) {
+      if (new_namesIds[index].name == name) {
+        console.log('found ', name)
+        break
+      }
+    }
+
+    new_namesIds.splice(index, 1)
+    this.setState({
+      namesArray: newNamesArray,
+      namesIds: new_namesIds,
+      calculated: false,
+    }, () => {
+      this.updateBackend();
+
     })
   }
 
@@ -237,34 +261,6 @@ class App extends React.Component {
     return -1
   }
 
-  updateNameIds() {
-    let new_namesIds = this.state.namesIds.slice()
-    for (let name of this.state.namesArray) {
-      if (this.getIdByName(name) == -1) {
-        console.log('new name: ', name)
-        new_namesIds.push({
-          'name': name,
-          'id': this.uuidv4()
-        })
-      }
-    }
-
-    for (let i in new_namesIds) {
-      if (!this.state.namesArray.includes(new_namesIds[i].name)) {
-        console.log("name ", new_namesIds[i].name, " was not found!")
-        new_namesIds.splice(i, 1)
-      }
-    }
-
-    this.setState({
-      namesIds: new_namesIds
-    }, () => {
-      this.updateBackend();
-
-    })
-    //console.log()
-
-  }
 
   go(person, left, target, relations, sequences, profits, seq, ints) {
     if (left == 0) {
@@ -402,13 +398,11 @@ class App extends React.Component {
           projectname: result.name.slice(),
           namesIds: result.persons.slice(),
           namesArray: names.slice(),
-          namesText: names.join("\n"),
           guided: result.name == "guided test project",//result.guided,
         }, () => {
           if (this.state.guided && this.state.tableData.length == 0) {
             this.fillDebugInfo();
           }
-          //this.updateNameIds();
         })
       }
     }, (e) => {
@@ -429,7 +423,6 @@ class App extends React.Component {
     let id_vanya = this.uuidv4();
     this.setState({
       page: 'products',
-      namesText: 'Серго\r\nСаня\r\nВаня\r\nДаня', // только для демо-инфы задаётся вручную
       namesArray: ['Серго', 'Даня', 'Саня', 'Ваня'],
       namesIds: [
         {
@@ -531,7 +524,7 @@ class App extends React.Component {
       }, () => {
         this.makeGetRequest();
       })
-      ws_client = new W3CWebSocket(`ws://skolkoskinut.ru/api/ws/${id}`);
+      ws_client = new W3CWebSocket(`wss://skolkoskinut.ru/api/ws/${id}`);
       ws_client.onopen = () => {
         console.log('WS: WebSocket Client Connected');
       };
@@ -542,7 +535,7 @@ class App extends React.Component {
       };
 
     }
-    if (debugging) {  
+    if (debugging) {
       this.fillDebugInfo();
     }
   }
@@ -692,8 +685,10 @@ class App extends React.Component {
                             1. Впиши имена всех людей:
                           <div style={{ padding: "10px 0 10px 0", }}>
                               <ChooseNames
-                                handleNamesChange={this.handleNamesChange}
-                                namesText={this.state.namesText}
+                                handleRemoveName={this.handleRemoveName}
+                                handleAddName={this.handleAddName}
+                                namesArray={this.state.namesArray}
+                                namesIds={this.state.namesIds}
                               />
                             </div>
                           </List.Content>
@@ -709,7 +704,7 @@ class App extends React.Component {
                             {/* <List.Header>Три</List.Header> */}
                         3. Нажми на зелёную кнопку и получи расчёт чека (сколько кто кому должен скинуть).
                         <br /><br />
-                        У тебя будет ссылка, которой можно поделиться с друзьями, вау!
+                        У тебя будет ссылка, которой можно поделиться с друзьями!
                         🥳
                         <br />
                             <br />
@@ -757,8 +752,10 @@ class App extends React.Component {
                     // class: "textAlignCenter"
                   }}>
                     <ChooseNames
-                      handleNamesChange={this.handleNamesChange}
-                      namesText={this.state.namesText}
+                      handleRemoveName={this.handleRemoveName}
+                      handleAddName={this.handleAddName}
+                      namesArray={this.state.namesArray}
+                      namesIds={this.state.namesIds}
                     />
                   </div>
                 </div>
