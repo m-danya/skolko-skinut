@@ -22,6 +22,7 @@ import MyMenu from "./Menu.js";
 import TableOfProducts from './TableOfProducts'
 import ChooseNames from './ChooseNames'
 import ShareMenu from './ShareMenu'
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 import {
   BrowserView,
   isBrowser,
@@ -31,7 +32,7 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 import ss_logo from './assets/logo.png'
 
 const axios = require('axios').default;
-
+var ws_client;
 
 const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 //const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
@@ -140,6 +141,12 @@ class App extends React.Component {
         console.log('Не удалось установить связь с backend-сервером. ошибка 404')
       if (res.status == 201) {
         console.log('YAHOOOOOOOOOOOOOOOOOOOOO. updated.')
+        if (ws_client) {
+          ws_client.send(JSON.stringify({
+            type: "message",
+            msg: "hey",
+          }));
+        } 
         //window.location.href = "/" + new_id;
       }
     }, (e) => {
@@ -349,7 +356,7 @@ class App extends React.Component {
     delete this.state.tableData.splice(index, 1)
     this.setState({
       calculated: false,
-    })
+    }, () => { this.updateBackend() });
   }
 
   relationsIsNotEmpty() {
@@ -363,6 +370,51 @@ class App extends React.Component {
     return false;
   }
 
+
+  makeGetRequest() {
+    axios.get(`${BACKEND_ADDRESS}/api/get/${this.state.id}`,).then(res => {
+      console.log('get res: ', res)
+      //if it's internal error
+      if (res.status == 500)
+        console.log('Неотловленная ошибка на backend-части, ошибка 500')
+      if (res.status == 404)
+        console.log('Не удалось установить связь с backend-сервером. ошибка 404')
+      if (res.status == 201) {
+        //window.location.href = "/" + new_id;
+      }
+      let result = res.data
+      //console.log(result)
+      if (result) {
+        let names = []
+
+        for (let t of result.persons) {
+          names.push(t.name)
+          //console.log('push ', t.name)
+        }
+
+        for (let p of result.products) {
+          //p.proportions = JSON.parse(p.proportions)
+        }
+
+        this.setState({
+          page: 'products',
+          tableData: result.products.slice(),
+          projectname: result.name.slice(),
+          namesIds: result.persons.slice(),
+          namesArray: names.slice(),
+          namesText: names.join("\n"),
+          guided: result.name == "guided test project",//result.guided,
+        }, () => {
+          if (this.state.guided && this.state.tableData.length == 0) {
+            this.fillDebugInfo();
+          }
+          //this.updateNameIds();
+        })
+      }
+    }, (e) => {
+      console.log('get request error: ', e);
+    });
+  }
 
   fillDebugInfo() {
     let pid1 = this.uuidv4();
@@ -476,52 +528,21 @@ class App extends React.Component {
       let id = this.props.match.params.id
       this.setState({
         id: id,
+      }, () => {
+        this.makeGetRequest();
       })
-      // get-request
-      axios.get(`${BACKEND_ADDRESS}/api/get/${id}`,).then(res => {
-        console.log('get res: ', res)
-        //if it's internal error
-        if (res.status == 500)
-          console.log('Неотловленная ошибка на backend-части, ошибка 500')
-        if (res.status == 404)
-          console.log('Не удалось установить связь с backend-сервером. ошибка 404')
-        if (res.status == 201) {
-          //window.location.href = "/" + new_id;
-        }
-        let result = res.data
-        //console.log(result)
-        if (result) {
-          let names = []
+      ws_client = new W3CWebSocket(`ws://skolkoskinut.ru/api/ws/${id}`);
+      ws_client.onopen = () => {
+        console.log('WS: WebSocket Client Connected');
+      };
+      ws_client.onmessage = (message) => {
+        const dataFromServer = JSON.parse(message.data);
+        console.log('WS: got reply! ', dataFromServer);
+        this.makeGetRequest();
+      };
 
-          for (let t of result.persons) {
-            names.push(t.name)
-            //console.log('push ', t.name)
-          }
-
-          for (let p of result.products) {
-            //p.proportions = JSON.parse(p.proportions)
-          }
-
-          this.setState({
-            page: 'products',
-            tableData: result.products.slice(),
-            projectname: result.name.slice(),
-            namesIds: result.persons.slice(),
-            namesArray: names.slice(),
-            namesText: names.join("\n"),
-            guided: result.name == "guided test project",//result.guided,
-          }, () => {
-            if (this.state.guided && this.state.tableData.length == 0) {
-              this.fillDebugInfo();
-            }
-            //this.updateNameIds();
-          })
-        }
-      }, (e) => {
-        console.log('get request error: ', e);
-      });
     }
-    if (debugging) {
+    if (debugging) {  
       this.fillDebugInfo();
     }
   }
@@ -618,7 +639,7 @@ class App extends React.Component {
                 </Header>
                   {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
                   <p style={{ marginTop: "-5px", }}>
-{/* 
+                    {/* 
                     <b style={{ color: "red" }}>
                       Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями, осталось чуть-чуть :)
                     </b>
