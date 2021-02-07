@@ -41,7 +41,6 @@ class ChooseNames extends React.Component {
 
     listener(event) {
         if (event.code === "Enter" || event.code === "NumpadEnter") {
-            console.log("Enter key was pressed. Run your function.");
             this.enter();
         }
     }
@@ -106,9 +105,9 @@ class ChooseNames extends React.Component {
                     <Button
                         //primary
                         color='orange'
-                        centered
-                        fluid={isMobile}
-                        width={isMobile ? "100%" : "300px"}
+                        className={this.props.centered ? 'centeredButton' : ''}
+                        fluid
+                        style={{ width: isMobile ? "100%" : "400px" }}
                     >
                         <p className='textAlignCenter '>
                             {this.props.namesArray.length

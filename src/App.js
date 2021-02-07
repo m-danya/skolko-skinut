@@ -26,6 +26,7 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 import {
   BrowserView,
   isBrowser,
+  isMobile,
   MobileView,
 } from "react-device-detect";
 import { BrowserRouter as Router, Link } from 'react-router-dom'
@@ -80,7 +81,7 @@ class App extends React.Component {
   formSearchFromArray() {
     let ans = [];
     if (!this.state.namesIds || !this.state.namesIds.length) return ans;
-    console.log("this.state.namesIds = ", this.state.namesIds)
+    //console.log("this.state.namesIds = ", this.state.namesIds)
     for (let a of this.state.namesIds) {
 
       ans.push({
@@ -139,7 +140,7 @@ class App extends React.Component {
       if (res.status == 404)
         console.log('Не удалось установить связь с backend-сервером. ошибка 404')
       if (res.status == 201) {
-        console.log('YAHOOOOOOOOOOOOOOOOOOOOO. updated.')
+        //console.log('YAHOOOOOOOOOOOOOOOOOOOOO. updated.')
         if (ws_client) {
           ws_client.send(JSON.stringify({
             type: "message",
@@ -170,21 +171,21 @@ class App extends React.Component {
     })
 
     // BACKEND: CREATE NEW PROJECT
-    console.log('go go axios!')
+    console.log('go go axios: create')
 
     axios.post(`${BACKEND_ADDRESS}/api/create`, {
       'id': new_id,
       'name': this.state.projectname,
       //'guided': guided, // bool
     }).then(res => {
-      console.log('res: ', res)
+      //console.log('res: ', res)
       //if it's internal error
       if (res.status == 500)
         console.log('Неотловленная ошибка на backend-части, ошибка 500')
       if (res.status == 404)
         console.log('Не удалось установить связь с backend-сервером. ошибка 404')
       if (res.status == 201) {
-        console.log('YAHOOOOOOOOOOOOOOOOOOOOO. created.')
+        //console.log('YAHOOOOOOOOOOOOOOOOOOOOO. created.')
         window.location.href = "/" + new_id;
       }
     }, (e) => {
@@ -217,7 +218,7 @@ class App extends React.Component {
     let index = 0;
     for (index in new_namesIds) {
       if (new_namesIds[index].name == name) {
-        console.log('found ', name)
+        //console.log('found ', name)
         break
       }
     }
@@ -388,7 +389,7 @@ class App extends React.Component {
 
   makeGetRequest() {
     axios.get(`${BACKEND_ADDRESS}/api/get/${this.state.id}`,).then(res => {
-      console.log('get res: ', res)
+      //console.log('get res: ', res)
       //if it's internal error
       if (res.status == 500)
         console.log('Неотловленная ошибка на backend-части, ошибка 500')
@@ -540,6 +541,7 @@ class App extends React.Component {
       let id = this.props.match.params.id
       this.setState({
         id: id,
+        page: 'products',
       }, () => {
         this.makeGetRequest();
       })
@@ -602,56 +604,69 @@ class App extends React.Component {
             this.state.page == 'main' &&
             <div>
               {/* <Segment.Group>
-              <Segment> */}
-              <Grid ui centered>
-                <Grid.Row>
-                  {/* <Link to={'this.generateNewProjectToken'} > */}
-                  <Button
-                    size="massive"
-                    color='orange'
-                    onClick={() => {
-                      //this.handleMenuChange('products');
-                      this.setState({
-                        guided: false,
-                        projectname: "temp project name"
-                      }, () => {
-                        this.generateNewProjectToken();
-                      });
-                    }} >
+              <Segment>  */}
+
+              <div style={{
+                padding: "10px 0 10px 0",
+                // width: isBrowser ? "300px" : "80%",
+                //  class: "textAlignCenter"
+              }}
+                className='textAlignCenter'
+              >
+                <Button
+                  //size="big"
+                  color='orange'
+                  centered
+                  fluid
+                  style={{ width: isMobile ? "100%" : "400px" }}
+                  onClick={() => {
+                    //this.handleMenuChange('products');
+                    this.setState({
+                      guided: false,
+                      projectname: "temp project name"
+                    }, () => {
+                      this.generateNewProjectToken();
+                    });
+                  }} >
+                  <p className='textAlignCenter '>
                     Создать пустой проект
-                        </Button>
-                  {/* </Link> */}
-                </Grid.Row>
-                <Grid.Row
-                  style={{ paddingTop: 0 }}
-                >
-                  <Button
-                    size="massive"
-                    positive
-                    onClick={() => {
-                      //this.handleMenuChange('products');
-                      this.setState({
-                        guided: true,
-                        projectname: "guided test project"
-                      }, () => {
-                        this.generateNewProjectToken(true);
-                      });
-                    }} >
+                      </p>
+                </Button>
+                {/* </Link> */}
+
+              </div>
+              <div>
+                <Button
+                  style={{ width: isMobile ? "100%" : "400px" }}
+                  //size="massive"
+                  //positive
+                  color='green'
+                  centered
+                  fluid
+                  onClick={() => {
+                    //this.handleMenuChange('products');
+                    this.setState({
+                      guided: true,
+                      projectname: "guided test project"
+                    }, () => {
+                      this.generateNewProjectToken(true);
+                    });
+                  }} >
+                  <p className='textAlignCenter '>
+
                     Пройти обучение
-                        </Button>
+                    </p>
+                </Button>
+              </div>
+              <Segment
 
-                </Grid.Row>
-              </Grid>
-              {/* </Segment>*/
-                <Segment
-
-                >
-                  <Header as="h3">
-                    Добро пожаловать!
+              >
+                <Header as="h3">
+                  Добро пожаловать!
                 </Header>
-                  {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
-                  <p style={{ marginTop: "-5px", }}>
-                    {/* 
+                {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
+                <p style={{ marginTop: "-5px", }}>
+                  {/* 
                     <b style={{ color: "red" }}>
                       Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями, осталось чуть-чуть :)
                     </b>
@@ -668,22 +683,11 @@ class App extends React.Component {
                 Приятного использования!
                 <br /><br />
 
-                  </p>
-                </Segment>
-              /*
-            </Segment.Group> */}
-            </div>
-          }
-
-          {
-            this.state.page == 'people' &&
-
-            <Segment.Group>
-              <Segment>
-                404
+                </p>
               </Segment>
-            </Segment.Group>
 
+              {/* </Segment.Group>  */}
+            </div>
           }
 
           {
@@ -692,61 +696,106 @@ class App extends React.Component {
 
               {/* <Segment relaxed > */}
               {this.state.guided ?
-                <Grid columns={3} stackable style={{ paddingBottom: "20px", }}>
-                  <Grid.Column>
-                    <div style={{ minHeight: '203px' }} >
-                      <Header as="h3" style={{ paddingTop: "10px" }}>
-                        Как пользоваться?
-                        </Header>
-                      <List relaxed>
-                        <List.Item>
-                          <List.Content>
-                            1. Впиши имена всех людей:
-                          <div style={{ padding: "10px 0 10px 0", }}>
-                              <ChooseNames
-                                handleRemoveName={this.handleRemoveName}
-                                handleAddName={this.handleAddName}
-                                namesArray={this.state.namesArray}
-                                namesIds={this.state.namesIds}
-                              />
-                            </div>
-                          </List.Content>
-                        </List.Item>
-                        <List.Item>
-                          <List.Content>
-                            {/* <List.Header>Два</List.Header> */}
-                          2. Добавь продукты в таблицу ниже
-                       </List.Content>
-                        </List.Item>
-                        <List.Item>
-                          <List.Content>
-                            {/* <List.Header>Три</List.Header> */}
-                        3. Нажми на зелёную кнопку и получи расчёт чека (сколько кто кому должен скинуть).
-                        <br /><br />
-                        У тебя будет ссылка, которой можно поделиться с друзьями!
-                        🥳
-                        <br />
-                            <br />
-                        Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс,
-                        <a
-                              onClick={() => {
-                                this.setState({
-                                  page: 'main',
-                                })
-                              }}
-                            > создай пустой проект</a>
-                        , чтобы внести туда свои данные.
-                        </List.Content>
-                        </List.Item>
-                      </List>
-                    </div>
-                  </Grid.Column>
-                  {isBrowser && <Grid.Column >
-                    <div style={{ minHeight: '203px' }} >
+                <div>
+                  {isMobile && <div style={{
+                    padding: "10px 0 0px 0",
+                    // width: isBrowser ? "300px" : "80%",
+                    // class: "textAlignCenter"
+                  }}>
+                    <ChooseNames
+                      handleRemoveName={this.handleRemoveName}
+                      handleAddName={this.handleAddName}
+                      namesArray={this.state.namesArray}
+                      namesIds={this.state.namesIds}
+                    />
+                  </div>
+                  }
+                  <Grid columns={2} stackable style={{ paddingBottom: "20px", }}
+                  //divided={isBrowser}
+                  >
+                    {isBrowser && <Grid.Column width={8}>
+                      <div
+                      //style={{ minHeight: isBrowser ? '203px' : '' }} 
+                      >
+                        <div style={{
+                          padding: "10px 0 10px 0",
+                          textAlign: "center"
+                        }}>
+                          <ChooseNames
+                            handleRemoveName={this.handleRemoveName}
+                            handleAddName={this.handleAddName}
+                            namesArray={this.state.namesArray}
+                            namesIds={this.state.namesIds}
+                            centered={true}
+                          />
+                          <br />
 
-                    </div>
-                  </Grid.Column>}
-                  {/* <Grid.Column >
+                          <br />
+
+                        Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс, <br />
+                          <a
+                            onClick={() => {
+                              this.setState({
+                                page: 'main',
+                              })
+                            }}
+                          > создай пустой проект</a>
+                        , чтобы внести туда свои данные.
+
+                        </div>
+                      </div>
+
+                    </Grid.Column>
+                    }
+                    <Grid.Column
+                      style={{
+                        // backgroundColor: '#E5E7E7',
+                      }}
+                    >
+                      <div
+                      //style={{ minHeight: '203px' }} 
+                      >
+                        <Header as="h3" style={{ paddingTop: isMobile ? "20px" : "10px" }}>
+                          Как пользоваться?
+                        </Header>
+                        <List relaxed>
+                          <List.Item>
+                            <List.Content>
+                              1. Заполни список людей
+                          </List.Content>
+                          </List.Item>
+                          <List.Item>
+                            <List.Content>
+                              {/* <List.Header>Два</List.Header> */}
+                          2. Добавь продукты в таблицу
+                       </List.Content>
+                          </List.Item>
+                          <List.Item>
+                            <List.Content>
+                              {/* <List.Header>Три</List.Header> */}
+                        3. Нажми на зелёную кнопку и узнай, сколько кто кому должен скинуть!
+                        <br /><br />У тебя будет ссылка, которой можно поделиться с друзьями
+                        🥳
+
+                        {isMobile && <div><br />
+
+Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс, 
+                                <a
+                                  onClick={() => {
+                                    this.setState({
+                                      page: 'main',
+                                    })
+                                  }}
+                                > создай пустой проект</a>
+, чтобы внести туда свои данные.
+  </div>}
+                            </List.Content>
+                          </List.Item>
+                        </List>
+                      </div>
+                    </Grid.Column>
+
+                    {/* <Grid.Column >
                     
                     <div style={{ minHeight: '' }} >
 
@@ -761,7 +810,9 @@ class App extends React.Component {
 
 
                   </Grid.Column> */}
-                </Grid>
+                  </Grid>
+                </div>
+
                 :
 
                 <div>
@@ -775,6 +826,7 @@ class App extends React.Component {
                       handleAddName={this.handleAddName}
                       namesArray={this.state.namesArray}
                       namesIds={this.state.namesIds}
+                      centered={true}
                     />
                   </div>
                 </div>

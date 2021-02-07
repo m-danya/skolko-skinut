@@ -84,7 +84,7 @@ class TableOfProducts extends Component {
     }
 
     fillDataToEdit(id) {
-        console.log('fillDataToEdit(', id, ')')
+        //console.log('fillDataToEdit(', id, ')')
         let index = this.props.getTableItemIndexByProductId(id)
         if (index == -1) {
             console.log('fillDataToEdit error: no such id! кто-то удалил продукт!')
@@ -93,7 +93,7 @@ class TableOfProducts extends Component {
         let whoPaysGenerated = new Array(this.props.tableData[index].proportions.length)
         for (let i in this.props.tableData[index].proportions) {
             whoPaysGenerated[i] = this.props.tableData[index].proportions[i].id
-            console.log(this.props.tableData[index].proportions[i])
+            //console.log(this.props.tableData[index].proportions[i])
         }
         this.setState({
             inputNameText: this.props.tableData[index].name.slice(),
@@ -120,9 +120,8 @@ class TableOfProducts extends Component {
     }
 
     handleWhoPaysChange(e, { name, value }) {
-        console.log('val = ', value)
+        //console.log('val = ', value)
         if (value.includes("Добавить всех")) {
-            console.log('all. not tested yet')
             let newWhoPays = new Array(this.props.namesArray.length);
             let newProportions = new Array(this.props.namesArray.length);
             let i = 0
@@ -144,7 +143,7 @@ class TableOfProducts extends Component {
             let newProportions = new Array(value.length);
             let i = 0
             for (let f of value) {
-                console.log('f = ', f)
+                //console.log('f = ', f)
                 newProportions[i] = {
                     id: f,
                     part: 1,
@@ -155,7 +154,7 @@ class TableOfProducts extends Component {
                 whoPays: value,
                 proportions: newProportions,
             }, () => {
-                console.log('set. whoPays = ', this.state.whoPays, ". props = ", this.state.proportions)
+                //console.log('set. whoPays = ', this.state.whoPays, ". props = ", this.state.proportions)
             });
         }
     }

@@ -21,6 +21,18 @@ code {
   text-align: center!important;
 }
 
+.textAlignCenter > button
+{
+  text-align: center!important;
+}
+
+.centeredButton 
+{
+  margin-left: auto!important;
+  margin-right: auto!important;
+  /* width: 6em */
+}
+
 
 .tableFont {
   font-size: 18px; /* was 15  */
