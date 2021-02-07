@@ -222,6 +222,25 @@ class App extends React.Component {
       }
     }
 
+    let id = this.getIdByName(name);
+    for (let i in this.state.tableData) {
+      if (this.state.tableData[i].whoBoughtId == id) {
+        // человек купил этот продукт
+        this.removeRow(this.state.tableData[i].id)
+        continue
+      }
+      for (let j in this.state.tableData[i].proportions) {
+        if (this.state.tableData[i].proportions[j].id == id) {
+          this.state.tableData[i].proportions.splice(j, 1)
+          if (!this.state.tableData[i].proportions.length) {
+            // это был единственный, кто скидывался!
+            this.removeRow(this.state.tableData[i].id)
+          }
+          break
+        }
+      }
+    }
+
     new_namesIds.splice(index, 1)
     this.setState({
       namesArray: newNamesArray,

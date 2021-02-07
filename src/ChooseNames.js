@@ -25,7 +25,6 @@ import {
 
 class ChooseNames extends React.Component {
 
-
     constructor(props) {
         super(props);
         this.state = {

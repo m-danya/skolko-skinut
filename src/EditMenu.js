@@ -201,6 +201,7 @@ function EditMenu(props) {
                                     labelPosition='right'
                                     placeholder='Цена'
                                     //label='Цена'
+                                    type="number" 
                                     error={priceError}
                                     onChange={(e) => props.handleInputChange('Price', e)}
                                     value={props.inputPriceText}
@@ -211,7 +212,7 @@ function EditMenu(props) {
                                 <Input
                                     fluid
                                     //width={1}
-                                    type="number" // вроде вмещается число с мобильника
+                                    type="number" 
                                     label='Кол-во'
                                     //style={{ paddingTop: '10px', }}
                                     placeholder=''

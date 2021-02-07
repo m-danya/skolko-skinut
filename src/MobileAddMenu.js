@@ -191,6 +191,8 @@ function MobileAddMenu(props) {
                                     labelPosition='right'
                                     placeholder='Цена'
                                     error={priceError}
+                                    type="number" 
+
                                     //label='Цена'
                                     onChange={(e) => props.handleInputChange('Price', e)}
                                     value={props.inputPriceText}
@@ -201,7 +203,7 @@ function MobileAddMenu(props) {
                                 <Input
                                     fluid
                                     //width={1}
-                                    type="number" // вроде вмещается число с мобильника
+                                    type="number" 
                                     label='Кол-во'
                                     //style={{ paddingTop: '10px', }}
                                     error={quantityError}
@@ -212,11 +214,6 @@ function MobileAddMenu(props) {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
-
-
-
-
-                    {/* {row.price} ₽ */}
                 </p>
 
 
