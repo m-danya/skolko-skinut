@@ -1,20 +1,34 @@
 import React from "react";
+import { isMobile } from "react-device-detect";
 import { Menu, Icon } from "semantic-ui-react";
 
 class MyMenu extends React.Component {
   render() {
     return (
-      <div style={{ paddingBottom: "15px", }}>
+      <div
+        style={
+          isMobile
+            ? {
+              paddingBottom: "15px", width: "100%!important",
+              textAlign: "center",
+            }
+            :
+            {}
+          }
+      >
         <Menu
           //inverted
           //stackable
-          compact
+          compact={isMobile}
+          className="centeredButton"
           borderless
-          fluid
+          //fluid
           //vertical
-          style={{ fontSize: "16px" }}
+          style={{ fontSize: "14px" }}
         >
           <Menu.Item
+            className={isMobile?"centeredButton":""}
+
             name="main"
             active={this.props.activeItem === "main"}
             onClick={() => this.props.handleItemClick('main')}
@@ -33,6 +47,8 @@ class MyMenu extends React.Component {
           </Menu.Item> */}
 
           <Menu.Item
+            className={isMobile?"centeredButton":""}
+
             name="products"
             disabled={!this.props.hasId}
             active={this.props.activeItem === "products"}
@@ -44,6 +60,7 @@ class MyMenu extends React.Component {
 
           <Menu.Item
             name="login"
+            className={isMobile?"centeredButton":""}
             active={this.props.activeItem === "login"}
             onClick={() => this.props.handleItemClick('login')}
           >

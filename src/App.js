@@ -618,6 +618,7 @@ class App extends React.Component {
                   color='orange'
                   centered
                   fluid
+                  className="centeredButton"
                   style={{ width: isMobile ? "100%" : "400px" }}
                   onClick={() => {
                     //this.handleMenuChange('products');
@@ -643,6 +644,7 @@ class App extends React.Component {
                   color='green'
                   centered
                   fluid
+                  className="centeredButton"
                   onClick={() => {
                     //this.handleMenuChange('products');
                     this.setState({
