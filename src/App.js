@@ -699,20 +699,11 @@ class App extends React.Component {
               {/* <Segment relaxed > */}
               {this.state.guided ?
                 <div>
-                  {isMobile && <div style={{
-                    padding: "10px 0 0px 0",
-                    // width: isBrowser ? "300px" : "80%",
-                    // class: "textAlignCenter"
-                  }}>
-                    <ChooseNames
-                      handleRemoveName={this.handleRemoveName}
-                      handleAddName={this.handleAddName}
-                      namesArray={this.state.namesArray}
-                      namesIds={this.state.namesIds}
-                    />
-                  </div>
-                  }
-                  <Grid columns={2} stackable style={{ paddingBottom: "20px", }}
+                  
+                  <Grid columns={2} stackable style={{
+                    paddingBottom: "20px",
+                    paddingTop: isBrowser ? "20px" : "" ,
+                  }}
                   //divided={isBrowser}
                   >
                     {isBrowser && <Grid.Column width={8}>
@@ -778,10 +769,11 @@ class App extends React.Component {
                         3. Нажми на зелёную кнопку и узнай, сколько кто кому должен скинуть!
                         <br /><br />У тебя будет ссылка, которой можно поделиться с друзьями
                         🥳
+                        <br /><br />
 
                         {isMobile && <div><br />
 
-Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс, 
+Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс,
                                 <a
                                   onClick={() => {
                                     this.setState({
@@ -813,6 +805,19 @@ class App extends React.Component {
 
                   </Grid.Column> */}
                   </Grid>
+                  {isMobile && <div style={{
+                    padding: "10px 0 10px 0",
+                    // width: isBrowser ? "300px" : "80%",
+                    // class: "textAlignCenter"
+                  }}>
+                    <ChooseNames
+                      handleRemoveName={this.handleRemoveName}
+                      handleAddName={this.handleAddName}
+                      namesArray={this.state.namesArray}
+                      namesIds={this.state.namesIds}
+                    />
+                  </div>
+                  }
                 </div>
 
                 :
