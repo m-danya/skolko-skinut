@@ -545,7 +545,7 @@ class App extends React.Component {
       }, () => {
         this.makeGetRequest();
       })
-      ws_client = new W3CWebSocket(`wss://skolkoskinut.ru/api/ws/${id}`);
+      ws_client = new W3CWebSocket(`wss://skolkoskinut.ru/ws/${id}`);
       ws_client.onopen = () => {
         console.log('WS: WebSocket Client Connected');
       };

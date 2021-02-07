@@ -366,10 +366,6 @@ class TableOfProducts extends Component {
                                                 onChange={(e) => this.handleInputChange('Quantity', e)}
                                                 value={this.state.inputQuantityText}
                                             />
-
-
-
-                                            {/* {row.price} ₽ */}
                                         </p>
                                     </Table.Cell>
 

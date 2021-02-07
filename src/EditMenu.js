@@ -223,11 +223,6 @@ function EditMenu(props) {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
-
-
-
-
-                    {/* {row.price} ₽ */}
                 </p>
 
 
