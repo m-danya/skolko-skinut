@@ -15,6 +15,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
+    "react-web-share-api": "0.0.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^1.2.1",
     "websocket": "^1.0.33"
