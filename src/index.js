@@ -5,16 +5,12 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'semantic-ui-css/semantic.min.css'
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
-import Helmet from "helmet"
 
 
 ReactDOM.render(
 
   <React.StrictMode>
-    <Helmet>
-      <meta charSet="utf-8" />
-      <title>My Title</title>
-    </Helmet>
+ 
     <Router>
       <Route
         path="/:id?"

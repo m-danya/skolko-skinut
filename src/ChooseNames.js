@@ -107,7 +107,8 @@ class ChooseNames extends React.Component {
                         color='orange'
                         className={this.props.centered ? 'centeredButton' : ''}
                         fluid
-                        style={{ width: isMobile ? "100%" : "400px" }}
+                        style={{ width: isMobile ? "100%" : "400px",
+                    float: this.props.rightAligned? "right":"" }}
                     >
                         <p className='textAlignCenter '>
                             {this.props.namesArray.length
