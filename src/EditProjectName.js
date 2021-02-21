@@ -38,6 +38,7 @@ function EditProjectName(props) {
 
     return (
         <Modal
+            size='tiny'
             onClose={() => setOpen(false)}
             onOpen={() => {
                 setOpen(true);
@@ -51,7 +52,7 @@ function EditProjectName(props) {
                 }} />
             }
         >
-            <Modal.Header>Редактировать название</Modal.Header>
+            <Modal.Header>Редактировать название проекта</Modal.Header>
             <Modal.Content>
                 <p className='tableFont'>
                     <Input fluid
@@ -67,6 +68,7 @@ function EditProjectName(props) {
             <Modal.Actions>
                 <Button onClick={() => {
                     setOpen(false);
+                    props.handleProjectNameInputChange("")
                 }}
                 >
                     Отмена</Button>
@@ -76,7 +78,7 @@ function EditProjectName(props) {
                         setOpen(false);
                     }
                 }} positive>
-                    Добавить
+                    Сохранить
         </Button>
             </Modal.Actions>
         </Modal>
