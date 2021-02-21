@@ -53,6 +53,8 @@ class App extends React.Component {
       calculated: false,
       namesIds: [],
       guided: false,
+      loadingEmpty: false,
+      loadingGuided: false,
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
@@ -589,7 +591,7 @@ class App extends React.Component {
                 page: 'main'
               })
             }}
-            style={{ paddingBottom: "20px" }}
+            style={{ paddingBottom: "20px", cursor: "pointer"}}
             centered
           />
           {/* </Link> */}
@@ -621,13 +623,15 @@ class App extends React.Component {
                   color='orange'
                   centered
                   fluid
+                  loading={this.state.loadingEmpty}
                   className="centeredButton"
                   style={{ width: isMobile ? "100%" : "400px" }}
                   onClick={() => {
                     //this.handleMenuChange('products');
                     this.setState({
                       guided: false,
-                      projectname: "temp project name"
+                      projectname: "temp project name",
+                      loadingEmpty: true,
                     }, () => {
                       this.generateNewProjectToken();
                     });
@@ -646,12 +650,14 @@ class App extends React.Component {
                   //positive
                   color='green'
                   centered
+                  loading={this.state.loadingGuided}
                   fluid
                   className="centeredButton"
                   onClick={() => {
                     //this.handleMenuChange('products');
                     this.setState({
                       guided: true,
+                      loadingGuided: true,
                       projectname: "guided test project"
                     }, () => {
                       this.generateNewProjectToken(true);
