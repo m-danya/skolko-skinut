@@ -857,7 +857,7 @@ class App extends React.Component {
 
                   </Grid.Column> */}
                   </Grid>
-                  {isMobile && <div style={{
+                  {isMobile && !this.state.guided && <div style={{
                     padding: "10px 0 10px 0",
                     // width: isBrowser ? "300px" : "80%",
                     // class: "textAlignCenter"
