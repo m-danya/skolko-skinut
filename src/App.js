@@ -29,6 +29,9 @@ import {
   isMobile,
   MobileView,
 } from "react-device-detect";
+import Helmet from "react-helmet"
+import EditProjectName from "./EditProjectName"
+
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import ss_logo from './assets/logo.png'
 
@@ -38,6 +41,13 @@ var ws_client;
 const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
 //const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
 //const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
+const phrases = [
+  "Очередная попойка у Фон Глена",
+  "Тусовка у Мити",
+  "Поход в Карелию",
+  "Шашлыки",
+  "Корпоратив разработчиков СколькоСкинуть",
+];
 
 var debugging = false;
 
@@ -47,12 +57,13 @@ class App extends React.Component {
     super(props);
     this.state = {
       page: "main", // do not change. 
-      //projectname: "temp project name", // need to fix this: add naming system
       tableData: [],
       namesArray: [],
       calculated: false,
       namesIds: [],
       guided: false,
+      loadingEmpty: false,
+      loadingGuided: false,
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
@@ -67,6 +78,8 @@ class App extends React.Component {
     this.getNameById = this.getNameById.bind(this);
     this.getTableItemIndexByProductId = this.getTableItemIndexByProductId.bind(this);
     this.getIdByName = this.getIdByName.bind(this);
+    this.handleProjectNameChange = this.handleProjectNameChange.bind(this);
+    this.handleProjectNameInputChange = this.handleProjectNameInputChange.bind(this);
   }
 
   handleMenuChange(a) {
@@ -77,6 +90,24 @@ class App extends React.Component {
         page: a,
       });
   }
+
+  handleProjectNameChange(newName) {
+    this.setState({
+      projectname: newName,
+    }, () => {
+      this.updateBackend();
+    });
+
+
+  }
+
+  handleProjectNameInputChange(newName) {
+    console.log('newname', newName)
+    this.setState({
+      projectnameInput: newName,
+    });
+  }
+
 
   formSearchFromArray() {
     let ans = [];
@@ -567,6 +598,18 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Helmet>
+          <title> {(() => {
+            if (this.state.projectname != "guided test project" && this.state.projectname) {
+              return "СколькоСкинуть. " + this.state.projectname
+            } else if (this.state.projectname) {
+              return "СколькоСкинуть. Обучение"
+            } else {
+              return "СколькоСкинуть"
+            }
+          })()} </title>
+          <meta name="description" content="Веб-приложение, которое посчитает за Вас, кто кому сколько должен скинуть!" />
+        </Helmet>
         <div
 
           style={{
@@ -590,6 +633,7 @@ class App extends React.Component {
               })
             }}
             style={{ paddingBottom: "20px" }}
+            className="clickable"
             centered
           />
           {/* </Link> */}
@@ -621,13 +665,15 @@ class App extends React.Component {
                   color='orange'
                   centered
                   fluid
+                  loading={this.state.loadingEmpty}
                   className="centeredButton"
                   style={{ width: isMobile ? "100%" : "400px" }}
                   onClick={() => {
                     //this.handleMenuChange('products');
                     this.setState({
                       guided: false,
-                      projectname: "temp project name"
+                      projectname: "Событие на миллион",
+                      loadingEmpty: true,
                     }, () => {
                       this.generateNewProjectToken();
                     });
@@ -646,12 +692,14 @@ class App extends React.Component {
                   //positive
                   color='green'
                   centered
+                  loading={this.state.loadingGuided}
                   fluid
                   className="centeredButton"
                   onClick={() => {
                     //this.handleMenuChange('products');
                     this.setState({
                       guided: true,
+                      loadingGuided: true,
                       projectname: "guided test project"
                     }, () => {
                       this.generateNewProjectToken(true);
@@ -702,14 +750,15 @@ class App extends React.Component {
               {/* <Segment relaxed > */}
               {this.state.guided ?
                 <div>
-                  
+
                   <Grid columns={2} stackable style={{
                     paddingBottom: "20px",
-                    paddingTop: isBrowser ? "20px" : "" ,
+                    paddingTop: isBrowser ? "20px" : "",
                   }}
                   //divided={isBrowser}
                   >
                     {isBrowser && <Grid.Column width={8}>
+
                       <div
                       //style={{ minHeight: isBrowser ? '203px' : '' }} 
                       >
@@ -774,7 +823,7 @@ class App extends React.Component {
                         🥳
                         <br /><br />
 
-                        {isMobile && <div><br />
+                              {isMobile && <div><br />
 
 Это <b>демо-проект</b>. Когда поймешь, как работает интерфейс,
                                 <a
@@ -808,7 +857,7 @@ class App extends React.Component {
 
                   </Grid.Column> */}
                   </Grid>
-                  {isMobile && <div style={{
+                  {isMobile && !this.state.guided && <div style={{
                     padding: "10px 0 10px 0",
                     // width: isBrowser ? "300px" : "80%",
                     // class: "textAlignCenter"
@@ -826,22 +875,78 @@ class App extends React.Component {
                 :
 
                 <div>
-                  <div style={{
-                    padding: "10px 0 10px 0",
-                    // width: isBrowser ? "300px" : "80%",
-                    // class: "textAlignCenter"
-                  }}>
-                    <ChooseNames
-                      handleRemoveName={this.handleRemoveName}
-                      handleAddName={this.handleAddName}
-                      namesArray={this.state.namesArray}
-                      namesIds={this.state.namesIds}
-                      centered={true}
-                    />
+                  <div
+                    style={{
+                      padding: isBrowser? "10px 0 0px 0" : "10px 0 10px 0",
+                      // width: isBrowser ? "300px" : "80%",
+                    }}
+                    className={isBrowser ? "leftright" : ""}
+                  >
+                    <div
+                      className={isBrowser?"centertextdiv":""}
+                    >
+                      <h2
+                        
+                      style={{ fontSize: "1.5rem" }}
+                        className={isBrowser?"centertexttext":""}
+                      >
+                        {this.state.projectname}
+                        &nbsp;
+
+                    <EditProjectName
+                          handleProjectNameChange={this.handleProjectNameChange}
+                          handleProjectNameInputChange={this.handleProjectNameInputChange}
+                          projectnameInput={this.state.projectnameInput}
+                          projectname={this.state.projectname}
+                        />
+                        <Icon name="refresh" style={{ fontSize: "0.5em" }} className="clickable"
+                          onClick={() => { this.handleProjectNameChange(phrases[Math.floor((Math.random() * phrases.length))]) }} />
+                      </h2>
+                    </div>
+
+                    {isBrowser && <div style={{
+                      padding: "10px 0 10px 0",
+                      // width: isBrowser ? "300px" : "80%",
+                      // class: "textAlignCenter"
+
+                    }}
+                    >
+                      <ChooseNames
+                        handleRemoveName={this.handleRemoveName}
+                        handleAddName={this.handleAddName}
+                        namesArray={this.state.namesArray}
+                        namesIds={this.state.namesIds}
+                        centered={false}
+                        rightAligned={true}
+                      />
+                    </div>
+                    }
+
+
                   </div>
                 </div>
 
+
               }
+
+              {isMobile && <div>
+                <div style={{
+                  padding: "10px 0 10px 0",
+                  // width: isBrowser ? "300px" : "80%",
+                  // class: "textAlignCenter"
+                }}>
+                  <ChooseNames
+                    handleRemoveName={this.handleRemoveName}
+                    handleAddName={this.handleAddName}
+                    namesArray={this.state.namesArray}
+                    namesIds={this.state.namesIds}
+                    centered={true}
+                  />
+                </div>
+              </div>
+              }
+
+
               {/* 
               </Segment> */}
 

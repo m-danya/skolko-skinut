@@ -61,11 +61,36 @@ textarea {
   width: 200px!important;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .centertext {
-  height: 20px;
-  line-height: 20px;
+  height: 20px!important;
+  line-height: 20px!important;
+}
+
+.centertextdiv {
+  display: table; 
+  height: 50px; 
+  overflow: hidden;
+}
+
+.centertexttext {
+  display: table-cell; vertical-align: middle;
 }
 
 .ui.orange.button, .ui.orange.buttons .button {
   background-color: #f58220!important;
+}
+
+.leftright {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+}
+.leftright > div {
+  width: 500px;
+  /* border: 2px dashed red; */
 }
