@@ -35,11 +35,11 @@ code {
 
 
 .tableFont {
-  font-size: 18px; /* was 15  */
+  font-size: 15px; /* was 18  */
   text-align: center;
 }
 .tableFontProportions {
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
   color: #636363;
 }

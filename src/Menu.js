@@ -33,7 +33,9 @@ class MyMenu extends React.Component {
             active={this.props.activeItem === "main"}
             onClick={() => this.props.handleItemClick('main')}
           >
-            <Icon name='content' />
+            <Icon name='content'  style={{
+              paddingTop: "1.5px",
+            }}/>
             Главная
           </Menu.Item>
 
@@ -54,7 +56,9 @@ class MyMenu extends React.Component {
             active={this.props.activeItem === "products"}
             onClick={() => this.props.handleItemClick('products')}
           >
-            <Icon name='calculator' />
+            <Icon name='calculator' color='black'  style={{
+              paddingTop: "1.5px",
+            }} />
             Продукты
           </Menu.Item>
 
@@ -64,8 +68,9 @@ class MyMenu extends React.Component {
             active={this.props.activeItem === "login"}
             onClick={() => this.props.handleItemClick('login')}
           >
-            <Icon name='sign-in' />
-            Войти
+            <Icon name='vk' style={{
+              paddingTop: "1.5px",
+            }}/>Войти
           </Menu.Item>
 
           {/* <Menu.Item

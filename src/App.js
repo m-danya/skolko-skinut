@@ -23,6 +23,7 @@ import TableOfProducts from './TableOfProducts'
 import ChooseNames from './ChooseNames'
 import ShareMenu from './ShareMenu'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+/* global VK */
 import {
   BrowserView,
   isBrowser,
@@ -31,9 +32,11 @@ import {
 } from "react-device-detect";
 import Helmet from "react-helmet"
 import EditProjectName from "./EditProjectName"
+import VkGroup from './VkGroup'
 
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import ss_logo from './assets/logo.png'
+import VkLogin from "./VkLogin.js";
 
 const axios = require('axios').default;
 var ws_client;
@@ -80,6 +83,13 @@ class App extends React.Component {
     this.getIdByName = this.getIdByName.bind(this);
     this.handleProjectNameChange = this.handleProjectNameChange.bind(this);
     this.handleProjectNameInputChange = this.handleProjectNameInputChange.bind(this);
+    this.updatePersonalData = this.updatePersonalData.bind(this);
+  }
+
+  updatePersonalData(data) {
+    this.setState({
+      personalData: data,
+    });
   }
 
   handleMenuChange(a) {
@@ -570,6 +580,7 @@ class App extends React.Component {
   }
 
   componentDidMount(props) {
+    
     if (this.props.match.params.id) {
       let id = this.props.match.params.id
       this.setState({
@@ -596,6 +607,7 @@ class App extends React.Component {
   }
 
   render() {
+    
     return (
       <div>
         <Helmet>
@@ -729,14 +741,13 @@ class App extends React.Component {
                   перед Вами лишь предварительная, модельная версия продукта.
                   Она может быть неустойчива к заведомо (или случайно) некорректно введённым входным данным.
                 <br /><br />
-                В будущем планируется реализовать множество функций, не представленных в текущей версии (а также полный редизайн),
-                однако, если у вас есть какие-либо предложения по улучшению функционала или если вы заметили
-                некорректную работу программы, просьба написать разработчикам.
+                Если у вас есть какие-либо предложения по улучшению функционала или если вы заметили
+                некорректную работу программы, просьба написать разработчикам в группу ВКонтакте.
                 <br /><br />
                 Приятного использования!
-                <br /><br />
-
                 </p>
+                <VkGroup />
+
               </Segment>
 
               {/* </Segment.Group>  */}
@@ -818,7 +829,7 @@ class App extends React.Component {
                           <List.Item>
                             <List.Content>
                               {/* <List.Header>Три</List.Header> */}
-                        3. Нажми на зелёную кнопку и узнай, сколько кто кому должен скинуть!
+                        3. Нажми на кнопку внизу и узнай, сколько кто кому должен скинуть!
                         <br /><br />У тебя будет ссылка, которой можно поделиться с друзьями
                         🥳
                         <br /><br />
@@ -877,18 +888,18 @@ class App extends React.Component {
                 <div>
                   <div
                     style={{
-                      padding: isBrowser? "10px 0 0px 0" : "10px 0 10px 0",
+                      padding: isBrowser ? "10px 0 0px 0" : "10px 0 10px 0",
                       // width: isBrowser ? "300px" : "80%",
                     }}
                     className={isBrowser ? "leftright" : ""}
                   >
                     <div
-                      className={isBrowser?"centertextdiv":""}
+                      className={isBrowser ? "centertextdiv" : ""}
                     >
                       <h2
-                        
-                      style={{ fontSize: "1.5rem" }}
-                        className={isBrowser?"centertexttext":""}
+
+                        style={{ fontSize: "1.5rem" }}
+                        className={isBrowser ? "centertexttext" : ""}
                       >
                         {this.state.projectname}
                         &nbsp;
@@ -1022,6 +1033,17 @@ class App extends React.Component {
                 </div>
               }
             </div>
+          }
+          {
+            this.state.page == 'login' &&
+            <Segment basic>
+            <div>
+              <VkLogin
+                personalData={this.state.personalData}
+                updatePersonalData={this.updatePersonalData}
+              />
+            </div>
+            </Segment>
           }
         </Container>
 

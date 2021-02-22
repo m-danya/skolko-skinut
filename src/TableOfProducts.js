@@ -251,7 +251,7 @@ class TableOfProducts extends Component {
                     }
                     <Table
                         // selectable 
-                        
+                        stackable
                         celled
                     //basic
                     >
@@ -399,7 +399,7 @@ class TableOfProducts extends Component {
                                 return (
                                     <Table.Row>
                                         <Table.Cell width={4}>
-                                            <p className='tableFont'>
+                                            <p className={isMobile?'tableHeaderFont':"tableFont"}>
                                                 {row.name}
                                             </p>
                                         </Table.Cell>
