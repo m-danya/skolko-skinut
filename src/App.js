@@ -595,8 +595,8 @@ class App extends React.Component {
       };
 
       ws_client.onmessage = (message) => {
-        const dataFromServer = JSON.parse(message.data);
-        console.log('WS: got reply! ', dataFromServer);
+        //const dataFromServer = message.data;
+        console.log('WS: got reply!');
         this.makeGetRequest();
       };
 
