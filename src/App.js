@@ -255,6 +255,7 @@ class App extends React.Component {
 
 
   handleRemoveName(name) {
+    // todo: полностью переписать 
     let newNamesArray = this.state.namesArray.slice()
     let new_namesIds = this.state.namesIds.slice()
     newNamesArray.splice(newNamesArray.indexOf(name), 1)
@@ -279,8 +280,8 @@ class App extends React.Component {
           if (!this.state.tableData[i].proportions.length) {
             // это был единственный, кто скидывался!
             this.removeRow(this.state.tableData[i].id)
+            continue;
           }
-          break
         }
       }
     }
