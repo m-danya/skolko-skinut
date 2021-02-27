@@ -42,7 +42,7 @@ const axios = require('axios').default;
 var ws_client;
 
 //const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
-const BACKEND_ADDRESS = 'localhost'
+const BACKEND_ADDRESS = '0.0.0.0:8000'
 
 const phrases = [
   "Очередная попойка у Фон Глена",
