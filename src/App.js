@@ -42,8 +42,6 @@ const axios = require('axios').default;
 var ws_client;
 
 const BACKEND_ADDRESS = 'https://skolkoskinut.ru'
-//const BACKEND_ADDRESS = 'http://194.87.248.62:8000'
-//const BACKEND_ADDRESS = 'https://0.0.0.0:8000'
 
 const phrases = [
   "Очередная попойка у Фон Глена",
