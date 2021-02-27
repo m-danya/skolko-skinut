@@ -41,8 +41,8 @@ const colors = [
     'brown',
     'grey',
     'black',
-  ]
-  
+]
+
 
 class TableOfProducts extends Component {
 
@@ -67,6 +67,76 @@ class TableOfProducts extends Component {
         this.reduceProportions = this.reduceProportions.bind(this)
         this.getWhoPaysOptions = this.getWhoPaysOptions.bind(this)
         this.fillDataToEdit = this.fillDataToEdit.bind(this)
+    }
+
+    checkAllFields() {
+        this.setState({
+            nameError: false,
+            whoBoughtError: false,
+            whoPaysError: false,
+            proportionsError: false,
+            priceError: false,
+            quantityError: false,
+        })
+
+
+        let isOk = true;
+        // check name
+        if (this.state.inputNameText === '') {
+            this.setState({
+                nameError: true,
+            });
+            isOk = 0;
+        }
+        // check whoBought
+        if (this.state.whoBought === null) {
+            this.setState({
+                whoBoughtError: true,
+            });
+            isOk = 0;
+        }
+        // check whoPays
+        if (this.state.whoPays.length == 0) {
+            this.setState({
+                whoPaysError: true,
+            });
+            isOk = 0;
+        }
+
+        // check price
+        let parsedPrice = parseInt(this.state.inputPriceText)
+        if (isNaN(parsedPrice)) {
+            this.setState({
+                priceError: true,
+            });
+            isOk = 0;
+        } else {
+            if (parsedPrice <= 0 || parsedPrice > 1000000) {
+                this.setState({
+                    priceError: true,
+                });
+                isOk = 0;
+            }
+        }
+
+        // check quantity
+        let parsedQuantity = parseInt(this.state.inputQuantityText)
+        if (isNaN(parsedQuantity)) {
+            this.setState({
+                quantityError: true,
+            });
+            isOk = 0;
+        } else {
+            if (parsedQuantity <= 0 || parsedQuantity > 1000) {
+                this.setState({
+                    quantityError: true,
+                });
+                isOk = 0;
+            }
+        }
+
+        return isOk
+
     }
 
     resetInputs() {
@@ -268,6 +338,7 @@ class TableOfProducts extends Component {
                                                 placeholder='Название продукта'
                                                 onChange={(e) => this.handleInputChange('Name', e)}
                                                 value={this.state.inputNameText}
+                                                error={this.state.nameError}
                                             />
                                         </p>
                                     </Table.Cell>
@@ -284,7 +355,7 @@ class TableOfProducts extends Component {
                                                 options={this.props.namesArray}
                                                 onChange={this.handleWhoBoughtChange}
                                                 value={this.state.whoBought}
-
+                                                error={this.state.whoBoughtError}
                                             />
                                             {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
@@ -310,7 +381,7 @@ class TableOfProducts extends Component {
                                                 options={this.getWhoPaysOptions()}
                                                 onChange={this.handleWhoPaysChange}
                                                 value={this.state.whoPays}
-
+                                                error={this.state.whoPaysError}
                                             />
 
 
@@ -328,6 +399,8 @@ class TableOfProducts extends Component {
                                                         handleProportionsChange={this.handleProportionsChange}
                                                         reduceProportions={this.reduceProportions}
                                                         getNameById={this.props.getNameById}
+                                                        error={this.state.proportionsError}
+
                                                     />
                                                 }
                                             </Transition.Group>
@@ -349,6 +422,7 @@ class TableOfProducts extends Component {
                                                 labelPosition='right'
                                                 placeholder='Цена'
                                                 //label='Цена'
+                                                error={this.state.priceError}
                                                 onChange={(e) => this.handleInputChange('Price', e)}
                                                 value={this.state.inputPriceText}
                                             />
@@ -359,9 +433,11 @@ class TableOfProducts extends Component {
                                                 //width={1}
                                                 //type="number"// тогда число не вмещается 
                                                 label='Кол-во'
-                                                style={{ paddingTop: '10px'}}
+                                                style={{ paddingTop: '10px' }}
                                                 className='placeholderCentering textAlignCenter'
                                                 size='mini'
+                                                error={this.state.quantityError}
+
                                                 placeholder=''
                                                 onChange={(e) => this.handleInputChange('Quantity', e)}
                                                 value={this.state.inputQuantityText}
@@ -372,15 +448,17 @@ class TableOfProducts extends Component {
                                     <Table.Cell width={1}>
                                         <p className='tableFont'>
                                             <Button fluid onClick={() => {
-                                                this.props.handleAddRow(
-                                                    this.state.inputNameText,
-                                                    this.state.whoBought,
-                                                    //this.state.whoPays,
-                                                    parseInt(this.state.inputPriceText),
-                                                    parseInt(this.state.inputQuantityText),
-                                                    this.state.proportions
-                                                );
-                                                this.resetInputs();
+                                                if (this.checkAllFields()) {
+                                                    this.props.handleAddRow(
+                                                        this.state.inputNameText,
+                                                        this.state.whoBought,
+                                                        //this.state.whoPays,
+                                                        parseInt(this.state.inputPriceText),
+                                                        parseInt(this.state.inputQuantityText),
+                                                        this.state.proportions
+                                                    );
+                                                    this.resetInputs();
+                                                }
                                             }}>
                                                 <p className='textAlignCenter '>
                                                     <Icon name='add' />
@@ -399,7 +477,7 @@ class TableOfProducts extends Component {
                                 return (
                                     <Table.Row>
                                         <Table.Cell width={4}>
-                                            <p className={isMobile?'tableHeaderFont':"tableFont"}>
+                                            <p className={isMobile ? 'tableHeaderFont' : "tableFont"}>
                                                 {row.name}
                                             </p>
                                         </Table.Cell>

@@ -222,7 +222,6 @@ function MobileAddMenu(props) {
             <Modal.Actions>
                 <Button onClick={() => {
                     props.resetInputs();
-
                     setOpen(false);
                 }}
                 >
