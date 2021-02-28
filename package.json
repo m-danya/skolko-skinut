@@ -19,6 +19,7 @@
     "react-web-share-api": "0.0.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^1.2.1",
+    "sweetalert": "^2.1.2",
     "websocket": "^1.0.33"
   },
   "scripts": {

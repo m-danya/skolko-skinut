@@ -24,6 +24,8 @@ import {
     isBrowser,
     isMobile
 } from "react-device-detect";
+import swal from 'sweetalert';
+
 
 function EditMenu(props) {
     const [open, setOpen] = React.useState(false)
@@ -201,7 +203,7 @@ function EditMenu(props) {
                                     labelPosition='right'
                                     placeholder='Цена'
                                     //label='Цена'
-                                    type="number" 
+                                    type="number"
                                     error={priceError}
                                     onChange={(e) => props.handleInputChange('Price', e)}
                                     value={props.inputPriceText}
@@ -212,7 +214,7 @@ function EditMenu(props) {
                                 <Input
                                     fluid
                                     //width={1}
-                                    type="number" 
+                                    type="number"
                                     label='Кол-во'
                                     //style={{ paddingTop: '10px', }}
                                     placeholder=''
@@ -232,9 +234,22 @@ function EditMenu(props) {
                 <Button
                     negative
                     onClick={() => {
-                        props.resetInputs();
-                        props.removeRow(props.productId)
-                        setOpen(false);
+                        swal({
+                            title: "Внимание",
+                            text: "Вы действительно хотите удалить продукт?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        })
+                            .then((willDelete) => {
+                                if (willDelete) {
+                                    props.resetInputs();
+                                    props.removeRow(props.productId)
+                                    setOpen(false);
+                                } else {
+                                    // safe
+                                }
+                            });
                     }}
 
                     style={{ float: "left" }}
@@ -243,7 +258,6 @@ function EditMenu(props) {
                     Удалить</Button>
                 <Button onClick={() => {
                     props.resetInputs();
-
                     setOpen(false);
                 }}
                 >

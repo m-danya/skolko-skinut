@@ -21,6 +21,9 @@ import {
     Table,
     GridColumn,
 } from "semantic-ui-react";
+import swal from 'sweetalert';
+import webShare from 'react-web-share-api';
+
 
 
 class ChooseNames extends React.Component {
@@ -138,7 +141,9 @@ class ChooseNames extends React.Component {
                                 <Icon
                                     name='delete'
                                     onClick={() => {
-                                        this.props.handleRemoveName(e.name)
+                                        if (!this.props.handleRemoveName(e.name)) {
+                                            swal("Так нельзя", "Вы пытаетесь удалить из человека, который упоминается в списке продуктов", "error");
+                                        }
                                     }}
                                 />
                             </Label>

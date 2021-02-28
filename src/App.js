@@ -38,6 +38,7 @@ import { BrowserRouter as Router, Link } from 'react-router-dom'
 import ss_logo from './assets/logo.png'
 import VkLogin from "./VkLogin.js";
 
+
 const axios = require('axios').default;
 var ws_client;
 
@@ -270,17 +271,19 @@ class App extends React.Component {
     for (let i in this.state.tableData) {
       if (this.state.tableData[i].whoBoughtId == id) {
         // человек купил этот продукт
-        this.removeRow(this.state.tableData[i].id)
-        continue
+        return false;
+        // this.removeRow(this.state.tableData[i].id)
+        // continue
       }
       for (let j in this.state.tableData[i].proportions) {
         if (this.state.tableData[i].proportions[j].id == id) {
-          this.state.tableData[i].proportions.splice(j, 1)
-          if (!this.state.tableData[i].proportions.length) {
-            // это был единственный, кто скидывался!
-            this.removeRow(this.state.tableData[i].id)
-            continue;
-          }
+          return false;
+          // this.state.tableData[i].proportions.splice(j, 1)
+          // if (!this.state.tableData[i].proportions.length) {
+          //   // это был единственный, кто скидывался!
+          //   // this.removeRow(this.state.tableData[i].id)
+          //   // continue;
+          // }
         }
       }
     }
@@ -292,8 +295,8 @@ class App extends React.Component {
       calculated: false,
     }, () => {
       this.updateBackend();
-
     })
+    return true;
   }
 
   getIdByName(name) {

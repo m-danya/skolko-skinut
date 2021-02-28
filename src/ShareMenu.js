@@ -24,59 +24,27 @@ import {
 import webShare from 'react-web-share-api';
 import funny_gif from './assets/funny.gif'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import swal from 'sweetalert';
+
 
 
 function ShareMenu(props) {
     const [open, setOpen] = React.useState(false)
 
     return (
+        <div style={{ textAlign: "center" }}>
 
-        webShare.isSupported
-            ?
-            <div style={{ textAlign: "center" }}>
-
-                <Button
-                    color='blue'
-                    size='huge'
-                    onClick={webShare.share}
-                >
-                    <Icon name='share' />
+            <Button
+                color='blue'
+                size='huge'
+                onClick={webShare.isSupported ? webShare.share : () => {
+                    swal("Готово", "Ссылка скопирована в буфер обмена", "success")
+                }}
+            >
+                <Icon name='share' />
                     Поделиться
                 </Button>
-            </div>
-            :
-            <Modal
-                onClose={() => setOpen(false)}
-                onOpen={() => setOpen(true)}
-                open={open}
-                size='tiny'
-                trigger={
-                    <div style={{ textAlign: "center" }}>
-                        <CopyToClipboard text={props.copyText}>
-                            <Button
-                                color='blue'
-                                size='huge'
-                            //onClick={this.handleShare}
-                            >
-                                <Icon name='share' />
-                Поделиться</Button>
-                        </CopyToClipboard>
-                    </div>
-                }
-            >
-                <Modal.Header>Готово!</Modal.Header>
-                <Modal.Content>
-                    <p className='tableFont'>
-                        Ссылка скопирована в буфер обмена
-                    </p>
-                    <Image src={funny_gif} centered />
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button onClick={() => setOpen(false)} positive centered>
-                        ОК
-        </Button>
-                </Modal.Actions>
-            </Modal>
+        </div>
 
     )
 
