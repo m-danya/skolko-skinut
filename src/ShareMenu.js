@@ -32,19 +32,22 @@ function ShareMenu(props) {
     const [open, setOpen] = React.useState(false)
 
     return (
-        <div style={{ textAlign: "center" }}>
-
-            <Button
-                color='blue'
-                size='huge'
-                onClick={webShare.isSupported ? webShare.share : () => {
-                    swal("Готово", "Ссылка скопирована в буфер обмена", "success")
-                }}
-            >
-                <Icon name='share' />
+        <CopyToClipboard
+        text={props.copyText}
+        >
+            <div style={{ textAlign: "center" }}>
+                <Button
+                    color='blue'
+                    size='huge'
+                    onClick={webShare.isSupported ? webShare.share : () => {
+                        swal("Готово", "Ссылка скопирована в буфер обмена", "success")
+                    }}
+                >
+                    <Icon name='share' />
                     Поделиться
                 </Button>
-        </div>
+            </div>
+        </CopyToClipboard>
 
     )
 

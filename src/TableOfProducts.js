@@ -26,6 +26,7 @@ import {
     isBrowser,
     isMobile
 } from "react-device-detect";
+import swal from 'sweetalert';
 
 const colors = [
     'red',
@@ -50,26 +51,36 @@ class TableOfProducts extends Component {
         super(props);
         this.state = {
             inputNameText: '',
-            // inputWhoBoughtText: '',
-            // inputWhoPaysText: '',
+            inputNameTextEdit: '',
             inputPriceText: '',
+            inputPriceTextEdit: '',
             inputQuantityText: '1',
+            inputQuantityTextEdit: '1',
             proportions: [],
-            whoBought: null, // мы обнуляем input-ы
-            //whoBoughtId: null,
-            whoPays: [], // мы обнуляем input-ы
+            proportionsEdit: [],
+            whoBought: null, 
+            whoBoughtEdit: null,
+            whoPaysEdit: [], 
+            whoPays: [],
         }
         this.handleWhoBoughtChange = this.handleWhoBoughtChange.bind(this)
+        this.handleWhoBoughtEditChange = this.handleWhoBoughtEditChange.bind(this)
+        this.handleWhoPaysEditChange = this.handleWhoPaysEditChange.bind(this)
+        this.handleProportionsEditChange = this.handleProportionsEditChange.bind(this)
         this.handleWhoPaysChange = this.handleWhoPaysChange.bind(this)
         this.handleProportionsChange = this.handleProportionsChange.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleInputEditChange = this.handleInputEditChange.bind(this)
         this.resetInputs = this.resetInputs.bind(this)
+        this.resetInputsEdit = this.resetInputsEdit.bind(this)
         this.reduceProportions = this.reduceProportions.bind(this)
+        this.reduceProportionsEdit = this.reduceProportionsEdit.bind(this)
         this.getWhoPaysOptions = this.getWhoPaysOptions.bind(this)
         this.fillDataToEdit = this.fillDataToEdit.bind(this)
     }
 
     checkAllFields() {
+        // for adding
         this.setState({
             nameError: false,
             whoBoughtError: false,
@@ -153,11 +164,25 @@ class TableOfProducts extends Component {
         });
     }
 
+    resetInputsEdit() {
+        this.setState({
+            inputNameTextEdit: '',
+            // inputWhoBoughtText: '',
+            // inputWhoPaysText: '',
+            whoBoughtEdit: null, // мы обнуляем input-ы
+            whoPaysEdit: [], // мы обнуляем input-ы
+            //whoBoughtId: null,
+            inputPriceTextEdit: '',
+            inputQuantityTextEdit: '1',
+            proportionsEdit: [],
+        });
+    }
+
     fillDataToEdit(id) {
         //console.log('fillDataToEdit(', id, ')')
         let index = this.props.getTableItemIndexByProductId(id)
         if (index == -1) {
-            console.log('fillDataToEdit error: no such id! кто-то удалил продукт!')
+            swal("Ошибка", "Кто-то удалил продукт, который вы хотели отредактировать!", "error");
             return
         }
         let whoPaysGenerated = new Array(this.props.tableData[index].proportions.length)
@@ -166,12 +191,12 @@ class TableOfProducts extends Component {
             //console.log(this.props.tableData[index].proportions[i])
         }
         this.setState({
-            inputNameText: this.props.tableData[index].name.slice(),
-            whoBought: this.props.tableData[index].whoBoughtId,
-            whoPays: whoPaysGenerated.slice(), //this.props.tableData[index].whoPays.slice(),
-            inputPriceText: this.props.tableData[index].price,
-            inputQuantityText: this.props.tableData[index].quantity,
-            proportions: this.props.tableData[index].proportions.slice(),
+            inputNameTextEdit: this.props.tableData[index].name.slice(),
+            whoBoughtEdit: this.props.tableData[index].whoBoughtId,
+            whoPaysEdit: whoPaysGenerated.slice(), //this.props.tableData[index].whoPays.slice(),
+            inputPriceTextEdit: this.props.tableData[index].price,
+            inputQuantityTextEdit: this.props.tableData[index].quantity,
+            proportionsEdit: this.props.tableData[index].proportions.slice(),
         });
     }
 
@@ -183,9 +208,23 @@ class TableOfProducts extends Component {
         });
     }
 
+    handleInputEditChange(name, e) {
+        const target = e.target;
+        const value = target.value;
+        this.setState({
+            ['input' + name + 'TextEdit']: value,
+        });
+    }
+
     handleWhoBoughtChange(e, { name, value }) {
         this.setState({
             whoBought: value,
+        });
+    }
+
+    handleWhoBoughtEditChange(e, { name, value }) {
+        this.setState({
+            whoBoughtEdit: value,
         });
     }
 
@@ -229,6 +268,46 @@ class TableOfProducts extends Component {
         }
     }
 
+    handleWhoPaysEditChange(e, { name, value }) {
+        //console.log('val = ', value)
+        if (value.includes("Добавить всех")) {
+            let newWhoPays = new Array(this.props.namesArray.length);
+            let newProportions = new Array(this.props.namesArray.length);
+            let i = 0
+            for (let f of this.props.namesArray) {
+
+                newWhoPays[i] = f.key;
+                newProportions[i] = {
+                    id: this.props.getIdByName(f.text),
+                    part: 1,
+                };
+                i += 1
+            }
+
+            this.setState({
+                whoPaysEdit: newWhoPays,
+                proportionsEdit: newProportions,
+            });
+        } else {
+            let newProportions = new Array(value.length);
+            let i = 0
+            for (let f of value) {
+                //console.log('f = ', f)
+                newProportions[i] = {
+                    id: f,
+                    part: 1,
+                };
+                i += 1
+            }
+            this.setState({
+                whoPaysEdit: value,
+                proportionsEdit: newProportions,
+            }, () => {
+                //console.log('set. whoPays = ', this.state.whoPays, ". props = ", this.state.proportions)
+            });
+        }
+    }
+
     handleProportionsChange(id, value) {
         let proportions_new = this.state.proportions.slice()
         let i = 0
@@ -243,6 +322,23 @@ class TableOfProducts extends Component {
         if (proportions_new[i].part < 1) proportions_new[i].part = 1
         this.setState({
             proportions: proportions_new,
+        })
+    }
+
+    handleProportionsEditChange(id, value) {
+        let proportions_new = this.state.proportionsEdit.slice()
+        let i = 0
+        while (i < proportions_new.length && proportions_new[i].id != id) {
+            i += 1
+        }
+        if (i == proportions_new.length) {
+            console.log('handleProportionsChange error! id ', id, ' was not found!')
+            return
+        }
+        proportions_new[i].part += value
+        if (proportions_new[i].part < 1) proportions_new[i].part = 1
+        this.setState({
+            proportionsEdit: proportions_new,
         })
     }
 
@@ -279,6 +375,26 @@ class TableOfProducts extends Component {
         }
         this.setState({
             proportions: proportions_new,
+        })
+
+    }
+
+    reduceProportionsEdit() {
+        // find gcd and divide by it every number
+        if (!this.state.proportionsEdit.length) {
+            return
+        }
+        let g = this.state.proportionsEdit[0].part;
+        for (let i of this.state.proportionsEdit) {
+            g = this.gcd(g, i.part)
+        }
+
+        let proportions_new = this.state.proportionsEdit.slice()
+        for (let n in proportions_new) {
+            proportions_new[n].part = proportions_new[n].part / g
+        }
+        this.setState({
+            proportionsEdit: proportions_new,
         })
 
     }
@@ -525,22 +641,21 @@ class TableOfProducts extends Component {
                                                     //index={index}
                                                     productId={row.id}
                                                     namesArray={this.props.namesArray}
-                                                    whoBought={this.state.whoBought}
-                                                    handleWhoPaysChange={this.handleWhoPaysChange}
-                                                    whoPays={this.state.whoPays}
-                                                    proportions={this.state.proportions}
-                                                    handleProportionsChange={this.handleProportionsChange}
-                                                    handleInputChange={this.handleInputChange}
-                                                    inputPriceText={this.state.inputPriceText}
-                                                    inputQuantityText={this.state.inputQuantityText}
-                                                    handleAddRow={this.props.handleAddRow}
-                                                    resetInputs={this.resetInputs}
-                                                    reduceProportions={this.reduceProportions}
-                                                    handleWhoBoughtChange={this.handleWhoBoughtChange}
+                                                    whoBought={this.state.whoBoughtEdit}
+                                                    handleWhoPaysChange={this.handleWhoPaysEditChange}
+                                                    whoPays={this.state.whoPaysEdit}
+                                                    proportions={this.state.proportionsEdit}
+                                                    handleProportionsChange={this.handleProportionsEditChange}
+                                                    handleInputChange={this.handleInputEditChange}
+                                                    inputPriceText={this.state.inputPriceTextEdit}
+                                                    inputQuantityText={this.state.inputQuantityTextEdit}
+                                                    resetInputs={this.resetInputsEdit}
+                                                    reduceProportions={this.reduceProportionsEdit}
+                                                    handleWhoBoughtChange={this.handleWhoBoughtEditChange}
                                                     getWhoPaysOptions={this.getWhoPaysOptions}
                                                     fillDataToEdit={this.fillDataToEdit}
                                                     handleChangeRow={this.props.handleChangeRow}
-                                                    inputNameText={this.state.inputNameText}
+                                                    inputNameText={this.state.inputNameTextEdit}
                                                     removeRow={this.props.removeRow}
                                                     getNameById={this.props.getNameById}
                                                 />
