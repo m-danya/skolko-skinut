@@ -92,6 +92,10 @@ class App extends React.Component {
     });
   }
 
+  printObject(data) {
+    console.log(JSON.stringify(data, null, 4));
+  }
+
   handleMenuChange(a) {
     if (a == 'products' && !this.state.id) {
       this.generateNewProjectToken()
@@ -330,7 +334,7 @@ class App extends React.Component {
   }
 
 
-  go(person, left, target, relations, sequences, profits, seq, ints) {
+  brilliant_dfs(person, left, target, relations, profits, seq, ints) {
     if (left == 0) {
       return
     }
@@ -351,13 +355,16 @@ class App extends React.Component {
           for (let t in seq) {
             let pint = parseInt(t)
             console.log(seq[pint], ' won\'t pay', min_num, " to ", seq[(pint + 1) % seq.length])
-            relations[seq[pint]][seq[(pint + 1) % seq.length]] -= min_num
+            relations[seq[pint]][seq[(pint + 1) % seq.length]] -= min_num;
+          }
+          for (let i in ints) {
+            ints[i] -= min_num;
           }
           ints.pop()
           //sequences.push(seq.slice())
         } else if (!seq.includes(p)) {
           ints.push(relations[person][p])
-          this.go(p, left - 1, target, relations, sequences, profits, seq, ints)
+          this.brilliant_dfs(p, left - 1, target, relations, profits, seq, ints)
           ints.pop()
         }
 
@@ -365,35 +372,63 @@ class App extends React.Component {
     }
     seq.pop()
   }
+  binaryFind(searchElement) {
+    // copypaste from SOF
 
+    var minIndex = 0;
+    var maxIndex = this.length - 1;
+    var currentIndex;
+    var currentElement;
+
+    while (minIndex <= maxIndex) {
+      currentIndex = (minIndex + maxIndex) / 2 | 0; // Binary hack. Faster than Math.floor
+      currentElement = this[currentIndex];
+
+      if (currentElement < searchElement) {
+        minIndex = currentIndex + 1;
+      }
+      else if (currentElement > searchElement) {
+        maxIndex = currentIndex - 1;
+      }
+      else {
+        return { // Modification
+          found: true,
+          index: currentIndex
+        };
+      }
+    }
+
+    return { // Modification
+      found: false,
+      index: currentElement < searchElement ? currentIndex + 1 : currentIndex
+    };
+  }
 
   handleCalculate(event) {
     let relations = {} // relations[КТО][КОМУ]
+    let commonplace_dict = {}
     for (let p_name of this.state.namesArray) {
       relations[p_name] = {}
+      commonplace_dict[p_name] = 0
       for (let q_name of this.state.namesArray) {
         relations[p_name][q_name] = 0
       }
     }
 
     for (let event of this.state.tableData) {
-      let sum = 0
+      let all_parts = 0;
       for (let f of event.proportions) {
-        sum += f.part
+        all_parts += f.part
       }
-      let price = event.price * event.quantity / sum
+      let one_part_price = event.price * event.quantity / all_parts
       //console.log('price = ', price)
       for (let paying_person_and_part of event.proportions) {
-        relations[this.getNameById(paying_person_and_part.id)][this.getNameById(event.whoBoughtId)] += price * paying_person_and_part.part;
+        let money = one_part_price * paying_person_and_part.part;
+        commonplace_dict[this.getNameById(paying_person_and_part.id)] += money;
+        commonplace_dict[this.getNameById(event.whoBoughtId)] -= money;
+        // relations[this.getNameById(paying_person_and_part.id)][this.getNameById(event.whoBoughtId)] += one_part_price * paying_person_and_part.part;
         //console.log(paying_person, ' += ', price * event.proportions[i])
       }
-      for (let p_name of this.state.namesArray) {
-        relations[p_name][p_name] = 0;
-      }
-      for (let q_name of this.state.namesArray) {
-        this.go(q_name, this.state.namesArray.length, q_name, relations, [], [], [], [])
-      }
-
     }
 
     for (let p_name of this.state.namesArray) {
@@ -401,6 +436,42 @@ class App extends React.Component {
     }
 
 
+    let commonplace_pos = []
+    let commonplace_neg = []
+    for (let name in commonplace_dict) {
+      if (commonplace_dict[name] > 0) {
+        commonplace_pos.push({ 'name': name, 'money': commonplace_dict[name] });
+      } else if (commonplace_dict[name] < 0) {
+        commonplace_neg.push({ 'name': name, 'money': -commonplace_dict[name] });
+      }
+    }
+
+    commonplace_pos.sort((a, b) => b.money - a.money);
+    commonplace_neg.sort((a, b) => b.money - a.money); // the sign has already been taken into account
+
+    while (commonplace_pos.length > 0) {
+      let payment = Math.min(commonplace_neg[0].money, commonplace_pos[0].money)
+      relations[commonplace_pos[0].name][commonplace_neg[0].name] += payment 
+      commonplace_neg[0].money -= payment
+      commonplace_pos[0].money -= payment
+      if (commonplace_neg[0].money == 0) {
+        commonplace_neg.splice(0, 1);
+      } else {
+        commonplace_neg.sort((a, b) => b.money - a.money);
+      }
+      if (commonplace_pos[0].money == 0) {
+        commonplace_pos.splice(0, 1);
+      } else {
+        commonplace_pos.sort((a, b) => b.money - a.money);
+      }
+    }
+
+    this.printObject(relations);
+
+    // for (let q_name of this.state.namesArray) { 
+    // Rest In Peace, dfs
+    //   this.brilliant_dfs(q_name, this.state.namesArray.length, q_name, relations, [], [], [])
+    // }
 
     this.setState({
       calculated: true,
@@ -586,7 +657,7 @@ class App extends React.Component {
   }
 
   componentDidMount(props) {
-    
+
     if (this.props.match.params.id) {
       let id = this.props.match.params.id
       this.setState({
@@ -613,7 +684,7 @@ class App extends React.Component {
   }
 
   render() {
-    
+
     return (
       <div>
         <Helmet>
@@ -1039,12 +1110,12 @@ class App extends React.Component {
           {
             this.state.page == 'login' &&
             <Segment basic>
-            <div>
-              <VkLogin
-                personalData={this.state.personalData}
-                updatePersonalData={this.updatePersonalData}
-              />
-            </div>
+              <div>
+                <VkLogin
+                  personalData={this.state.personalData}
+                  updatePersonalData={this.updatePersonalData}
+                />
+              </div>
             </Segment>
           }
         </Container>
