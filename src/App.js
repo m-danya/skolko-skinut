@@ -260,14 +260,16 @@ class App extends React.Component {
     let new_namesIds = this.state.namesIds.slice()
     newNamesArray.splice(newNamesArray.indexOf(name), 1)
     let index = 0;
-    for (index in new_namesIds) {
-      if (new_namesIds[index].name == name) {
+    let id;
+    for (let i in new_namesIds) {
+      if (new_namesIds[i].name == name) {
         //console.log('found ', name)
+        index = i;
+        id = new_namesIds[i].id;
         break
       }
     }
 
-    let id = this.getIdByName(name);
     for (let i in this.state.tableData) {
       if (this.state.tableData[i].whoBoughtId == id) {
         // человек купил этот продукт
@@ -404,11 +406,11 @@ class App extends React.Component {
       calculated: true,
       relations: Object.assign({}, relations),
     }, () => {
-      // window.scrollTo({
-      //   top: document.body.scrollHeight,
-      //   left: 0,
-      //   behavior: 'smooth'
-      // });
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+      });
     });
 
   }
@@ -469,9 +471,7 @@ class App extends React.Component {
           if (this.state.guided && this.state.tableData.length == 0) {
             this.fillDebugInfo();
           }
-          if (this.state.tableData.length) {
-            this.handleCalculate();
-          }
+
         })
       }
     }, (e) => {
@@ -831,8 +831,8 @@ class App extends React.Component {
                           <List.Item>
                             <List.Content>
                               {/* <List.Header>Три</List.Header> */}
-                        3. Под таблицей показано, сколько кто кому должен скинуть!
-                        <br /><br />Нажми "поделиться" и у тебя будет ссылка, которой можно поделиться с друзьями
+                              3. Нажми на кнопку внизу и узнай, сколько кто кому должен скинуть!
+                        <br /><br />У тебя будет ссылка, которой можно поделиться с друзьями
                         🥳
                         <br /><br />
 
@@ -973,17 +973,17 @@ class App extends React.Component {
                 getTableItemIndexByProductId={this.getTableItemIndexByProductId}
                 getIdByName={this.getIdByName}
               />
-              {/* {this.state.tableData.length > 0 &&
+              {this.state.tableData.length > 0 &&
 
-                // <div style={{ textAlign: "center", padding: "15px 0px" }}>
-                //   <Button
-                //     positive
-                //     size='big'
-                //     onClick={this.handleCalculate}
-                //   >
-                //     Рассчитать СколькоСкинуть</Button>
-                // </div>
-              } */}
+                <div style={{ textAlign: "center", padding: "15px 0px" }}>
+                  <Button
+                    positive
+                    size='big'
+                    onClick={this.handleCalculate}
+                  >
+                    Рассчитать СколькоСкинуть</Button>
+                </div>
+              }
 
               {this.state.calculated &&
 

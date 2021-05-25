@@ -142,7 +142,7 @@ class ChooseNames extends React.Component {
                                     name='delete'
                                     onClick={() => {
                                         if (!this.props.handleRemoveName(e.name)) {
-                                            swal("Так нельзя", "Вы пытаетесь удалить из человека, который упоминается в списке продуктов", "error");
+                                            swal("Так нельзя", "Вы пытаетесь удалить человека, который упоминается в списке продуктов", "error");
                                         }
                                     }}
                                 />
