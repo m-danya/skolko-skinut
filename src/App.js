@@ -372,37 +372,7 @@ class App extends React.Component {
     }
     seq.pop()
   }
-  binaryFind(searchElement) {
-    // copypaste from SOF
-
-    var minIndex = 0;
-    var maxIndex = this.length - 1;
-    var currentIndex;
-    var currentElement;
-
-    while (minIndex <= maxIndex) {
-      currentIndex = (minIndex + maxIndex) / 2 | 0; // Binary hack. Faster than Math.floor
-      currentElement = this[currentIndex];
-
-      if (currentElement < searchElement) {
-        minIndex = currentIndex + 1;
-      }
-      else if (currentElement > searchElement) {
-        maxIndex = currentIndex - 1;
-      }
-      else {
-        return { // Modification
-          found: true,
-          index: currentIndex
-        };
-      }
-    }
-
-    return { // Modification
-      found: false,
-      index: currentElement < searchElement ? currentIndex + 1 : currentIndex
-    };
-  }
+  
 
   handleCalculate(event) {
     let relations = {} // relations[КТО][КОМУ]
@@ -423,7 +393,7 @@ class App extends React.Component {
       let one_part_price = event.price * event.quantity / all_parts
       //console.log('price = ', price)
       for (let paying_person_and_part of event.proportions) {
-        let money = one_part_price * paying_person_and_part.part;
+        let money = Math.round(one_part_price * paying_person_and_part.part);
         commonplace_dict[this.getNameById(paying_person_and_part.id)] += money;
         commonplace_dict[this.getNameById(event.whoBoughtId)] -= money;
         // relations[this.getNameById(paying_person_and_part.id)][this.getNameById(event.whoBoughtId)] += one_part_price * paying_person_and_part.part;
@@ -450,8 +420,11 @@ class App extends React.Component {
     commonplace_neg.sort((a, b) => b.money - a.money); // the sign has already been taken into account
 
     while (commonplace_pos.length > 0) {
+      console.log('pos and neg:')
+      this.printObject(commonplace_pos)
+      this.printObject(commonplace_neg)
       let payment = Math.min(commonplace_neg[0].money, commonplace_pos[0].money)
-      relations[commonplace_pos[0].name][commonplace_neg[0].name] += payment 
+      relations[commonplace_pos[0].name][commonplace_neg[0].name] += payment
       commonplace_neg[0].money -= payment
       commonplace_pos[0].money -= payment
       if (commonplace_neg[0].money == 0) {
@@ -1083,7 +1056,7 @@ class App extends React.Component {
                                       style={{ height: "70px", lineHeight: "70px" }}
                                     >
                                       {name} <Icon name='long arrow alternate right' />
-                                      {name2}: {Math.round(this.state.relations[name][name2])} ₽
+                                      {name2}: {this.state.relations[name][name2]} ₽
                                   </text>
                                     </List.Content>
                                   </List.Item> :
