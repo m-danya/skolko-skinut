@@ -111,8 +111,6 @@ class App extends React.Component {
     }, () => {
       this.updateBackend();
     });
-
-
   }
 
   handleProjectNameInputChange(newName) {
@@ -246,7 +244,7 @@ class App extends React.Component {
     new_namesIds.push({
       'name': name,
       'id': this.uuidv4(),
-      'order_number': this.state.namesArray.length ? this.state.namesArray[this.state.namesArray.length - 1].order_number + 1 : 1,
+      'order_number': this.state.namesIds.length ? this.state.namesIds[this.state.namesIds.length - 1].order_number + 1 : 1,
     })
 
     this.setState({
