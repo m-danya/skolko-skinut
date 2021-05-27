@@ -116,7 +116,6 @@ class App extends React.Component {
   }
 
   handleProjectNameInputChange(newName) {
-    console.log('newname', newName)
     this.setState({
       projectnameInput: newName,
     });
@@ -147,6 +146,7 @@ class App extends React.Component {
         quantity: quantity,
         proportions: proportions,
         id: this.uuidv4(),
+        order_number: state.tableData.length ? state.tableData[state.tableData.length - 1].order_number + 1 : 1,
       }),
       calculated: false,
     }), () => {
@@ -191,7 +191,7 @@ class App extends React.Component {
           console.log('send!')
           ws_client.send(JSON.stringify({
             type: "message",
-            msg: "hey",
+            msg: "hey", // it's not a debug message!
           }));
         }
         //window.location.href = "/" + new_id;
@@ -245,7 +245,8 @@ class App extends React.Component {
     let new_namesIds = this.state.namesIds.slice()
     new_namesIds.push({
       'name': name,
-      'id': this.uuidv4()
+      'id': this.uuidv4(),
+      'order_number': this.state.namesArray.length ? this.state.namesArray[this.state.namesArray.length - 1].order_number + 1 : 1,
     })
 
     this.setState({
@@ -372,7 +373,7 @@ class App extends React.Component {
     }
     seq.pop()
   }
-  
+
 
   handleCalculate(event) {
     let relations = {} // relations[КТО][КОМУ]
@@ -494,21 +495,23 @@ class App extends React.Component {
       //console.log(result)
       if (result) {
         let names = []
+        
+        let newNamesIds = result.persons.slice();
+        newNamesIds.sort((a, b) => a.order_number - b.order_number);
 
         for (let t of result.persons) {
           names.push(t.name)
           //console.log('push ', t.name)
         }
 
-        for (let p of result.products) {
-          //p.proportions = JSON.parse(p.proportions)
-        }
+        let newTableData = result.products.slice();
+        newTableData.sort((a, b) => a.order_number - b.order_number);
 
         this.setState({
           page: 'products',
-          tableData: result.products.slice(),
+          tableData: newTableData.slice(),
           projectname: result.name.slice(),
-          namesIds: result.persons.slice(),
+          namesIds: newNamesIds.slice(),
           namesArray: names.slice(),
           guided: result.name == "guided test project",//result.guided,
         }, () => {
@@ -540,19 +543,23 @@ class App extends React.Component {
       namesIds: [
         {
           'name': 'Серго',
-          'id': id_sergo
+          'id': id_sergo,
+          'order_number': 1
         },
         {
           'name': 'Даня',
-          'id': id_danya
+          'id': id_danya,
+          'order_number': 2
         },
         {
           'name': 'Саня',
-          'id': id_sanya
+          'id': id_sanya,
+          'order_number': 3
         },
         {
           'name': 'Ваня',
-          'id': id_vanya
+          'id': id_vanya,
+          'order_number': 4
         },
       ],
       tableData:
@@ -566,7 +573,8 @@ class App extends React.Component {
               { "id": id_vanya, "part": 1 },
               { "id": id_danya, "part": 1 }
             ],
-            id: pid1
+            id: pid1,
+            'order_number': 1
           },
           {
             name: 'Квас "Никола"',
@@ -578,7 +586,8 @@ class App extends React.Component {
               { "id": id_vanya, "part": 1 },
               { "id": id_danya, "part": 1 }
             ],
-            id: pid2
+            id: pid2,
+            'order_number': 2
 
           },
           {
@@ -589,7 +598,8 @@ class App extends React.Component {
             proportions: [
               { "id": id_danya, "part": 1 }
             ],
-            id: pid3
+            id: pid3,
+            'order_number': 3
 
           },
           {
@@ -603,7 +613,8 @@ class App extends React.Component {
               { "id": id_sanya, "part": 3 },
               { "id": id_vanya, "part": 1 },
             ],
-            id: pid4
+            id: pid4,
+            'order_number': 4
 
           },
           {
@@ -616,7 +627,8 @@ class App extends React.Component {
               { "id": id_danya, "part": 1 },
               { "id": id_vanya, "part": 1 },
             ],
-            id: pid5
+            id: pid5,
+            'order_number': 5
           },
 
         ],
@@ -786,7 +798,7 @@ class App extends React.Component {
                       Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями, осталось чуть-чуть :)
                     </b>
                     <br /><br /> */}
-СколькоСкинуть — это сайт, который после тусовки поможет Вам узнать, сколько денег вы должны перевести друг другу. 
+СколькоСкинуть — это сайт, который после тусовки поможет Вам узнать, сколько денег вы должны перевести друг другу.
 <br /><br />
 Чтобы вносить данные вместе, ссылку можно можно будет скинуть друзьям. Алгоритм максимально уменьшит количество переводов между людьми, чтобы облегчить процесс расчёта.
 <br /><br />
