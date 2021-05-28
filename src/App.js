@@ -496,7 +496,7 @@ class App extends React.Component {
       //console.log(result)
       if (result) {
         let names = []
-        
+
         let newNamesIds = result.persons.slice();
         newNamesIds.sort((a, b) => a.order_number - b.order_number);
 
@@ -642,6 +642,36 @@ class App extends React.Component {
     })
   }
 
+  configureSocket() {
+    ws_client = new W3CWebSocket(`wss://skolkoskinut.ru/ws/${id}`);
+    ws_client.onopen = () => {
+      swal('connected')
+      console.log('WS: WebSocket Client Connected');
+    };
+
+    ws_client.onmessage = (message) => {
+      //const dataFromServer = message.data;
+      console.log('WS: got reply!');
+      this.makeGetRequest();
+    };
+
+    ws_client.onclose = (event) => {
+      ws = null
+      setTimeout(configureSocket, 5000)
+      console.log('ws closed: ', event)
+      // this.setState({
+      //   needToReloadWebSocket: true,
+      // })
+    }
+
+    ws_client.onerror = (event) => {
+      console.log('ws error: ', event)
+      this.setState({
+        needToReloadWebSocket: true,
+      })
+    }
+  }
+
   componentDidMount(props) {
 
     if (this.props.match.params.id) {
@@ -652,30 +682,7 @@ class App extends React.Component {
       }, () => {
         this.makeGetRequest();
       })
-      ws_client = new W3CWebSocket(`wss://skolkoskinut.ru/ws/${id}`);
-      ws_client.onopen = () => {
-        console.log('WS: WebSocket Client Connected');
-      };
-
-      ws_client.onmessage = (message) => {
-        //const dataFromServer = message.data;
-        console.log('WS: got reply!');
-        this.makeGetRequest();
-      };
-      
-      ws_client.onclose = (event) => {
-        console.log('ws closed: ', event)
-        this.setState({
-          needToReloadWebSocket: true,
-        })
-      }
-
-      ws_client.onerror = (event) => {
-        console.log('ws error: ', event)
-        this.setState({
-          needToReloadWebSocket: true,
-        })
-      }
+      this.configureSocket();
 
     }
     if (debugging) {
