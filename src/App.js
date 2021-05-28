@@ -23,6 +23,8 @@ import TableOfProducts from './TableOfProducts'
 import ChooseNames from './ChooseNames'
 import ShareMenu from './ShareMenu'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import swal from 'sweetalert';
+
 /* global VK */
 import {
   BrowserView,
@@ -195,7 +197,8 @@ class App extends React.Component {
         //window.location.href = "/" + new_id;
       }
     }, (e) => {
-      console.log('put request error: ', e);
+      console.log('put request error. gonna wait for 3 sec');
+      setTimeout(this.updateBackend, 3000);
     });
 
   }
@@ -497,7 +500,7 @@ class App extends React.Component {
         let newNamesIds = result.persons.slice();
         newNamesIds.sort((a, b) => a.order_number - b.order_number);
 
-        for (let t of result.persons) {
+        for (let t of newNamesIds) {
           names.push(t.name)
           //console.log('push ', t.name)
         }
@@ -659,6 +662,20 @@ class App extends React.Component {
         console.log('WS: got reply!');
         this.makeGetRequest();
       };
+      
+      ws_client.onclose = (event) => {
+        console.log('ws closed: ', event)
+        this.setState({
+          needToReloadWebSocket: true,
+        })
+      }
+
+      ws_client.onerror = (event) => {
+        console.log('ws error: ', event)
+        this.setState({
+          needToReloadWebSocket: true,
+        })
+      }
 
     }
     if (debugging) {
@@ -666,6 +683,11 @@ class App extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.state.needToReloadWebSocket) {
+      swal("Нужно перезагрузить страницу", "Связь с сервером потеряна", "error");
+    }
+  }
   render() {
 
     return (
