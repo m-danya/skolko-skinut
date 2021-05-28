@@ -642,7 +642,7 @@ class App extends React.Component {
     })
   }
 
-  configureSocket() {
+  configureSocket(id) {
     ws_client = new W3CWebSocket(`wss://skolkoskinut.ru/ws/${id}`);
     ws_client.onopen = () => {
       swal('connected')
@@ -656,8 +656,8 @@ class App extends React.Component {
     };
 
     ws_client.onclose = (event) => {
-      ws = null
-      setTimeout(configureSocket, 5000)
+      ws_client = null
+      setTimeout(this.configureSocket, 5000)
       console.log('ws closed: ', event)
       // this.setState({
       //   needToReloadWebSocket: true,
@@ -682,7 +682,7 @@ class App extends React.Component {
       }, () => {
         this.makeGetRequest();
       })
-      this.configureSocket();
+      this.configureSocket(id);
 
     }
     if (debugging) {
