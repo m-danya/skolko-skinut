@@ -141,9 +141,22 @@ class ChooseNames extends React.Component {
                                 <Icon
                                     name='delete'
                                     onClick={() => {
-                                        if (!this.props.handleRemoveName(e.name)) {
-                                            swal("Так нельзя", "Вы пытаетесь удалить человека, который упоминается в списке продуктов", "error");
-                                        }
+                                        swal({
+                                            title: "Внимание",
+                                            text: "Вы действительно хотите удалить этого человека?",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                        })
+                                            .then((willDelete) => {
+                                                if (willDelete) {
+                                                    if (!this.props.handleRemoveName(e.name)) {
+                                                        swal("Так нельзя", "Вы пытаетесь удалить человека, который упоминается в списке продуктов", "error");
+                                                    }
+                                                } else {
+                                                    // nothing
+                                                }
+                                            });
                                     }}
                                 />
                             </Label>
