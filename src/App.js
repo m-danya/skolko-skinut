@@ -673,7 +673,6 @@ class App extends React.Component {
   }
 
   componentDidMount(props) {
-
     if (this.props.match.params.id) {
       let id = this.props.match.params.id
       this.setState({
@@ -683,24 +682,24 @@ class App extends React.Component {
         this.makeGetRequest();
       })
       this.configureSocket(id);
-
+      
     }
     if (debugging) {
       this.fillDebugInfo();
     }
-    setTimeout(() => {
-      if (this.state.tableData.length > 0) {
-        this.handleCalculate();
-      } else {
-        setTimeout(() => {
-          if (this.state.tableData.length > 0) {
-            this.handleCalculate();
-          }
-        }, 800);
+    
+    this.postponedCalculation(10);
+
+  }
+
+  postponedCalculation(left) {
+    if (this.state.tableData.length > 0) {
+      this.handleCalculate();
+    } else {
+      if (left > 0) {
+        setTimeout(() => { this.postponedCalculation(left - 1) }, 300);
       }
-    }, 200);
-
-
+    }
   }
 
   componentDidUpdate() {
