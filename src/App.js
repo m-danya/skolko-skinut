@@ -688,6 +688,19 @@ class App extends React.Component {
     if (debugging) {
       this.fillDebugInfo();
     }
+    setTimeout(() => {
+      if (this.state.tableData.length > 0) {
+        this.handleCalculate();
+      } else {
+        setTimeout(() => {
+          if (this.state.tableData.length > 0) {
+            this.handleCalculate();
+          }
+        }, 800);
+      }
+    }, 200);
+
+
   }
 
   componentDidUpdate() {
@@ -819,7 +832,7 @@ class App extends React.Component {
                   Добро пожаловать!
                 </Header>
                 {/* <p style={{ marginTop: "-5px", }}> СколькоСкинуть - веб-приложение для таких-то задач, подходит ваще всем потому-то. </p> */}
-                <p style={{ marginTop: "-5px", fontSize: "16px", marginBottom: "15px"}}>
+                <p style={{ marginTop: "-5px", fontSize: "16px", marginBottom: "15px" }}>
                   {/* 
                     <b style={{ color: "red" }}>
                       Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями, осталось чуть-чуть :)
