@@ -4,9 +4,13 @@ import { Menu, Icon } from "semantic-ui-react";
 /* global VK */
 
 class VkGroup extends React.Component {
-  componentDidMount() {
+
+  constructor(props) {
+    super(props);
     VK.Widgets.Group("vk_groups", { mode: 3, width: "250" }, 202786086);
+
   }
+
 
   render() {
     return (
