@@ -151,7 +151,7 @@ function EditMenu(props) {
                     {/* <Input fluid
                                             className='placeholderCentering textAlignCenter'
                                             placeholder='Кто купил'
-                                            //label='Кто купил'
+                             ~               //label='Кто купил'
                                             onChange={(e) => props.handleInputChange('WhoBought', e)}
                                             value={props.inputWhoBoughtText}
                                         /> */}
