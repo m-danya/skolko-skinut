@@ -119,6 +119,9 @@ function EditMenu(props) {
             <Modal.Header>Редактировать продукт</Modal.Header>
             <Modal.Content>
                 <p className='tableFont'>
+                    <p className='tableHeaderFont'>
+                        <b>Название </b>
+                    </p>
                     <Input fluid
                         className='placeholderCentering textAlignCenter'
                         placeholder='Название продукта'
@@ -127,7 +130,11 @@ function EditMenu(props) {
                         value={props.inputNameText}
                     />
                 </p>
+
                 <p className='tableFont'>
+                    <p className='tableHeaderFont'>
+                        <b>Кто купил</b>
+                    </p>
                     <Dropdown
                         className='placeholderCentering textAlignCenter'
                         placeholder='Кто купил'
@@ -150,6 +157,9 @@ function EditMenu(props) {
                                         /> */}
                 </p>
                 <p className='tableFont'>
+                    <p className='tableHeaderFont'>
+                        <b>Кто скидывается</b>
+                    </p>
                     <Dropdown
                         className='placeholderCentering textAlignCenter'
                         placeholder='Кто скидывается'
@@ -279,7 +289,7 @@ function EditMenu(props) {
                 }
                 } positive>
                     Сохранить
-        </Button>
+                </Button>
             </Modal.Actions>
         </Modal>
     )
