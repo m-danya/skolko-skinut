@@ -39,6 +39,7 @@ import VkGroup from './VkGroup'
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import ss_logo from './assets/logo.png'
 import VkLogin from "./VkLogin.js";
+import MoreInfo from "./MoreInfo.js";
 
 
 const axios = require('axios').default;
@@ -379,8 +380,10 @@ class App extends React.Component {
 
   handleCalculate(event) {
     let relations = {} // relations[КТО][КОМУ]
+    let expenses = {} // [КТО] = сколько стоило мероприятие ему
     let commonplace_dict = {}
     for (let p_name of this.state.namesArray) {
+      expenses[p_name] = 0
       relations[p_name] = {}
       commonplace_dict[p_name] = 0
       for (let q_name of this.state.namesArray) {
@@ -394,19 +397,27 @@ class App extends React.Component {
         all_parts += f.part
       }
       let one_part_price = event.price * event.quantity / all_parts
+      expenses[this.getNameById(event.whoBoughtId)] += event.price * event.quantity;
       //console.log('price = ', price)
       for (let paying_person_and_part of event.proportions) {
         let money = Math.round(one_part_price * paying_person_and_part.part);
         commonplace_dict[this.getNameById(paying_person_and_part.id)] += money;
-        commonplace_dict[this.getNameById(event.whoBoughtId)] -= money;
+        commonplace_dict[this.getNameById(event.whoBoughtId)] -= money; // + на - даёт 0
+        // пересчёт персональных затрат:
+        expenses[this.getNameById(paying_person_and_part.id)] += money;
+        expenses[this.getNameById(event.whoBoughtId)] -= money;
         // relations[this.getNameById(paying_person_and_part.id)][this.getNameById(event.whoBoughtId)] += one_part_price * paying_person_and_part.part;
         //console.log(paying_person, ' += ', price * event.proportions[i])
       }
+      
     }
 
     for (let p_name of this.state.namesArray) {
       relations[p_name][p_name] = 0;
     }
+
+    console.log('after +')
+    this.printObject(expenses);
 
 
     let commonplace_pos = []
@@ -442,8 +453,6 @@ class App extends React.Component {
       }
     }
 
-    this.printObject(relations);
-
     // for (let q_name of this.state.namesArray) { 
     // Rest In Peace, dfs
     //   this.brilliant_dfs(q_name, this.state.namesArray.length, q_name, relations, [], [], [])
@@ -452,6 +461,7 @@ class App extends React.Component {
     this.setState({
       calculated: true,
       relations: Object.assign({}, relations),
+      expenses: Object.assign({}, expenses)
     }, () => {
       window.scrollTo({
         top: document.body.scrollHeight,
@@ -1021,7 +1031,7 @@ class App extends React.Component {
                             })
                               .then((willRefresh) => {
                                 if (willRefresh) {
-                                  this.handleProjectNameChange(phrases[Math.floor((Math.random() * phrases.length))]) 
+                                  this.handleProjectNameChange(phrases[Math.floor((Math.random() * phrases.length))])
                                 } else {
                                   // safe
                                 }
@@ -1139,6 +1149,12 @@ class App extends React.Component {
                         }
                       </List>
                       {/* </Segment> */}
+                    </Grid.Row>
+                    <Grid.Row>
+                      <MoreInfo
+                        namesArray={this.state.namesArray}
+                        expenses={this.state.expenses}
+                      />
                     </Grid.Row>
                     <Grid.Row>
                       <ShareMenu

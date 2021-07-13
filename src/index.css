@@ -49,6 +49,12 @@ code {
   text-align: center;
 }
 
+.moreDetails {
+  font-size: 20px;
+  text-align: center;
+  color: lightslategrey
+}
+
 .placeholderCentering > input::placeholder {
   text-align: center;
 }
