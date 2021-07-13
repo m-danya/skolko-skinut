@@ -19,7 +19,14 @@ export default class MoreInfo extends Component {
         const { activeIndex } = this.state
         const newIndex = activeIndex === index ? -1 : index
 
-        this.setState({ activeIndex: newIndex })
+        this.setState({ activeIndex: newIndex }, () => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                left: 0,
+                behavior: 'smooth'
+              });
+        })
+        
     }
 
     render() {

@@ -416,9 +416,6 @@ class App extends React.Component {
       relations[p_name][p_name] = 0;
     }
 
-    console.log('after +')
-    this.printObject(expenses);
-
 
     let commonplace_pos = []
     let commonplace_neg = []
