@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Accordion, Icon } from 'semantic-ui-react'
 
 export default class MoreInfo extends Component {
-    state = { activeIndex: 0 } // CHANGE TO -1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    state = { activeIndex: -1 } 
 
     componentDidMount() {
         let sum = 0;
