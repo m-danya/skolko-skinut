@@ -33,7 +33,7 @@ function ShareMenu(props) {
 
     return (
         <CopyToClipboard
-        text={props.copyText}
+            text={props.copyText}
         >
             <div style={{ textAlign: "center" }}>
                 <Button
@@ -44,10 +44,15 @@ function ShareMenu(props) {
                     }}
                 >
                     <Icon name='share' />
-                    Поделиться
+                    Скопировать ссылку на проект
                 </Button>
+                <p className='centerText tableHeaderFont hint'>
+                    Ссылку можно отправить друзьям или сохранить себе, чтобы не потерять проект
+
+                </p>
             </div>
         </CopyToClipboard>
+
 
     )
 

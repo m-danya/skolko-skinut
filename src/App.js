@@ -409,7 +409,7 @@ class App extends React.Component {
         // relations[this.getNameById(paying_person_and_part.id)][this.getNameById(event.whoBoughtId)] += one_part_price * paying_person_and_part.part;
         //console.log(paying_person, ' += ', price * event.proportions[i])
       }
-      
+
     }
 
     for (let p_name of this.state.namesArray) {

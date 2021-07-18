@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Accordion, Icon } from 'semantic-ui-react'
 
 export default class MoreInfo extends Component {
-    state = { activeIndex: -1 } 
+    state = { activeIndex: -1 }
 
     componentDidMount() {
         let sum = 0;
@@ -24,16 +24,16 @@ export default class MoreInfo extends Component {
                 top: document.body.scrollHeight,
                 left: 0,
                 behavior: 'smooth'
-              });
+            });
         })
-        
+
     }
 
     render() {
         const { activeIndex } = this.state;
         return (
-            <Accordion 
-            styled = {this.state.activeIndex >= 0}
+            <Accordion
+                styled={this.state.activeIndex >= 0}
             >
                 <Accordion.Title
                     active={activeIndex === 0}
