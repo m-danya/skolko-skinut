@@ -397,7 +397,6 @@ class App extends React.Component {
         all_parts += f.part
       }
       let one_part_price = event.price * event.quantity / all_parts
-      expenses[this.getNameById(event.whoBoughtId)] += event.price * event.quantity;
       //console.log('price = ', price)
       for (let paying_person_and_part of event.proportions) {
         let money = Math.round(one_part_price * paying_person_and_part.part);
@@ -405,7 +404,6 @@ class App extends React.Component {
         commonplace_dict[this.getNameById(event.whoBoughtId)] -= money; // + на - даёт 0
         // пересчёт персональных затрат:
         expenses[this.getNameById(paying_person_and_part.id)] += money;
-        expenses[this.getNameById(event.whoBoughtId)] -= money;
         // relations[this.getNameById(paying_person_and_part.id)][this.getNameById(event.whoBoughtId)] += one_part_price * paying_person_and_part.part;
         //console.log(paying_person, ' += ', price * event.proportions[i])
       }
