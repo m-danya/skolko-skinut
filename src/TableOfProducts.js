@@ -607,10 +607,17 @@ class TableOfProducts extends Component {
                                         <Table.Cell width={4}>
                                             <p className='tableFont'>
                                                 {/* {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}<br /> */}
-                                                {row.proportions.map((e, i) => ((i == row.proportions.length - 1) ?
+                                                
+                                                {row.proportions.length == this.props.namesArray.length ?
+                                                <b>Все</b> : 
+                                                (row.proportions.map((e, i) => ((i == row.proportions.length - 1) ?
                                                     this.props.getNameById(e.id)
                                                     :
-                                                    this.props.getNameById(e.id) + ', '))}<br />
+                                                    this.props.getNameById(e.id) + ', ')))
+                                                }
+                                                    
+                                                <br />
+
                                                 <text className='tableFontProportions' style={{ paddingTop: '0', marginInlineStart: 0 }}>
                                                     {
                                                         row.proportions.length == 1 ? '' : (row.proportions.every(v => v.part === row.proportions[0].part)

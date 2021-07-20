@@ -382,10 +382,12 @@ class App extends React.Component {
     let relations = {} // relations[КТО][КОМУ]
     let expenses = {} // [КТО] = сколько стоило мероприятие ему
     let commonplace_dict = {}
+    let boughtSum = {}
     for (let p_name of this.state.namesArray) {
       expenses[p_name] = 0
       relations[p_name] = {}
       commonplace_dict[p_name] = 0
+      boughtSum[p_name] = 0
       for (let q_name of this.state.namesArray) {
         relations[p_name][q_name] = 0
       }
@@ -397,6 +399,7 @@ class App extends React.Component {
         all_parts += f.part
       }
       let one_part_price = event.price * event.quantity / all_parts
+      boughtSum[this.getNameById(event.whoBoughtId)] += event.price * event.quantity
       //console.log('price = ', price)
       for (let paying_person_and_part of event.proportions) {
         let money = Math.round(one_part_price * paying_person_and_part.part);
@@ -456,7 +459,8 @@ class App extends React.Component {
     this.setState({
       calculated: true,
       relations: Object.assign({}, relations),
-      expenses: Object.assign({}, expenses)
+      expenses: Object.assign({}, expenses),
+      boughtSum: Object.assign({}, boughtSum)
     }, () => {
       window.scrollTo({
         top: document.body.scrollHeight,
@@ -1149,6 +1153,7 @@ class App extends React.Component {
                       <MoreInfo
                         namesArray={this.state.namesArray}
                         expenses={this.state.expenses}
+                        boughtSum={this.state.boughtSum}
                       />
                     </Grid.Row>
                     <Grid.Row>

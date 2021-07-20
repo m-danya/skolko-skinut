@@ -49,11 +49,11 @@ export default class MoreInfo extends Component {
                 <Accordion.Content active={activeIndex === 0}>
                     <p className='centerText tableHeaderFont'>
 
-                        Всего потрачено денег: {this.state.sum} ₽
+                        <b>Всего потрачено денег:</b> {this.state.sum} ₽
                     </p>
                     <p className='centerText tableHeaderFont'>
 
-                        Траты каждого участника:
+                        <b>Стоимость для каждого:</b>
                     </p>
 
                     <p>
@@ -62,6 +62,39 @@ export default class MoreInfo extends Component {
                                 <p className='centerText tableHeaderFont'>
                                     {name}: {this.props.expenses[name]} ₽
                                 </p>
+                            )
+                        })
+                        }
+
+                    </p>
+                    <br />
+
+                    <p className='centerText tableHeaderFont'>
+                        <b>Сколько заплатили за продукты:</b>
+                        <p className='centerText tableFontProportions'> 
+                        (почему скидывать нужно именно столько)
+                        </p>
+                    </p>
+
+                    <p>
+                        {this.props.namesArray.map((name) => {
+                            return (
+                                <div>
+                                    <p className='centerText tableHeaderFont smallPaddingBottom'>
+                                        {name}: {this.props.boughtSum[name]} ₽
+                                        <p className='centerText tableFontProportions'>
+                                            {this.props.boughtSum[name] - this.props.expenses[name] > 0 ?
+                                                "в минусе на "
+                                                :
+                                                "в плюсе на "
+                                            }
+                                            {Math.abs(this.props.boughtSum[name] - this.props.expenses[name])}
+                                            &nbsp;₽
+                                        </p>
+                                    </p>
+
+                                </div>
+
                             )
                         })
                         }
