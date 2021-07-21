@@ -608,7 +608,8 @@ class TableOfProducts extends Component {
                                             <p className='tableFont'>
                                                 {/* {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}<br /> */}
                                                 
-                                                {row.proportions.length == this.props.namesArray.length ?
+                                                {(row.proportions.length == this.props.namesArray.length && 
+                                                this.props.namesArray.length > 2) ?
                                                 <b>Все</b> : 
                                                 (row.proportions.map((e, i) => ((i == row.proportions.length - 1) ?
                                                     this.props.getNameById(e.id)
