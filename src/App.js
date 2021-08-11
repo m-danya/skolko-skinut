@@ -669,7 +669,7 @@ class App extends React.Component {
       ws_client = null
       setTimeout(this.configureSocket, 5000)
       console.log('ws closed: ', event)
-      window.location.reload();
+      setTimeout(() => { window.location.reload(); }, 1000);
 
       this.setState({
         needToReloadWebSocket: true,
@@ -681,7 +681,7 @@ class App extends React.Component {
       this.setState({
         needToReloadWebSocket: true,
       })
-      window.location.reload();
+      setTimeout(() => { window.location.reload(); }, 1000);
     }
   }
 
@@ -717,10 +717,8 @@ class App extends React.Component {
 
   componentDidUpdate() {
     if (this.state.needToReloadWebSocket) {
-      window.location.reload();
-      setTimeout(() => { window.location.reload(); }, 300);
       swal("Нужно перезагрузить страницу", "Связь с сервером потеряна", "error");
-      setTimeout(() => { window.location.reload(); }, 300);
+      setTimeout(() => { window.location.reload(); }, 1000);
     }
   }
   render() {
