@@ -717,7 +717,7 @@ class App extends React.Component {
 
   componentDidUpdate() {
     if (this.state.needToReloadWebSocket) {
-      swal("Нужно перезагрузить страницу", "Связь с сервером потеряна", "error");
+      // swal("Нужно перезагрузить страницу", "Связь с сервером потеряна", "error");
       setTimeout(() => { window.location.reload(); }, 1000);
     }
   }
@@ -791,6 +791,7 @@ class App extends React.Component {
                   //size="big"
                   color='orange'
                   centered
+                  round
                   fluid
                   loading={this.state.loadingEmpty}
                   className="centeredButton"
