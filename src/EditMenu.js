@@ -105,6 +105,7 @@ function EditMenu(props) {
             open={open}
             size={isBrowser ? 'small' : ''}
             trigger={<Button
+                circular
 
                 fluid={isBrowser}
 
@@ -272,7 +273,9 @@ function EditMenu(props) {
                 }}
                 >
                     Отмена</Button>
-                <Button onClick={() => {
+                <Button
+                
+                onClick={() => {
                     if (checkAllFields()) {
                         props.handleChangeRow(
                             props.productId,

@@ -563,7 +563,7 @@ class TableOfProducts extends Component {
 
                                     <Table.Cell width={1}>
                                         <p className='tableFont'>
-                                            <Button fluid onClick={() => {
+                                            <Button circular fluid onClick={() => {
                                                 if (this.checkAllFields()) {
                                                     this.props.handleAddRow(
                                                         this.state.inputNameText,

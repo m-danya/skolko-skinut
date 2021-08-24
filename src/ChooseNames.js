@@ -108,6 +108,7 @@ class ChooseNames extends React.Component {
                     <Button
                         //primary
                         color='orange'
+                        circular
                         className={this.props.centered ? 'centeredButton' : ''}
                         fluid
                         style={{ width: isMobile ? "100%" : "400px",
@@ -195,7 +196,6 @@ class ChooseNames extends React.Component {
 
                 </Modal.Content>
                 <Modal.Actions>
-                    {/* <Button onClick={() => setOpen(false)}>Cancel</Button> */}
                     <Button onClick={() => this.setOpen(false)} positive
                         className='textAlignCenter'
                         style={{
@@ -203,6 +203,7 @@ class ChooseNames extends React.Component {
                         }}
                         size='big'
                         fluid
+                        circular
                     >
                         Сохранить
         </Button>

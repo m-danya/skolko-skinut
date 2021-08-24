@@ -100,6 +100,7 @@ function MobileAddMenu(props) {
             }}
             open={open}
             trigger={<Button
+                circular
                 color='green'
                 fluid>
                 <p className='textAlignCenter '

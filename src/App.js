@@ -791,7 +791,7 @@ class App extends React.Component {
                   //size="big"
                   color='orange'
                   centered
-                  round
+                  circular
                   fluid
                   loading={this.state.loadingEmpty}
                   className="centeredButton"
@@ -820,6 +820,7 @@ class App extends React.Component {
                   //positive
                   color='green'
                   centered
+                  circular
                   loading={this.state.loadingGuided}
                   fluid
                   className="centeredButton"
@@ -965,22 +966,6 @@ class App extends React.Component {
                         </List>
                       </div>
                     </Grid.Column>
-
-                    {/* <Grid.Column >
-                    
-                    <div style={{ minHeight: '' }} >
-
-                      <Button
-                        color='orange'
-                        fluid
-                        onClick={this.fillDebugInfo}
-                      >
-                        Заполнить демонстрационными данными</Button>
-
-                    </div>
-
-
-                  </Grid.Column> */}
                   </Grid>
                   {isMobile && !this.state.guided && <div style={{
                     padding: "10px 0 10px 0",
@@ -1106,6 +1091,7 @@ class App extends React.Component {
                 <div style={{ textAlign: "center", padding: "15px 0px" }}>
                   <Button
                     positive
+                    circular
                     size='big'
                     onClick={this.handleCalculate}
                   >

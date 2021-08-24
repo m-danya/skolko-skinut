@@ -37,6 +37,7 @@ function ShareMenu(props) {
         >
             <div style={{ textAlign: "center" }}>
                 <Button
+                circular
                     color='blue'
                     size='huge'
                     onClick={webShare.isSupported ? webShare.share : () => {
