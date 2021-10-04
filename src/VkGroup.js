@@ -5,14 +5,16 @@ import { Menu, Icon } from "semantic-ui-react";
 
 class VkGroup extends React.Component {
   componentDidMount() {
-    VK.Widgets.Group("vk_groups", { mode: 3, width: "250" }, 202786086);
+  
+    // VK.Widgets.Group("vk_groups", { mode: 3, width: "250" }, 202786086);
   }
 
   render() {
     return (
-        <div
-          id="vk_groups"
-          className='centeredButton'/>
+      <div></div>
+        // <div
+        //   id="vk_groups"
+        //   className='centeredButton'/>
           // className={isMobile ? 'centeredButton' : ' '}/>
     );
   }
