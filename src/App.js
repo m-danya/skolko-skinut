@@ -89,6 +89,8 @@ class App extends React.Component {
     this.handleProjectNameChange = this.handleProjectNameChange.bind(this);
     this.handleProjectNameInputChange = this.handleProjectNameInputChange.bind(this);
     this.updatePersonalData = this.updatePersonalData.bind(this);
+    this.handleChangeReversedOrder = this.handleChangeReversedOrder.bind(this);
+    this.sortTheTable = this.sortTheTable.bind(this);
   }
 
   updatePersonalData(data) {
@@ -140,8 +142,16 @@ class App extends React.Component {
     return ans;
   }
 
+
   handleAddRow(name, whoBoughtId, price, quantity, proportions) {
-    this.setState(state => ({
+    this.setState(state => {
+      let new_order_number = 0;
+      if (!state.reversedOrder) {
+        new_order_number = state.tableData.length ? state.tableData[state.tableData.length - 1].order_number + 1 : 1
+      } else {
+        new_order_number = state.tableData.length ? state.tableData[0].order_number + 1 : 1
+      }
+      return ({
       tableData: state.tableData.concat({
         name: name,
         whoBoughtId: whoBoughtId,
@@ -149,11 +159,12 @@ class App extends React.Component {
         quantity: quantity,
         proportions: proportions,
         id: this.uuidv4(),
-        order_number: state.tableData.length ? state.tableData[state.tableData.length - 1].order_number + 1 : 1,
+        order_number: new_order_number,
       }),
       calculated: false,
-    }), () => {
+    })}, () => {
       this.updateBackend();
+      this.sortTheTable();
     });
 
   }
@@ -491,6 +502,33 @@ class App extends React.Component {
     return false;
   }
 
+  handleChangeReversedOrder() {
+    this.setState((state) => {
+      return {
+        reversedOrder: !state.reversedOrder
+      }
+    }, () => {
+      this.sortTheTable()
+    })
+  }
+
+
+  sortTheTable() {
+    this.setState((state) => {
+
+      let newTableData = state.tableData.slice()
+      
+      if (state.reversedOrder == false) {
+        newTableData.sort((a, b) => a.order_number - b.order_number);
+      } else {
+        newTableData.sort((a, b) => b.order_number - a.order_number);
+      }
+      return {
+        tableData: newTableData
+      }
+    })
+  }
+
 
   makeGetRequest() {
     axios.get(`${BACKEND_ADDRESS}/api/get/${this.state.id}`,).then(res => {
@@ -517,7 +555,6 @@ class App extends React.Component {
         }
 
         let newTableData = result.products.slice();
-        newTableData.sort((a, b) => a.order_number - b.order_number);
 
         this.setState({
           page: 'products',
@@ -527,6 +564,7 @@ class App extends React.Component {
           namesArray: names.slice(),
           guided: result.name == "guided test project",//result.guided,
         }, () => {
+          this.sortTheTable();
           if (this.state.guided && this.state.tableData.length == 0) {
             this.fillDebugInfo();
           }
@@ -1010,7 +1048,7 @@ class App extends React.Component {
                           projectnameInput={this.state.projectnameInput}
                           projectname={this.state.projectname}
                         />
-                        <Icon name="refresh" style={{ fontSize: "0.5em" }} className="clickable"
+                        <Icon name="refresh" style={{ fontSize: "0.75em", margin: "0 5px"}} className="clickable"
                           onClick={() => {
                             swal({
                               title: "",
@@ -1027,6 +1065,10 @@ class App extends React.Component {
                                 }
                               });
                           }}
+                        />
+                        <Icon name={'sort'}
+                         style={{ fontSize: "0.75em", margin: "0 5px"}} className="clickable"
+                          onClick={this.handleChangeReversedOrder}
                         />
                       </h2>
                     </div>

@@ -46,7 +46,7 @@ function EditProjectName(props) {
             }}
             open={open}
             trigger={
-                <Icon name="pencil alternate" style={{ fontSize: "0.5em" }} className="clickable"
+                <Icon name="pencil alternate" style={{ fontSize: "0.75em", margin: "0 5px 0 7px" }} className="clickable"
                 onClick={() => {
                     props.handleProjectNameInputChange(props.projectname);
                 }} />
