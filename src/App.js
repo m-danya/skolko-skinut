@@ -183,7 +183,7 @@ class App extends React.Component {
   }
 
   updateBackend() {
-    console.log('go go axios! update')
+    // console.log('go go axios! update')
 
     axios.put(`${BACKEND_ADDRESS}/api/update/${this.state.id}`, {
       'id': this.state.id,
@@ -191,8 +191,8 @@ class App extends React.Component {
       'persons': this.state.namesIds,
       'products': this.state.tableData
     }).then(res => {
-      console.log('update res: ', res)
-      console.log(this.state.tableData)
+      // console.log('update res: ', res)
+      // console.log(this.state.tableData)
       //if it's internal error
       if (res.status == 500)
         console.log('Неотловленная ошибка на backend-части, ошибка 500')
@@ -200,9 +200,9 @@ class App extends React.Component {
         console.log('Не удалось установить связь с backend-сервером. ошибка 404')
       if (res.status == 200) {
         //console.log('YAHOOOOOOOOOOOOOOOOOOOOO. updated.')
-        console.log('send?')
+        // console.log('send?')
         if (ws_client) {
-          console.log('send!')
+          // console.log('send!')
           ws_client.send(JSON.stringify({
             type: "message",
             msg: "hey", // it's not a debug message!
@@ -233,7 +233,7 @@ class App extends React.Component {
     })
 
     // BACKEND: CREATE NEW PROJECT
-    console.log('go go axios: create')
+    // console.log('go go axios: create')
 
     axios.post(`${BACKEND_ADDRESS}/api/create`, {
       'id': new_id,
@@ -370,7 +370,7 @@ class App extends React.Component {
           }
           for (let t in seq) {
             let pint = parseInt(t)
-            console.log(seq[pint], ' won\'t pay', min_num, " to ", seq[(pint + 1) % seq.length])
+            // console.log(seq[pint], ' won\'t pay', min_num, " to ", seq[(pint + 1) % seq.length])
             relations[seq[pint]][seq[(pint + 1) % seq.length]] -= min_num;
           }
           for (let i in ints) {
@@ -444,9 +444,9 @@ class App extends React.Component {
     commonplace_neg.sort((a, b) => b.money - a.money); // the sign has already been taken into account
 
     while (commonplace_pos.length > 0) {
-      console.log('pos and neg:')
-      this.printObject(commonplace_pos)
-      this.printObject(commonplace_neg)
+      // console.log('pos and neg:')
+      // this.printObject(commonplace_pos)
+      // this.printObject(commonplace_neg)
       let payment = Math.min(commonplace_neg[0].money, commonplace_pos[0].money)
       relations[commonplace_pos[0].name][commonplace_neg[0].name] += payment
       commonplace_neg[0].money -= payment
@@ -518,10 +518,10 @@ class App extends React.Component {
 
       let newTableData = state.tableData.slice()
       
-      if (state.reversedOrder == false) {
-        newTableData.sort((a, b) => a.order_number - b.order_number);
-      } else {
+      if (state.reversedOrder) {
         newTableData.sort((a, b) => b.order_number - a.order_number);
+      } else {
+        newTableData.sort((a, b) => a.order_number - b.order_number);
       }
       return {
         tableData: newTableData
@@ -558,7 +558,7 @@ class App extends React.Component {
 
         this.setState({
           page: 'products',
-          tableData: newTableData.slice(),
+          tableData: newTableData,
           projectname: result.name.slice(),
           namesIds: newNamesIds.slice(),
           namesArray: names.slice(),
@@ -694,13 +694,13 @@ class App extends React.Component {
   configureSocket(id) {
     ws_client = new W3CWebSocket(`wss://skolkoskinut.ru/ws/${id}`);
     ws_client.onopen = () => {
-      console.log('WS: WebSocket Client Connected');
+      // console.log('WS: WebSocket Client Connected');
       this.updateBackend();
     };
 
     ws_client.onmessage = (message) => {
       //const dataFromServer = message.data;
-      console.log('WS: got reply!');
+      // console.log('WS: got reply!');
       this.makeGetRequest();
     };
 
