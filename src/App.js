@@ -1,3 +1,7 @@
+
+// LASCIATE OGNE SPERANZA, VOI CH’ENTRATE
+// ОСТАВЬ НАДЕЖДУ, ВСЯК СЮДА ВХОДЯЩИЙ
+
 import React, { useEffect, useRef } from "react";
 import {
   Button,
@@ -185,6 +189,12 @@ class App extends React.Component {
   updateBackend() {
     // console.log('go go axios! update')
 
+    if (!this.state.projectname) {
+      // if we didn't get any get request before the socket
+      // connection is established, it is incorrect
+      // to send update request
+      return
+    }
     axios.put(`${BACKEND_ADDRESS}/api/update/${this.state.id}`, {
       'id': this.state.id,
       'name': this.state.projectname,
