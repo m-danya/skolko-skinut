@@ -31,4 +31,8 @@ nvm install 16 --lts
 nvm use 16 --lts
 npm i
 npm start
+
+# deploying
+git clone <backend_repo>
+./push_and_upload.sh
 ```
