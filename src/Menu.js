@@ -9,12 +9,12 @@ class MyMenu extends React.Component {
         style={
           isMobile
             ? {
-              paddingBottom: "15px", width: "100%!important",
-              textAlign: "center",
-            }
-            :
-            {}
-          }
+                paddingBottom: "15px",
+                width: "100%!important",
+                textAlign: "center",
+              }
+            : {}
+        }
       >
         <Menu
           //inverted
@@ -27,15 +27,17 @@ class MyMenu extends React.Component {
           style={{ fontSize: "14px" }}
         >
           <Menu.Item
-            className={isMobile?"centeredButton":""}
-
+            className={isMobile ? "centeredButton" : ""}
             name="main"
             active={this.props.activeItem === "main"}
-            onClick={() => this.props.handleItemClick('main')}
+            onClick={() => this.props.handleItemClick("main")}
           >
-            <Icon name='content'  style={{
-              paddingTop: "1.5px",
-            }}/>
+            <Icon
+              name="content"
+              style={{
+                paddingTop: "1.5px",
+              }}
+            />
             Главная
           </Menu.Item>
 
@@ -49,20 +51,23 @@ class MyMenu extends React.Component {
           </Menu.Item> */}
 
           <Menu.Item
-            className={isMobile?"centeredButton":""}
-
+            className={isMobile ? "centeredButton" : ""}
             name="products"
             disabled={!this.props.hasId}
             active={this.props.activeItem === "products"}
-            onClick={() => this.props.handleItemClick('products')}
+            onClick={() => this.props.handleItemClick("products")}
           >
-            <Icon name='calculator' color='black'  style={{
-              paddingTop: "1.5px",
-            }} />
+            <Icon
+              name="calculator"
+              color="black"
+              style={{
+                paddingTop: "1.5px",
+              }}
+            />
             Продукты
           </Menu.Item>
 
-          <Menu.Item
+          {/* <Menu.Item
             name="login"
             className={isMobile?"centeredButton":""}
             active={this.props.activeItem === "login"}
@@ -71,6 +76,22 @@ class MyMenu extends React.Component {
             <Icon name='vk' style={{
               paddingTop: "1.5px",
             }}/>Войти
+          </Menu.Item> */}
+
+          <Menu.Item
+            name="login"
+            className={isMobile ? "centeredButton" : ""}
+            active={this.props.activeItem === "donate"}
+            onClick={() => this.props.handleItemClick("donate")}
+          >
+            <Icon
+              name="coffee"
+              style={{
+                paddingTop: "1.5px",
+                paddingRight: "20px",
+              }}
+            />
+            Поддержать
           </Menu.Item>
 
           {/* <Menu.Item
