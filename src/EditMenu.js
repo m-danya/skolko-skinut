@@ -75,7 +75,7 @@ function EditMenu(props) {
             setPriceError(1);
             isOk = 0;
         } else {
-            if (parsedPrice <= 0 || parsedPrice > 1000000) {
+            if (parsedPrice <= 0) {
                 setPriceError(1);
                 isOk = 0;
             }
@@ -87,7 +87,7 @@ function EditMenu(props) {
             setQuantityError(1);
             isOk = 0;
         } else {
-            if (parsedQuantity <= 0 || parsedQuantity > 1000) {
+            if (parsedQuantity <= 0) {
                 setQuantityError(1);
                 isOk = 0;
             }
@@ -274,23 +274,23 @@ function EditMenu(props) {
                 >
                     Отмена</Button>
                 <Button
-                
-                onClick={() => {
-                    if (checkAllFields()) {
-                        props.handleChangeRow(
-                            props.productId,
-                            props.inputNameText,
-                            props.whoBought,
-                            //props.whoPays,
-                            parseInt(props.inputPriceText),
-                            parseInt(props.inputQuantityText),
-                            props.proportions
-                        );
-                        props.resetInputs();
-                        setOpen(false);
+
+                    onClick={() => {
+                        if (checkAllFields()) {
+                            props.handleChangeRow(
+                                props.productId,
+                                props.inputNameText,
+                                props.whoBought,
+                                //props.whoPays,
+                                parseInt(props.inputPriceText),
+                                parseInt(props.inputQuantityText),
+                                props.proportions
+                            );
+                            props.resetInputs();
+                            setOpen(false);
+                        }
                     }
-                }
-                } positive>
+                    } positive>
                     Сохранить
                 </Button>
             </Modal.Actions>
