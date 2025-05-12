@@ -58,9 +58,9 @@ class TableOfProducts extends Component {
             inputQuantityTextEdit: '1',
             proportions: [],
             proportionsEdit: [],
-            whoBought: null, 
+            whoBought: null,
             whoBoughtEdit: null,
-            whoPaysEdit: [], 
+            whoPaysEdit: [],
             whoPays: [],
         }
         this.handleWhoBoughtChange = this.handleWhoBoughtChange.bind(this)
@@ -122,7 +122,7 @@ class TableOfProducts extends Component {
             });
             isOk = 0;
         } else {
-            if (parsedPrice <= 0 || parsedPrice > 1000000) {
+            if (parsedPrice <= 0) {
                 this.setState({
                     priceError: true,
                 });
@@ -138,7 +138,7 @@ class TableOfProducts extends Component {
             });
             isOk = 0;
         } else {
-            if (parsedQuantity <= 0 || parsedQuantity > 1000) {
+            if (parsedQuantity <= 0) {
                 this.setState({
                     quantityError: true,
                 });
@@ -436,7 +436,7 @@ class TableOfProducts extends Component {
                         />
                     }
                     <Table
-                        // selectable 
+                        // selectable
                         stackable
                         celled
                     //basic
@@ -547,7 +547,7 @@ class TableOfProducts extends Component {
                                             <Input
                                                 fluid
                                                 //width={1}
-                                                //type="number"// тогда число не вмещается 
+                                                //type="number"// тогда число не вмещается
                                                 label='Кол-во'
                                                 style={{ paddingTop: '10px' }}
                                                 className='placeholderCentering textAlignCenter'
@@ -607,16 +607,16 @@ class TableOfProducts extends Component {
                                         <Table.Cell width={4}>
                                             <p className='tableFont'>
                                                 {/* {row.whoPays.map((e, i) => ((i == row.whoPays.length - 1) ? e : e + ', '))}<br /> */}
-                                                
-                                                {(row.proportions.length == this.props.namesArray.length && 
-                                                this.props.namesArray.length > 2) ?
-                                                <b>Все</b> : 
-                                                (row.proportions.map((e, i) => ((i == row.proportions.length - 1) ?
-                                                    this.props.getNameById(e.id)
-                                                    :
-                                                    this.props.getNameById(e.id) + ', ')))
+
+                                                {(row.proportions.length == this.props.namesArray.length &&
+                                                    this.props.namesArray.length > 2) ?
+                                                    <b>Все</b> :
+                                                    (row.proportions.map((e, i) => ((i == row.proportions.length - 1) ?
+                                                        this.props.getNameById(e.id)
+                                                        :
+                                                        this.props.getNameById(e.id) + ', ')))
                                                 }
-                                                    
+
                                                 <br />
 
                                                 <text className='tableFontProportions' style={{ paddingTop: '0', marginInlineStart: 0 }}>
@@ -639,7 +639,7 @@ class TableOfProducts extends Component {
                                         <Table.Cell width={2}>
                                             <p className='tableFont'>
                                                 {`${row.quantity} × ${row.price} = ${row.quantity * row.price}`} ₽
-                                                </p>
+                                            </p>
                                         </Table.Cell>
 
                                         <Table.Cell width={1}>

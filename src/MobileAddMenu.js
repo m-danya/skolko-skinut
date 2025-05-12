@@ -70,7 +70,7 @@ function MobileAddMenu(props) {
             setPriceError(1);
             isOk = 0;
         } else {
-            if (parsedPrice <= 0 || parsedPrice > 1000000) {
+            if (parsedPrice <= 0) {
                 setPriceError(1);
                 isOk = 0;
             }
@@ -82,7 +82,7 @@ function MobileAddMenu(props) {
             setQuantityError(1);
             isOk = 0;
         } else {
-            if (parsedQuantity <= 0 || parsedQuantity > 1000) {
+            if (parsedQuantity <= 0) {
                 setQuantityError(1);
                 isOk = 0;
             }
@@ -192,7 +192,7 @@ function MobileAddMenu(props) {
                                     labelPosition='right'
                                     placeholder='Цена'
                                     error={priceError}
-                                    type="number" 
+                                    type="number"
 
                                     //label='Цена'
                                     onChange={(e) => props.handleInputChange('Price', e)}
@@ -204,7 +204,7 @@ function MobileAddMenu(props) {
                                 <Input
                                     fluid
                                     //width={1}
-                                    type="number" 
+                                    type="number"
                                     label='Кол-во'
                                     //style={{ paddingTop: '10px', }}
                                     error={quantityError}
@@ -243,7 +243,7 @@ function MobileAddMenu(props) {
                     }
                 }} positive>
                     Добавить
-        </Button>
+                </Button>
             </Modal.Actions>
         </Modal>
     )
