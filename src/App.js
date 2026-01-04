@@ -996,7 +996,7 @@ class App extends React.Component {
                   <br />
                   <br />
                   Приятного использования! Будем рады любой Вашей обратной связи
-                  в сообщениях в нашей{" "}
+                  в <a href="https://t.me/m_danya_jpg">Telegram</a> или в нашей{" "}
                   <a href="https://vk.com/skolkoskinut">группе ВКонтакте</a>.
                   <br />
                   <br />
