@@ -966,13 +966,14 @@ class App extends React.Component {
                     marginBottom: "15px",
                   }}
                 >
-                  {/* 
+                  {/*
                     <b style={{ color: "red" }}>
                       Ведутся технические работы, в данный момент сервис работает нестабильно. <br /> Следите за обновлениями, осталось чуть-чуть :)
                     </b>
                     <br /><br /> */}
-                  СколькоСкинуть — это сайт, который после тусовки поможет Вам
-                  узнать, сколько денег вы должны перевести друг другу.
+
+                  СколькоСкинуть — это сайт, который поможет Вам узнать, сколько денег вы должны перевести друг другу после путешествия, выезда на шашлыки или сбора денег на 8 марта.
+
                   <br />
                   <br />
                   Ссылку можно будет скинуть друзьям — они смогут увидеть расчёт
@@ -985,9 +986,12 @@ class App extends React.Component {
                   <br />
                   Приятного использования! Будем рады любой Вашей обратной связи
                   в сообщениях в нашей{" "}
-                  <a href="https://vk.com/skolkoskinut">группе ВКонтакте</a>
+                  <a href="https://vk.com/skolkoskinut">группе ВКонтакте</a>.
+                  <br />
+                  <br />
+                  <Image src="/ss-example.png" centered style={{ maxWidth: "100%", height: "auto" }} />
                 </p>
-                <VkGroup />
+
               </Segment>
 
               {/* </Segment.Group>  */}
@@ -1006,7 +1010,7 @@ class App extends React.Component {
                       paddingBottom: "20px",
                       paddingTop: isBrowser ? "20px" : "",
                     }}
-                    //divided={isBrowser}
+                  //divided={isBrowser}
                   >
                     {isBrowser && (
                       <Grid.Column width={8}>
@@ -1161,7 +1165,7 @@ class App extends React.Component {
                               if (willRefresh) {
                                 this.handleProjectNameChange(
                                   phrases[
-                                    Math.floor(Math.random() * phrases.length)
+                                  Math.floor(Math.random() * phrases.length)
                                   ]
                                 );
                               } else {
@@ -1221,7 +1225,7 @@ class App extends React.Component {
                 </div>
               )}
 
-              {/* 
+              {/*
               </Segment> */}
 
               <TableOfProducts
@@ -1254,7 +1258,7 @@ class App extends React.Component {
                       {/* <Segment
                       textAlign='center'
                       size='big'
-                      
+
                     > */}
                       <List
                         size="big"
@@ -1326,7 +1330,7 @@ class App extends React.Component {
               <div></div>
               <Header as="h2">Поддержка проекта</Header>
               <p>
-                Мы, Серёжа и Даня, сделали этот проект в 2021 году для себя и
+                Мы, Серёжа и <a href="https://t.me/m_danya_blog">Даня</a>, сделали этот проект в 2021 году для себя и
                 своего окружения. Постепенно у нас появлялись новые пользователи
                 через сарафанное радио.
               </p>
