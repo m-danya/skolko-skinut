@@ -1352,7 +1352,7 @@ class App extends React.Component {
             </Segment>
           } */}
           {this.state.page == "donate" && (
-            <Segment basic style={{ maxWidth: "700px" }}>
+            <Segment basic >
               <div></div>
               <Header as="h2">Поддержка проекта</Header>
               <p style={{
