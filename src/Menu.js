@@ -9,22 +9,22 @@ class MyMenu extends React.Component {
         style={
           isMobile
             ? {
-                paddingBottom: "15px",
-                width: "100%!important",
-                textAlign: "center",
-              }
+              paddingBottom: "15px",
+              width: "100%!important",
+              textAlign: "center",
+            }
             : {}
         }
       >
         <Menu
           //inverted
           //stackable
-          compact={isMobile}
+          // compact={isMobile}
           className="centeredButton"
           borderless
           //fluid
-          vertical={isMobile}
-          style={{ fontSize: "14px" }}
+          // vertical={isMobile}
+          style={{ fontSize: "14px", overflowX: "scroll" }}
         >
           <Menu.Item
             className={isMobile ? "centeredButton" : ""}
