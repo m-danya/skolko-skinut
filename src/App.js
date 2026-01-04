@@ -1374,7 +1374,7 @@ class App extends React.Component {
               <Button
                 color="orange"
                 size="large"
-                href="https://t.me/m_danya_jpg"
+                href="https://spasibomir.ru/pay/29531"
                 target="_blank"
                 animated
               >
