@@ -1360,7 +1360,7 @@ class App extends React.Component {
                 fontSize: "16px",
                 marginBottom: "15px",
               }}>
-                Мы, Серёжа и <a href="https://t.me/m_danya_blog">Даня</a>, сделали этот проект в 2021 году для себя и
+                Мы, <a href="https://www.linkedin.com/in/sergey-voylov-a7a23225b/">Серёжа</a> и <a href="https://t.me/m_danya_blog">Даня</a>, сделали этот проект в 2021 году для себя и
                 своего окружения. Постепенно у нас появлялись новые пользователи
                 через сарафанное радио.
                 <br /> <br />
