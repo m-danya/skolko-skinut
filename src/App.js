@@ -73,6 +73,7 @@ class App extends React.Component {
       guided: false,
       loadingEmpty: false,
       loadingGuided: false,
+      imageModalOpen: false,
     };
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleAddRow = this.handleAddRow.bind(this);
@@ -94,6 +95,8 @@ class App extends React.Component {
     this.updatePersonalData = this.updatePersonalData.bind(this);
     this.handleChangeReversedOrder = this.handleChangeReversedOrder.bind(this);
     this.sortTheTable = this.sortTheTable.bind(this);
+    this.handleImageClick = this.handleImageClick.bind(this);
+    this.handleImageModalClose = this.handleImageModalClose.bind(this);
   }
 
   updatePersonalData(data) {
@@ -584,6 +587,14 @@ class App extends React.Component {
     });
   }
 
+  handleImageClick() {
+    this.setState({ imageModalOpen: true });
+  }
+
+  handleImageModalClose() {
+    this.setState({ imageModalOpen: false });
+  }
+
   makeGetRequest() {
     axios.get(`${BACKEND_ADDRESS}/api/get/${this.state.id}`).then(
       (res) => {
@@ -989,7 +1000,22 @@ class App extends React.Component {
                   <a href="https://vk.com/skolkoskinut">группе ВКонтакте</a>.
                   <br />
                   <br />
-                  <Image src="/ss-example.png" centered style={{ maxWidth: "100%", height: "auto" }} />
+                  <Image 
+                    src="/ss-example.png" 
+                    centered 
+                    style={{ maxWidth: "100%", height: "auto", cursor: "pointer" }} 
+                    onClick={this.handleImageClick}
+                  />
+                  <Modal
+                    open={this.state.imageModalOpen}
+                    onClose={this.handleImageModalClose}
+                    size="large"
+                    closeIcon
+                  >
+                    <Modal.Content image>
+                      <Image src="/ss-example.png" style={{ width: "100%", height: "auto" }} />
+                    </Modal.Content>
+                  </Modal>
                 </p>
 
               </Segment>
