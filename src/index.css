@@ -13,31 +13,30 @@ code {
 }
 
 .textAlignCenter {
-  text-align: center!important;
+  text-align: center !important;
 }
 
-.textAlignCenter > input
-{
-  text-align: center!important;
+.textAlignCenter>input {
+  text-align: center !important;
 }
 
-.textAlignCenter > button
-{
-  text-align: center!important;
+.textAlignCenter>button {
+  text-align: center !important;
 }
 
-.centeredButton 
-{
-  margin-left: auto!important;
-  margin-right: auto!important;
+.centeredButton {
+  margin-left: auto !important;
+  margin-right: auto !important;
   /* width: 6em */
 }
 
 
 .tableFont {
-  font-size: 15px; /* was 18  */
+  font-size: 15px;
+  /* was 18  */
   text-align: center;
 }
+
 .tableFontProportions {
   font-size: 15px;
   text-align: center;
@@ -55,16 +54,16 @@ code {
   color: lightslategrey
 }
 
-.placeholderCentering > input::placeholder {
+.placeholderCentering>input::placeholder {
   text-align: center;
 }
 
 textarea {
-  resize: none!important;
+  resize: none !important;
 }
 
 .ui.mini.modal {
-  width: 200px!important;
+  width: 200px !important;
 }
 
 .clickable {
@@ -72,31 +71,38 @@ textarea {
 }
 
 .centertext {
-  height: 20px!important;
-  line-height: 20px!important;
+  height: 20px !important;
+  line-height: 20px !important;
 }
 
 .centertextdiv {
-  display: table; 
-  height: 50px; 
+  display: table;
+  height: 50px;
   overflow: hidden;
 }
 
 .centertexttext {
-  display: table-cell; vertical-align: middle;
+  display: table-cell;
+  vertical-align: middle;
 }
 
-.ui.orange.button, .ui.orange.buttons .button {
-  background-color: #f58220!important;
+.ui.orange.button,
+.ui.orange.buttons .button {
+  background-color: #f58220 !important;
 }
 
 .leftright {
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
+  display: flex;
+  /* establish flex container */
+  flex-direction: row;
+  /* default value; can be omitted */
+  flex-wrap: nowrap;
+  /* default value; can be omitted */
+  justify-content: space-between;
+  /* switched from default (flex-start, see below) */
 }
-.leftright > div {
+
+.leftright>div {
   width: 500px;
   /* border: 2px dashed red; */
 }
@@ -125,4 +131,18 @@ textarea {
 
 .smallPaddingBottom {
   padding-bottom: 10px;
+}
+
+@media (max-width: 767px) {
+  .ui.vertical.menu {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .ui.vertical.menu .item {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
 }

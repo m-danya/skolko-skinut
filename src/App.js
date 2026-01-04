@@ -1000,10 +1000,10 @@ class App extends React.Component {
                   <a href="https://vk.com/skolkoskinut">группе ВКонтакте</a>.
                   <br />
                   <br />
-                  <Image 
-                    src="/ss-example.png" 
-                    centered 
-                    style={{ maxWidth: "100%", height: "auto", cursor: "pointer" }} 
+                  <Image
+                    src="/ss-example.png"
+                    centered
+                    style={{ maxWidth: "100%", height: "auto", cursor: "pointer" }}
                     onClick={this.handleImageClick}
                   />
                   <Modal
@@ -1372,12 +1372,12 @@ class App extends React.Component {
               <Button
                 color="orange"
                 size="large"
-                href="https://www.tbank.ru/cf/2CoUrXweKUW"
+                href="https://t.me/m_danya_jpg"
                 target="_blank"
                 animated
               >
                 <Button.Content visible>
-                  <Icon name="heart" /> Пожертвовать
+                  <Icon name="heart" /> Поддержать
                 </Button.Content>
                 <Button.Content hidden>Спасибо!</Button.Content>
               </Button>

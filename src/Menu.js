@@ -23,7 +23,7 @@ class MyMenu extends React.Component {
           className="centeredButton"
           borderless
           //fluid
-          //vertical
+          vertical={isMobile}
           style={{ fontSize: "14px" }}
         >
           <Menu.Item
