@@ -57,7 +57,7 @@ const ArticleLayout = ({
           Перейти к калькулятору
         </Button>
 
-        {/* {relatedLinks && relatedLinks.length ? (
+        {relatedLinks && relatedLinks.length ? (
           <>
             <Divider horizontal>Полезно рядом</Divider>
             <List bulleted>
@@ -68,7 +68,7 @@ const ArticleLayout = ({
               ))}
             </List>
           </>
-        ) : null} */}
+        ) : null}
       </Segment>
     </Container>
   </div>
