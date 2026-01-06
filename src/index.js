@@ -4,16 +4,38 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'semantic-ui-css/semantic.min.css'
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import {
+  AfterPartyArticle,
+  MainIntentArticle,
+  SplitAmountArticle
+} from './SeoArticles';
 
 ReactDOM.render(
 
   <React.StrictMode>
 
     <Router>
-      <Route
-        path="/:id?"
-        component={App} />
+      <Switch>
+        <Route
+          exact
+          path="/kto-komu-skolko-dolzhen"
+          component={MainIntentArticle}
+        />
+        <Route
+          exact
+          path="/razdelit-summu-na-chelovek"
+          component={SplitAmountArticle}
+        />
+        <Route
+          exact
+          path="/posle-vecherinki-kto-skolko-skinulsya"
+          component={AfterPartyArticle}
+        />
+        <Route
+          path="/:id?"
+          component={App} />
+      </Switch>
     </Router>
   </React.StrictMode>,
 
